@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package>
+  <name>osmosis_simulation</name>
+  <version>0.0.0</version>
+  <description>Simulation environment for the OSMOSIS project</description>
+
+  <maintainer email="charles.lesire@onera.fr">Charles Lesire</maintainer>
+  <license>GPL</license>
+
+  <url type="website">https://osmosis.gitlab.io</url>
+
+  <author email="charles.lesire@onera.fr">Charles Lesire</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>gazebo_ros</run_depend>
+  <run_depend>summit_xl_robot_control</run_depend>
+  <run_depend>summit_xl_description</run_depend>
+
+  <export>
+    <gazebo_ros gazebo_model_path="${prefix}/models"/>
+  </export>
+</package>

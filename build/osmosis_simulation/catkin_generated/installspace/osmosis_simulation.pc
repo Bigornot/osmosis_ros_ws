@@ -1,0 +1,8 @@
+prefix=/home/afavier/osmosis_ws/install
+
+Name: osmosis_simulation
+Description: Description of osmosis_simulation
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/afavier/osmosis_ws/install/lib 
+Requires: 
