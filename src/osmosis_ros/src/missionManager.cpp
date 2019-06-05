@@ -4,11 +4,11 @@
 
 //! ROS node initialization
 MissionManager::MissionManager()
-  {
+{
 	//set up the publisher for the goal topic
 	goal_pub_ = nh_.advertise<geometry_msgs::Point>("goal", 1);
-
-  }
+	this->initMission("A"); // A ENLEVER
+}
 
 
 void MissionManager::goalKeyboard()
@@ -25,6 +25,58 @@ void MissionManager::goalKeyboard()
 	this->goal_=thegoal;
 }
 
+void MissionManager::initMission(std::string name)
+{
+	std::cout << "Init mission" << std::endl;
+
+	std::string filename=ros::package::getPath("osmosis_control");
+	filename.append("/MISSION_" + name + ".miss");
+	
+	std::ifstream fichier(filename, std::ios::in);
+
+	if(fichier)
+	{
+		// Parsing
+		int i=0;
+		std::string line;
+
+		while(getline(fichier, line))
+			parse(line);
+
+		fichier.close();
+	}
+
+	else
+		ROS_ERROR("Mission Not Found !\n");
+}
+
+void MissionManager::parse(std::string line)
+{
+	geometry_msgs::Point point;
+	std::string xs, ys;
+	float x, y;
+	
+	std::cout << line << std::endl;
+
+	int coma=line.find(',');
+	if(coma>=0)		
+	{
+		std::cout << "coma" << coma << std::endl;
+		xs=line.substr(2, coma-2);
+		ys=line.substr(coma+3);
+
+		x=stof(xs);
+		y=stof(ys);
+		
+		point.x=x;
+		point.y=y;
+
+		std::cout << "x=" << x << " y=" << y << std::endl;
+
+		mission_.orders.push_back(point);
+	}
+}
+
 
 void MissionManager::run()
 {
@@ -32,12 +84,11 @@ void MissionManager::run()
 	while (nh_.ok())
 	    {
 		//std::cout <<"HEY";
-		this->goalKeyboard();
+		//this->goalKeyboard(); // A REMETTRE
 		goal_pub_.publish(goal_);
 	 	//ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate
 	    }
-
 }
 
 

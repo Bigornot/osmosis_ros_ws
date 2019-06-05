@@ -20,9 +20,19 @@
 
 #include <iostream>
 #include <ros/ros.h>
+#include <fstream>
+#include <vector>
+#include <string>
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/Point.h>
+#include <ros/package.h>
 
+struct Mission
+{
+	std::string name;
+	int step;
+	std::vector<geometry_msgs::Point> orders;
+};
 
 class MissionManager
 {
@@ -30,13 +40,15 @@ private:
 	ros::NodeHandle nh_;
 	ros::Publisher goal_pub_;
 	geometry_msgs::Point goal_;
+	Mission mission_;
 
 
 public:
-
-	void goalKeyboard();
 	MissionManager();
+	void goalKeyboard();
 	void run();
+        void initMission(std::string name);
+	void parse(std::string line);
 
 }; // end of class
 
