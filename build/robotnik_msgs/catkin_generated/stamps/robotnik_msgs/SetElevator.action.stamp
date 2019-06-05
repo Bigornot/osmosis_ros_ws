@@ -1,6 +1,0 @@
-ElevatorAction action
----
-bool result
-ElevatorStatus status
----
-ElevatorStatus status

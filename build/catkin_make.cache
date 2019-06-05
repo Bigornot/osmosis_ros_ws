@@ -1,2 +1,0 @@
-osmosis_ros:osmosis_simulation:robotnik_msgs:robotnik_sensors:summit_xl_common/summit_xl_common:summit_xl_common/summit_xl_control:summit_xl_common/summit_xl_description:summit_xl_common/summit_xl_localization:summit_xl_common/summit_xl_navigation:summit_xl_common/summit_xl_pad:summit_xl_sim/summit_xl_gazebo:summit_xl_sim/summit_xl_sim:summit_xl_sim/summit_xl_sim_bringup
--DCATKIN_DEVEL_PREFIX=/home/afavier/osmosis_ws/devel -DCMAKE_INSTALL_PREFIX=/home/afavier/osmosis_ws/install -G Unix Makefiles

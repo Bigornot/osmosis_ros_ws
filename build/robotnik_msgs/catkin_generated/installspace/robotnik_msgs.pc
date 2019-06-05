@@ -1,8 +1,0 @@
-prefix=/home/afavier/osmosis_ws/install
-
-Name: robotnik_msgs
-Description: Description of robotnik_msgs
-Version: 0.2.2
-Cflags: -I/home/afavier/osmosis_ws/install/include
-Libs: -L/home/afavier/osmosis_ws/install/lib 
-Requires: actionlib_msgs message_runtime std_msgs
