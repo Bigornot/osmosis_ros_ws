@@ -26,6 +26,7 @@
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/Point.h>
 #include <ros/package.h>
+#include "std_msgs/Bool.h"
 
 struct Mission
 {
@@ -39,10 +40,15 @@ class MissionManager
 private:
 	ros::NodeHandle nh_;
 	ros::Publisher goal_pub_;
+	ros::Subscriber goal_reached_sub_;
 	geometry_msgs::Point goal_;
+	enum StateDriveMission {KEYBOARD,MISSION};
+	StateDriveMission state_;
+	enum StateMission {WAITMISSION,WAITORDERDONE};
+	StateMission missionState_;
 	Mission mission_;
-
-
+	bool goal_reached_;
+	
 public:
 	MissionManager();
 	void goalKeyboard();
@@ -50,6 +56,9 @@ public:
         void initMission(std::string name);
 	void parse(std::string line);
 
+	void driveMissionManager();
+	void MissionManagerCallbackGoalReached(const std_msgs::Bool &goal_reached);
+	bool is_goal_reached();
 }; // end of class
 
 #endif
