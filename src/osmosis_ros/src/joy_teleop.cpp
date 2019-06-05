@@ -40,6 +40,8 @@ void Joy_teleop::joy_off()
 
 void Joy_teleop::teleopCallbackJoy(const sensor_msgs::Joy & joy_msg)
 {
+	std::cout << "TEST" << std::endl;
+
 	// detection du front montant
 	if(joy_msg_.buttons[7]==0 && joy_msg.buttons[7]==1)
 	{
@@ -80,6 +82,7 @@ Joy_teleop::Joy_teleop()
 	cmd_joy_teleop_pub_ = nh_.advertise<osmosis_control::TeleopMsg>("/cmd_vel_teleop", 1);
 	cmd_joystick_sub_= nh_.subscribe("/joy", 1, &Joy_teleop::teleopCallbackJoy, this);
 
+	joy_msg_.buttons[7]=0;
 	joy_teleop_cmd_.is_active=false;
 	joy_teleop_cmd_.cmd_vel.linear.x=joy_teleop_cmd_.cmd_vel.linear.y=joy_teleop_cmd_.cmd_vel.angular.z=0;
 	button_pressed_=false;
