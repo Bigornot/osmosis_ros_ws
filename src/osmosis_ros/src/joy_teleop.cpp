@@ -54,16 +54,13 @@ void Joy_teleop::teleopCallbackJoy(const sensor_msgs::Joy & joy_msg)
 		geometry_msgs::Twist base_cmd;
 		float axe1, axe2;
 		int button1;
-		int button2;
 
 		axe1=joy_msg_.axes[1];
 		axe2=joy_msg_.axes[3];
 
-		button1=joy_msg_.buttons[0];
-		button2=joy_msg_.buttons[2];
+		button1=joy_msg_.buttons[5];
 
 		base_cmd.linear.x=3*axe1*(1+button1);
-		base_cmd.linear.z=1000*button2;
 		base_cmd.angular.z=7*axe2;
 
 		joy_teleop_cmd_.cmd_vel.linear.x=base_cmd.linear.x;
