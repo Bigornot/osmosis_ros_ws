@@ -58,6 +58,7 @@ find_package(catkin REQUIRED COMPONENTS
  add_message_files(
    FILES
    TeleopMsg.msg
+   State_and_PointMsg.msg
  )
 
 ## Generate services in the 'srv' folder

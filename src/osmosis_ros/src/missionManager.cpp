@@ -81,7 +81,7 @@ void MissionManager::sendNextOrder()
 {
 	pub_on_=true;
 	goal_reached_=false;
-	goal_=mission_.orders[mission_.step];
+	state_and_point_cmd_.goal=mission_.orders[mission_.step];
 }
 
 char MissionManager::askMode()
@@ -109,7 +109,7 @@ bool MissionManager::askMission()
 		ok=true;
 		pub_on_=true;
 		mission_.step=0;
-		goal_=mission_.orders[mission_.step];
+		state_and_point_cmd_.goal=mission_.orders[mission_.step];
 	}
 
 	return ok;
@@ -125,6 +125,7 @@ MissionManager::MissionManager()
 	pub_on_=false;
 	state_=CHOICE;
 	missionState_=WAITMISSION;
+	state_and_point_cmd_.taxi=true;
 }
 
 
@@ -144,7 +145,7 @@ void MissionManager::goalKeyboard()
 	state_=KEYBOARD;
 
 	pub_on_=true;
-	this->goal_=thegoal;
+	state_and_point_cmd_.goal=thegoal;
 }
 
 bool MissionManager::initMission(std::string name)
@@ -219,7 +220,7 @@ void MissionManager::run()
 		this->driveMissionManager();
 		if(pub_on_)
 		{
-			goal_pub_.publish(goal_);
+			goal_pub_.publish(state_and_point_cmd_);
 			pub_on_=false;
 		}
 	 	ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages

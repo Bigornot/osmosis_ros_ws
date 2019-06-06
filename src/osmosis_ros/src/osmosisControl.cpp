@@ -2,10 +2,11 @@
 #include <osmosis_control/osmosisControl.hpp>
 
 
-void OsmosisControl::osmosisControlCallbackGoal(const geometry_msgs::Point & thegoal)
+void OsmosisControl::osmosisControlCallbackGoal(const osmosis_control::State_and_PointMsg & thegoal)
 {
-	this->goal=thegoal;
-	ROS_INFO("GOAL : x: [%f], y:[%f]",goal.x,goal.y);
+	state_and_target_=thegoal;
+	
+	ROS_INFO("GOAL : x: [%f], y:[%f]",state_and_target_.goal.x,state_and_target_.goal.y);
 }
 
 
@@ -38,7 +39,7 @@ OsmosisControl::OsmosisControl()
 	odom_sub_=nh_.subscribe("/pose", 1, &OsmosisControl::osmosisControlCallbackPose, this);
 
 	//initialization of attributes
-	goal.x = old_goal_.x = goal.y = old_goal_.y=0;
+	state_and_target_.goal.x = old_goal_.x = state_and_target_.goal.y = old_goal_.y=0;
 	state_=wait_goal;
 }
 
@@ -51,12 +52,12 @@ bool OsmosisControl::new_goal()
 	bool new_goal=false;
 	//if (g.status == runtime::DataStatus::NEW_DATA) {
 	//ROS_INFO("delta goal en x[%f]",fabs(goal.x-old_goal_.x));
-	if (fabs(goal.x-old_goal_.x)>0.1 || fabs(goal.y-old_goal_.y)>0.1)
+	if (fabs(state_and_target_.goal.x-old_goal_.x)>0.1 || fabs(state_and_target_.goal.y-old_goal_.y)>0.1)
 	{
 		//goal = g.value;
 		//logger().info("Received new goal {}", goal);
 		new_goal = true;
-		old_goal_=goal;
+		old_goal_=state_and_target_.goal;
 	}
 	return new_goal;
 
@@ -65,8 +66,8 @@ bool OsmosisControl::new_goal()
 
 bool OsmosisControl::is_arrived()
 {
-	double xPos = robot_pose.x - goal.x;
-	double yPos = robot_pose.y - goal.y;
+	double xPos = robot_pose.x - state_and_target_.goal.x;
+	double yPos = robot_pose.y - state_and_target_.goal.y;
 	bool is_arrived = false;
 	
 	if (sqrt( pow(xPos,2) + pow(yPos,2) ) < 0.2)
@@ -99,8 +100,8 @@ void OsmosisControl::updateMove()
 
 	obstacleFromScan(scan_);
 
-	double xPos = robot_pose.x - goal.x;
-	double yPos = robot_pose.y - goal.y;
+	double xPos = robot_pose.x - state_and_target_.goal.x;
+	double yPos = robot_pose.y - state_and_target_.goal.y;
 	double wPos = robot_pose.theta;
 	if ( wPos < 0) wPos += 2 * M_PI;
 

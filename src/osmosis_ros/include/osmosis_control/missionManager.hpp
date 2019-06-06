@@ -27,6 +27,7 @@
 #include <geometry_msgs/Point.h>
 #include <ros/package.h>
 #include "std_msgs/Bool.h"
+#include "osmosis_control/State_and_PointMsg.h"
 
 struct Mission
 {
@@ -41,7 +42,8 @@ private:
 	ros::NodeHandle nh_;
 	ros::Publisher goal_pub_;
 	ros::Subscriber goal_reached_sub_;
-	geometry_msgs::Point goal_;
+	//geometry_msgs::Point goal_;
+	osmosis_control::State_and_PointMsg state_and_point_cmd_;
 	enum StateDriveMission{CHOICE,KEYBOARD,MISSION};
 	StateDriveMission state_;
 	enum StateMission {WAITMISSION,WAITORDERDONE};

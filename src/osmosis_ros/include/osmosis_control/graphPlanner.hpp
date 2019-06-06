@@ -24,6 +24,7 @@
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/Pose2D.h>
 #include <std_msgs/Bool.h>
+#include "osmosis_control/State_and_PointMsg.h"
 #include <ros/package.h>
 
 
@@ -48,7 +49,7 @@ class GraphPlanner {
       void send_target();
       void graphPlannerFSM();
 
-      void callbackGoal(const geometry_msgs::Point & thegoal);
+      void callbackGoal(const osmosis_control::State_and_PointMsg & thegoal);
       void callbackPose(const geometry_msgs::Pose2D & msg);
       void callbackTargetReached(const std_msgs::Bool & target_reached);
 
@@ -66,7 +67,10 @@ class GraphPlanner {
       //geometry_msgs::Pose2D robot_pose;
       ros::Subscriber odom_sub_;
       geometry_msgs::Point target_;
-      geometry_msgs::Point current, goal;
+      geometry_msgs::Point current;
+
+      osmosis_control::State_and_PointMsg state_and_target_;	
+      osmosis_control::State_and_PointMsg state_and_goal_;	
       Graph graph;
       std::vector<geometry_msgs::Point> plan;
       int target_index;
