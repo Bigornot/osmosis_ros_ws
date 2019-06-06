@@ -40,8 +40,6 @@ void Joy_teleop::joy_off()
 
 void Joy_teleop::teleopCallbackJoy(const sensor_msgs::Joy & joy_msg)
 {
-	std::cout << "TEST" << std::endl;
-
 	// detection du front montant
 	if(joy_msg_.buttons[7]==0 && joy_msg.buttons[7]==1)
 	{
@@ -53,8 +51,6 @@ void Joy_teleop::teleopCallbackJoy(const sensor_msgs::Joy & joy_msg)
 
 	if(state_==ACTIVATED)
 	{
-		std::cout << "Callback act" << std::endl;
-
 		geometry_msgs::Twist base_cmd;
 		float axe1, axe2;
 		int button1;
@@ -81,6 +77,13 @@ Joy_teleop::Joy_teleop()
 {
 	cmd_joy_teleop_pub_ = nh_.advertise<osmosis_control::TeleopMsg>("/cmd_vel_teleop", 1);
 	cmd_joystick_sub_= nh_.subscribe("/joy", 1, &Joy_teleop::teleopCallbackJoy, this);
+
+	std::vector<int> buttons(11,0);
+	std::vector<float> axes(8,0);
+	sensor_msgs::Joy msg;
+	msg.buttons=buttons;
+	msg.axes=axes;
+	joy_msg_=msg;
 
 	joy_msg_.buttons[7]=0;
 	joy_teleop_cmd_.is_active=false;
@@ -116,6 +119,7 @@ int main(int argc, char** argv)
 {
   //init the ROS node
   ros::init(argc, argv, "joy_teleop_node");
+  std::cout << "JOY" << std::endl;
 
   Joy_teleop myJoyTeleop;
   myJoyTeleop.run();

@@ -22,6 +22,7 @@
 #include <geometry_msgs/Twist.h>
 #include "osmosis_control/TeleopMsg.h"
 #include <sensor_msgs/Joy.h>
+#include <vector>
 
 class Joy_teleop
 {

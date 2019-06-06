@@ -7,6 +7,7 @@
 <node name="graph_planner_node" type="graph_planner_node" pkg="osmosis_control" output="screen" launch-prefix="gnome-terminal --command"/>
 <node name="mission_manager_node" type="mission_manager_node" pkg="osmosis_control" output="screen" launch-prefix="xterm -e"/>
 <node name="joy_teleop_node" type="joy_teleop_node" pkg="osmosis_control" output="screen" launch-prefix="xterm -e"/>
+<node name="joy_node" type="joy_node" pkg="joy" output="screen" launch-prefix="xterm -e"/>
 
 <!--node name="navigation_node" type="navigation_node" pkg="osmosis_control" output="screen" launch-prefix="xterm -e"/-->
 
