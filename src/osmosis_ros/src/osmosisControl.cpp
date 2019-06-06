@@ -32,11 +32,11 @@ OsmosisControl::OsmosisControl()
 {
 
 	//set up the publishers and subscribers
-	cmd_vel_pub_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel_control", 1);
-	goal_reach_pub_=nh_.advertise<std_msgs::Bool>("target_reached", 10);
-	scan_sub_  = nh_.subscribe("/summit_xl_a/front_laser/scan", 1, &OsmosisControl::osmosisControlCallbackScan, this);
-	goal_sub_=nh_.subscribe("/target", 1, &OsmosisControl::osmosisControlCallbackGoal, this);
-	odom_sub_=nh_.subscribe("/pose", 1, &OsmosisControl::osmosisControlCallbackPose, this);
+	cmd_vel_pub_   = nh_.advertise<geometry_msgs::Twist>("cmd_vel_control", 1);
+	goal_reach_pub_= nh_.advertise<std_msgs::Bool>("target_reached", 10);
+	scan_sub_ = nh_.subscribe("/summit_xl_a/front_laser/scan", 1, &OsmosisControl::osmosisControlCallbackScan, this);
+	goal_sub_ = nh_.subscribe("/target", 1, &OsmosisControl::osmosisControlCallbackGoal, this);
+	odom_sub_ = nh_.subscribe("/pose", 1, &OsmosisControl::osmosisControlCallbackPose, this);
 
 	//initialization of attributes
 	state_and_target_.goal.x = old_goal_.x = state_and_target_.goal.y = old_goal_.y=0;
@@ -72,7 +72,6 @@ bool OsmosisControl::is_arrived()
 	
 	if (sqrt( pow(xPos,2) + pow(yPos,2) ) < 0.2)
 	{
-		//logger().info("Arrived at goal {}", goal);
 		is_arrived = true;
 	}
 	return is_arrived;
@@ -83,52 +82,48 @@ bool OsmosisControl::is_arrived()
 
 void OsmosisControl::stop()
 {
-	//shell().command.write({0, 0});
-
 	cmd_.linear.x=0;
 	cmd_.linear.y=0;
 	cmd_.angular.x=0;
 	cmd_.angular.y=0;
 	cmd_.angular.z=0;
-
 }
 
 void OsmosisControl::updateMove()
 {
-
-	//robot_pose = shell().pose.read();
-
-	obstacleFromScan(scan_);
-
-	double xPos = robot_pose.x - state_and_target_.goal.x;
-	double yPos = robot_pose.y - state_and_target_.goal.y;
-	double wPos = robot_pose.theta;
-	if ( wPos < 0) wPos += 2 * M_PI;
-
-	double obs_dist = sqrt(pow(obstacle.x,2) + pow(obstacle.y,2));
-	// logger().debug("obstacle {} distance: {}", obstacle, obs_dist);
-
-	// _arrived = false;
 	geometry_msgs::Twist cmd; //0,0
 
-	//  if (sqrt( pow(xPos,2) + pow(yPos,2) ) < 0.2) {
-	//logger().info("Arrived at goal {}", goal);
-	//    _arrived = true;
-	// }
-	// else {
-	double obsG_x = (xPos) + obs_dist*cos(wPos + obstacle_lw);
-	double obsG_y = (yPos) + obs_dist*sin(wPos + obstacle_lw);
-	cmd = PF(xPos,yPos,wPos,obsG_x,obsG_y);
-	//logger().debug("command: {}", cmd);
-	//}
+	// Si obstacle et Taxi
+//	if(obstacleFromScan(scan_) && taxi)
+	if(obstacleFromScan(scan_))
+	{
+		//cmd=0
+	}
 
-	// shell().command.write(cmd);
-	this->cmd_=cmd;
+	else
+	{
+		double xPos = robot_pose.x - state_and_target_.goal.x;
+		double yPos = robot_pose.y - state_and_target_.goal.y;
+		double wPos = robot_pose.theta;
+		if ( wPos < 0) wPos += 2 * M_PI;
+		double obs_dist = sqrt(pow(obstacle.x,2) + pow(obstacle.y,2));
+
+		double obsG_x = (xPos) + obs_dist*cos(wPos + obstacle_lw);
+		double obsG_y = (yPos) + obs_dist*sin(wPos + obstacle_lw);
+
+		std::cout << "Ob_X:" << obsG_x << " Ob_Y" << obsG_y << std::endl;
+
+		cmd = PF(xPos,yPos,wPos,obsG_x,obsG_y);
+	}
+
+	cmd_=cmd;
 }
 
 
-void OsmosisControl::obstacleFromScan(const sensor_msgs::LaserScan& scan)
+bool OsmosisControl::obstacleFromScan(const sensor_msgs::LaserScan& scan)
 {
+	bool obs=false;
+
 	double xmin = std::numeric_limits<double>::max();
 	double xmax = std::numeric_limits<double>::min();
 	double ymin = std::numeric_limits<double>::max();
@@ -143,6 +138,9 @@ void OsmosisControl::obstacleFromScan(const sensor_msgs::LaserScan& scan)
 		{
 			if (scan.ranges[i] <= far) 
 			{
+				std::cout << "PARCE QUE C'EST NOTRE OBJETTT!!!" << std::endl;
+				obs=true;
+
 				double dist = scan.ranges[i];
 				double ang = scan.angle_min + (scan.angle_max - scan.angle_min) * i / scan.ranges.size();
 				double px = dist * cos(ang);
@@ -157,6 +155,8 @@ void OsmosisControl::obstacleFromScan(const sensor_msgs::LaserScan& scan)
 	obstacle.x = xmin;
 	obstacle.y = ymin;
 	obstacle_lw = atan2(obstacle.y, obstacle.x);
+
+	return obs;
 }
 
 //Potential Field Algo

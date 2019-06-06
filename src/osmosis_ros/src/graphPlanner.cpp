@@ -102,7 +102,7 @@ void GraphPlanner::compute_plan()
 	target_index = 0;
 	ROS_INFO("Plan computed, size = %d",(int)plan.size());
 	for (int i = 0; i < plan.size(); i++)
-	ROS_INFO("%d: (%f , %f)",i, plan[i].x,plan[i].y);
+		ROS_INFO("%d: (%f , %f)",i, plan[i].x,plan[i].y);
 }
 
 bool GraphPlanner::plan_computed() 
@@ -114,7 +114,7 @@ void GraphPlanner::done()
 {
 	std_msgs::Bool target_reached;
 	target_reached.data=true;;
-	target_pub_.publish(target_reached);
+	goal_reached_pub_.publish(target_reached);
 
 	//  shell().arrived.write(true);
 	//  _has_goal = false;
@@ -203,24 +203,26 @@ void GraphPlanner::graphPlannerFSM()
 			}
 			else
 			{
-		send_target();
-		next_state=follow;
-		}
-		break;
+				send_target();
+				next_state=follow;
+			}
+			break;
+
 		case follow:
-		ROS_INFO("FOLLOW");
-		if (is_arrived())
-		{
-		next_state=send;
-		target_reached_=false; //re-init
-		}
-		else execute_plan();
-		break;
+			ROS_INFO("FOLLOW");
+			if (is_arrived())
+			{
+				next_state=send;
+				target_reached_=false; //re-init
+			}
+			else execute_plan();
+			break;
+
 		case goal_done:
-		ROS_INFO("DONE");
-		done();
-		next_state=wait_goal;
-		break;
+			ROS_INFO("DONE");
+			done();
+			next_state=wait_goal;
+			break;
 
 		default : next_state=wait_goal;
 

@@ -72,7 +72,7 @@ public:
 	void osmosisControlCallbackScan(const sensor_msgs::LaserScan & thescan);
 
 	void osmosisControlCallbackPose(const geometry_msgs::Pose2D & msg);
-  void publish_is_arrived();
+	  void publish_is_arrived();
 
 	//! ROS node initialization
 	OsmosisControl();
@@ -84,7 +84,7 @@ public:
 
 	void updateMove();
 
-	void obstacleFromScan(const sensor_msgs::LaserScan& scan);
+	bool obstacleFromScan(const sensor_msgs::LaserScan& scan);
 
 	geometry_msgs::Twist PF(double x_p, double y_p,
 	    double theta_p, double obs_dx, double obs_dy);
