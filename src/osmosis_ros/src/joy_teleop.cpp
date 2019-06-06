@@ -117,10 +117,10 @@ void Joy_teleop::run()
 
 int main(int argc, char** argv)
 {
-  //init the ROS node
-  ros::init(argc, argv, "joy_teleop_node");
-  std::cout << "JOY" << std::endl;
+	//init the ROS node
+	ros::init(argc, argv, "joy_teleop_node");
+	std::cout << "JOY" << std::endl;
 
-  Joy_teleop myJoyTeleop;
-  myJoyTeleop.run();
+	Joy_teleop myJoyTeleop;
+	myJoyTeleop.run();
 }
