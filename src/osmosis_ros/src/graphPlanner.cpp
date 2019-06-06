@@ -3,30 +3,30 @@
 
 //! ROS node initialization
 GraphPlanner::GraphPlanner()
-  {
+{
 	//set up the publisher for the goal topic
 	target_pub_ = nh_.advertise<geometry_msgs::Point>("target", 1);
-  goal_sub_=nh_.subscribe("/goal", 1, &GraphPlanner::callbackGoal, this);
-  odom_sub_=nh_.subscribe("/pose", 1, &GraphPlanner::callbackPose, this);
-  target_reached_sub_=nh_.subscribe("/target_reached", 1, &GraphPlanner::callbackTargetReached, this);
-  state_=wait_goal;
-  _new_goal=false;
-  target_reached_=false;
-  }
+	goal_reached_pub_ = nh_.advertise<std_msgs::Bool>("goal_reached", 1);
+	goal_sub_=nh_.subscribe("/goal", 1, &GraphPlanner::callbackGoal, this);
+	odom_sub_=nh_.subscribe("/pose", 1, &GraphPlanner::callbackPose, this);
+	target_reached_sub_=nh_.subscribe("/target_reached", 1, &GraphPlanner::callbackTargetReached, this);
+	state_=wait_goal;
+	_new_goal=false;
+	target_reached_=false;
+}
 
-  void GraphPlanner::callbackTargetReached(const std_msgs::Bool & target_reached)
-    	{
-    	  target_reached_=target_reached.data;
-         ROS_INFO("Target reached : [%d]",target_reached_);
-
-     }
+void GraphPlanner::callbackTargetReached(const std_msgs::Bool & target_reached)
+{
+	target_reached_=target_reached.data;
+	ROS_INFO("Target reached : [%d]",target_reached_);
+}
 
 void GraphPlanner::callbackGoal(const geometry_msgs::Point & thegoal)
-  	{
-  	  this->goal=thegoal;
-      _new_goal=true;
-  	 ROS_INFO("NEW GOAL : x: [%f], y:[%f]",goal.x,goal.y);
-   }
+{
+	this->goal=thegoal;
+	_new_goal=true;
+	ROS_INFO("NEW GOAL : x: [%f], y:[%f]",goal.x,goal.y);
+}
 
 /*void GraphPlanner::callbackGoalId(const std::string & thegoal_id)
     {
@@ -36,11 +36,11 @@ void GraphPlanner::callbackGoal(const geometry_msgs::Point & thegoal)
     }*/
 
 void GraphPlanner::callbackPose(const geometry_msgs::Pose2D & msg)
-    	{
-    	this->current.x = msg.x;
-      this->current.y = msg.y;
-      //ROS_INFO("NEW POS : x: [%f], y:[%f]",this->current.x,this->current.y);
-    	}
+{
+	this->current.x = msg.x;
+	this->current.y = msg.y;
+	//ROS_INFO("NEW POS : x: [%f], y:[%f]",this->current.x,this->current.y);
+}
 
 //from MAUVE
 /*void GraphPlanner::read_ports() {
@@ -63,55 +63,64 @@ void GraphPlanner::callbackPose(const geometry_msgs::Pose2D & msg)
   }
 }*/
 
-bool GraphPlanner::new_goal() {
-  bool newg=false;
-  if (_new_goal) {
-            newg=true;
-            _new_goal=false; // reset for next time
-          }
-  return newg;
-
+bool GraphPlanner::new_goal() 
+{
+	bool newg=false;
+	if (_new_goal) 
+	{
+		newg=true;
+		_new_goal=false; // reset for next time
+	}
+	return newg;
 }
 
 /*bool GraphPlanner::no_goal() {
   return ! (_has_goal);
 }*/
 
-void GraphPlanner::compute_plan() {
-  auto s = graph.getClosestNode(this->current);
-//  this->logger().info("start node {} {}", s->name, s->point);
-ROS_INFO("start node %s %f %f", s->name.c_str(), s->point.x,s->point.y);
-  auto g = graph.getClosestNode(this->goal);
-//  this->logger().info("goal node {} {}", g->name, g->point);
-ROS_INFO("goal node %s %f %f", g->name.c_str(), g->point.x,g->point.y);
-  auto p = graph.compute_plan(s, g);
-  plan.clear();
-  plan.push_back(s->point);
-  for (int i = 0; i < p.size(); i++)
-    plan.push_back(p[i]->point);
-//  plan.push_back(this->goal);
-
-//  this->logger().info("plan computed, length: {}", plan.size());
-//  for (int i = 0; i < plan.size(); i++)
-//    this->logger().info("{}: {}", i, plan[i]);
-
-  target_index = 0;
-  ROS_INFO("Plan computed, size = %d",(int)plan.size());
-  for (int i = 0; i < plan.size(); i++)
-    ROS_INFO("%d: (%f , %f)",i, plan[i].x,plan[i].y);
+void GraphPlanner::compute_plan() 
+{
+	auto s = graph.getClosestNode(this->current);
+	//  this->logger().info("start node {} {}", s->name, s->point);
+	ROS_INFO("start node %s %f %f", s->name.c_str(), s->point.x,s->point.y);
+	auto g = graph.getClosestNode(this->goal);
+	//  this->logger().info("goal node {} {}", g->name, g->point);
+	ROS_INFO("goal node %s %f %f", g->name.c_str(), g->point.x,g->point.y);
+	auto p = graph.compute_plan(s, g);
+	plan.clear();
+	plan.push_back(s->point);
+	for (int i = 0; i < p.size(); i++)
+		plan.push_back(p[i]->point);
+	//  plan.push_back(this->goal);
+	
+	//  this->logger().info("plan computed, length: {}", plan.size());
+	//  for (int i = 0; i < plan.size(); i++)
+	//    this->logger().info("{}: {}", i, plan[i]);
+	
+	target_index = 0;
+	ROS_INFO("Plan computed, size = %d",(int)plan.size());
+	for (int i = 0; i < plan.size(); i++)
+		ROS_INFO("%d: (%f , %f)",i, plan[i].x,plan[i].y);
 }
 
-bool GraphPlanner::plan_computed() {
-  return plan.size() > 0;
+bool GraphPlanner::plan_computed() 
+{
+	return plan.size() > 0;
 }
 
-void GraphPlanner::done() {
-//  shell().arrived.write(true);
-//  _has_goal = false;
+void GraphPlanner::done() 
+{
+	std_msgs::Bool target_reached;
+	target_reached.data=true;;
+	target_pub_.publish(target_reached);
+
+	//  shell().arrived.write(true);
+	//  _has_goal = false;
 }
 
-bool GraphPlanner::plan_done() {
-  return ( target_index >= (int)plan.size() );
+bool GraphPlanner::plan_done() 
+{
+	return ( target_index >= (int)plan.size() );
 }
 
 void GraphPlanner::send_target() {

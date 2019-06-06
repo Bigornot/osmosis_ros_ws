@@ -42,19 +42,26 @@ private:
 	ros::Publisher goal_pub_;
 	ros::Subscriber goal_reached_sub_;
 	geometry_msgs::Point goal_;
-	enum StateDriveMission {KEYBOARD,MISSION};
+	enum StateDriveMission{CHOICE,KEYBOARD,MISSION};
 	StateDriveMission state_;
 	enum StateMission {WAITMISSION,WAITORDERDONE};
 	StateMission missionState_;
 	Mission mission_;
 	bool goal_reached_;
+	bool pub_on_;
 	
 public:
 	MissionManager();
 	void goalKeyboard();
 	void run();
-        void initMission(std::string name);
+        bool initMission(std::string name);
 	void parse(std::string line);
+
+	bool doMission();
+	bool isMissionOver();
+	void sendNextOrder();
+	char askMode();
+	bool askMission();
 
 	void driveMissionManager();
 	void MissionManagerCallbackGoalReached(const std_msgs::Bool &goal_reached);

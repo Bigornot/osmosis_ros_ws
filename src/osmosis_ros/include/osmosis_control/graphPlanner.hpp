@@ -59,6 +59,7 @@ class GraphPlanner {
     private:
       ros::NodeHandle nh_;
       ros::Publisher target_pub_;
+      ros::Publisher goal_reached_pub_;
     //  ros::Subscriber goal_id_sub_;
       ros::Subscriber goal_sub_;
       ros::Subscriber target_reached_sub_;
