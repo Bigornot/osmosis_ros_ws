@@ -30,16 +30,47 @@ float traiter_ligne_y(std::string line)
                 int pos_bracky=line.find('}',pos_y);
                 std::string ys=line.substr(pos_y+4, pos_bracky-pos_y-4);
 		y=strtof(ys.c_str(), NULL);
-		y=strtof(ys.c_str(), NULL);
         }
         return y;
 }
+
+int traiter_ligne_noeud1(std::string line)
+{
+	int n=66;
+	int pos_N=line.find('N');
+        if (pos_N>=0)
+        {
+                int pos_guill=line.find('"',pos_N);
+                std::string ns=line.substr(pos_N+1, pos_guill-pos_N-1);
+		n=strtol(ns.c_str(), NULL,0);
+        }
+
+	return n;
+}
+
+int traiter_ligne_noeud2(std::string line)
+{
+	int n=7;
+	int pos_N=line.find('N',11);
+        if (pos_N>=0)
+        {
+                int pos_guill=line.find('"',pos_N);
+                std::string ns=line.substr(pos_N+1, pos_guill-pos_N-1);
+		n=strtol(ns.c_str(), NULL,0);
+        }
+
+	return n;
+}
+
  
-void graphe_vers_liste(std::vector<float> &LX, std::vector<float> &LY)
+void graphe_vers_liste(std::vector<float> &LX, std::vector<float> &LY,std::vector<int> &LN1,std::vector<int> &LN2)
 {
         std::ifstream fichier("test.graph", std::ios::in);  // on ouvre en lecture
 	float x;
 	float y;
+	int n1;
+	int n2;
+	bool noeud=false;
 
         if(fichier)  // si l'ouverture a fonctionné
         {	
@@ -55,6 +86,21 @@ void graphe_vers_liste(std::vector<float> &LX, std::vector<float> &LY)
 				LX.push_back(x);
 				LY.push_back(y);
 			}
+			if(noeud)
+			{	
+			test=ligne.find('N');
+				if (test>=0)
+				{
+					n1=traiter_ligne_noeud1(ligne);
+					n2=traiter_ligne_noeud2(ligne);
+					LN1.push_back(n1);
+					LN2.push_back(n2);
+				}
+			}
+
+			int test2=ligne.find("edge");
+			if (test2>=0)
+				noeud=true;
         	}      
  
                fichier.close();
@@ -71,8 +117,8 @@ void graphe_vers_liste(std::vector<float> &LX, std::vector<float> &LY)
 int main()
 {
 	std::vector<float> LX,LY;
-
-	graphe_vers_liste(LX,LY);
+	std::vector<int> LN1,LN2;
+	graphe_vers_liste(LX,LY,LN1,LN2);
 	
         std::ofstream fichier("tableau.txt", std::ios::out | std::ios::trunc);
 	if (fichier)
@@ -86,7 +132,17 @@ int main()
 		{
 			fichier<<LY[i]<<" ";
 		}
-	
+			fichier<<std::endl;
+		for (int i=0; i<LN1.size();i++)
+		{
+			fichier<< LN1[i]<<" ";	
+		}
+			fichier<<std::endl;
+		for (int i=0; i<LN2.size();i++)
+		{
+			fichier<<LN2[i]<<" ";
+		}
+
 	fichier.close();
 	}
 	return 0;
