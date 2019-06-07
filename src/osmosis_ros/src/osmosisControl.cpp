@@ -93,9 +93,8 @@ void OsmosisControl::updateMove()
 {
 	geometry_msgs::Twist cmd; //0,0
 
-	// Si obstacle et Taxi
-//	if(obstacleFromScan(scan_) && taxi)
-	if(obstacleFromScan(scan_))
+	// If obstacle and taxi
+	if(obstacleFromScan(scan_) && state_and_target_.taxi)
 	{
 		//cmd=0
 	}
@@ -138,7 +137,6 @@ bool OsmosisControl::obstacleFromScan(const sensor_msgs::LaserScan& scan)
 		{
 			if (scan.ranges[i] <= far) 
 			{
-				std::cout << "PARCE QUE C'EST NOTRE OBJETTT!!!" << std::endl;
 				obs=true;
 
 				double dist = scan.ranges[i];

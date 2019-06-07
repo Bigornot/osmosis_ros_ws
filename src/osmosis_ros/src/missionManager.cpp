@@ -81,7 +81,7 @@ void MissionManager::sendNextOrder()
 {
 	pub_on_=true;
 	goal_reached_=false;
-	state_and_point_cmd_.goal=mission_.orders[mission_.step];
+	state_and_point_cmd_=mission_.orders[mission_.step];
 }
 
 char MissionManager::askMode()
@@ -109,7 +109,7 @@ bool MissionManager::askMission()
 		ok=true;
 		pub_on_=true;
 		mission_.step=0;
-		state_and_point_cmd_.goal=mission_.orders[mission_.step];
+		state_and_point_cmd_=mission_.orders[mission_.step];
 	}
 
 	return ok;
@@ -119,13 +119,13 @@ bool MissionManager::askMission()
 MissionManager::MissionManager()
 {
 	//set up the publisher for the goal topic
-	goal_pub_ = nh_.advertise<geometry_msgs::Point>("goal", 1);
+	goal_pub_ = nh_.advertise<osmosis_control::State_and_PointMsg>("goal", 1);
 	goal_reached_sub_ = nh_.subscribe("/goal_reached", 1, &MissionManager::MissionManagerCallbackGoalReached, this); 
 	goal_reached_=false;
 	pub_on_=false;
 	state_=CHOICE;
 	missionState_=WAITMISSION;
-	state_and_point_cmd_.taxi=true;
+	state_and_point_cmd_.taxi=true; // A enlever ?
 }
 
 
@@ -174,7 +174,14 @@ bool MissionManager::initMission(std::string name)
 			parse(line);
 
 		for(i=0; i<mission_.orders.size();i++)
-			std::cout<<"x:"<<mission_.orders[i].x << " y:" << mission_.orders[i].y<<std::endl;
+		{
+			std::cout<<"x:"<<mission_.orders[i].goal.x << " y:" << mission_.orders[i].goal.y << std::endl;
+			if(mission_.orders[i].taxi)
+				std::cout << " TAXI=true" << std::endl;
+			else
+				std::cout << " TAXI=false" << std::endl;
+		}
+		
 		ok=true;
 		fichier.close();
 	}
@@ -187,23 +194,23 @@ bool MissionManager::initMission(std::string name)
 
 void MissionManager::parse(std::string line)
 {
-	geometry_msgs::Point point;
-	std::string xs, ys;
-	float x, y;
-	
-	int coma=line.find(',');
-	if(coma>=0)		
+	osmosis_control::State_and_PointMsg order;
+
+	if(line.size()>=14)
 	{
-		xs=line.substr(2, coma-2);
-		ys=line.substr(coma+3);
-
-		x=stof(xs);
-		y=stof(ys);
+		int coma=line.find(',');
+		if(coma>=0)
+		{
+			int coma2=line.find(',', coma+1);
+			if(coma2>=0)
+			{
+				order.goal.x=stof(line.substr(2, coma-2));
+				order.goal.y=stof(line.substr(coma+3, coma2-coma-3));
+				order.taxi=stoi(line.substr(coma2+6,1))!=0;
 		
-		point.x=x;
-		point.y=y;
-
-		mission_.orders.push_back(point);
+				mission_.orders.push_back(order);
+			}
+		}
 	}
 }
 

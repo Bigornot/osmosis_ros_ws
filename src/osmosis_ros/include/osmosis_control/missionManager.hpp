@@ -33,7 +33,7 @@ struct Mission
 {
 	std::string name;
 	int step;
-	std::vector<geometry_msgs::Point> orders;
+	std::vector<osmosis_control::State_and_PointMsg> orders;
 };
 
 class MissionManager
