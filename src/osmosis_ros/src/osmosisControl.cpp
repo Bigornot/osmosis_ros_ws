@@ -93,13 +93,8 @@ void OsmosisControl::updateMove()
 {
 	geometry_msgs::Twist cmd; //0,0
 
-	// If obstacle and taxi
-	if(obstacleFromScan(scan_) && state_and_target_.taxi)
-	{
-		//cmd=0
-	}
-
-	else
+	// if no obstacle or taxi mode on -> avoid
+	if(!obstacleFromScan(scan_) || state_and_target_.taxi)
 	{
 		double xPos = robot_pose.x - state_and_target_.goal.x;
 		double yPos = robot_pose.y - state_and_target_.goal.y;

@@ -175,11 +175,11 @@ bool MissionManager::initMission(std::string name)
 
 		for(i=0; i<mission_.orders.size();i++)
 		{
-			std::cout<<"x:"<<mission_.orders[i].goal.x << " y:" << mission_.orders[i].goal.y << std::endl;
+			std::cout<<"x:"<<mission_.orders[i].goal.x << " y:" << mission_.orders[i].goal.y;
 			if(mission_.orders[i].taxi)
-				std::cout << " TAXI=true" << std::endl;
+				std::cout << " taxi=true" << std::endl;
 			else
-				std::cout << " TAXI=false" << std::endl;
+				std::cout << " taxi=false" << std::endl;
 		}
 		
 		ok=true;
