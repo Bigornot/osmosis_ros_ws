@@ -13,9 +13,9 @@ void Localization::localizationCallbackOdom(const nav_msgs::Odometry::ConstPtr& 
 	ROS_INFO("Vel-> Linear: [%f], Angular: [%f]", msg->twist.twist.linear.x,msg->twist.twist.angular.z);
 	*/
 
-	this->robot_pose.x = msg->pose.pose.position.x;
-	this->robot_pose.y = msg->pose.pose.position.y;
-	this->robot_pose.theta =  tf::getYaw(pose.getRotation());
+	robot_pose.x = msg->pose.pose.position.x;
+	robot_pose.y = msg->pose.pose.position.y;
+	robot_pose.theta =  tf::getYaw(pose.getRotation());
 }
 
 //! ROS node initialization

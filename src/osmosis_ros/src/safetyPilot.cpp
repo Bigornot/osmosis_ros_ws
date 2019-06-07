@@ -68,25 +68,25 @@ void SafetyPilot::computeCommandCtrlTeleop()
 	else cmd=base_cmd_ctrl_;
 
 	//check if we need to override the command due to safe stop from laserScan
-	cmd=updateCmdWithLaserScan(cmd,this->scan_);
+	cmd=updateCmdWithLaserScan(cmd,scan_);
 
-	this->base_cmd_=cmd; // command to publish
+	base_cmd_=cmd; // command to publish
 }
 
 void SafetyPilot::safetyPilotCallbackCmdVelCtrl(const geometry_msgs::Twist & cmd_msg)
 {
-	this->base_cmd_ctrl_ = cmd_msg;
+	base_cmd_ctrl_ = cmd_msg;
 }
 
 
 void SafetyPilot::safetyPilotCallbackScan(const sensor_msgs::LaserScan & scan_msg)
 {
-	this->scan_=scan_msg;
+	scan_=scan_msg;
 }
 
 void SafetyPilot::safetyPilotCallbackTeleop(const osmosis_control::TeleopMsg & teleop_msg)
 {
-	this->base_cmd_teleop_=teleop_msg;
+	base_cmd_teleop_=teleop_msg;
 }
 
 

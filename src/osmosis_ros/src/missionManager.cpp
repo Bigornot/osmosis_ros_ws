@@ -216,7 +216,7 @@ void MissionManager::parse(std::string line)
 
 bool MissionManager::is_goal_reached()
 {
-	return this->goal_reached_;
+	return goal_reached_;
 }
 
 void MissionManager::run()

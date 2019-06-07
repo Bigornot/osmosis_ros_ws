@@ -42,10 +42,7 @@ void Joy_teleop::teleopCallbackJoy(const sensor_msgs::Joy & joy_msg)
 {
 	// detection du front montant
 	if(joy_msg_.buttons[7]==0 && joy_msg.buttons[7]==1)
-	{
-		std::cout << "Front montant" << std::endl;
 		button_pressed_=true;
-	}
 
         joy_msg_=joy_msg;
 

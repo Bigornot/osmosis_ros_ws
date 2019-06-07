@@ -38,8 +38,8 @@ void GraphPlanner::callbackGoal(const osmosis_control::State_and_PointMsg & theg
 
 void GraphPlanner::callbackPose(const geometry_msgs::Pose2D & msg)
 {
-	this->current.x = msg.x;
-	this->current.y = msg.y;
+	current.x = msg.x;
+	current.y = msg.y;
 	//ROS_INFO("NEW POS : x: [%f], y:[%f]",this->current.x,this->current.y);
 }
 
@@ -82,7 +82,7 @@ bool GraphPlanner::new_goal()
 
 void GraphPlanner::compute_plan() 
 {
-	auto s = graph.getClosestNode(this->current);
+	auto s = graph.getClosestNode(current);
 	//  this->logger().info("start node {} {}", s->name, s->point);
 	ROS_INFO("start node %s %f %f", s->name.c_str(), s->point.x,s->point.y);
 	auto g = graph.getClosestNode(state_and_goal_.goal);
@@ -152,9 +152,9 @@ void GraphPlanner::execute_plan()
 	//this->current = this->shell().pose.read().location;
 	//double d = Graph::distance(this->current, plan[target_index]);
 	//this->logger().debug("distance to current target {}", d);
-	ROS_INFO("POSE x: %f  y:%f", this->current.x , this->current.y );
+	ROS_INFO("POSE x: %f  y:%f", current.x , current.y );
 	ROS_INFO("PLAN x: %f  y:%f", plan[target_index].x , plan[target_index].y );
-	ROS_INFO("dist to target = %f", Graph::distance(this->current, plan[target_index]));
+	ROS_INFO("dist to target = %f", Graph::distance(current, plan[target_index]));
 }
 
 // this method should be placed somewhere else... where ???
@@ -165,7 +165,7 @@ void GraphPlanner::initGraph(const std::string& filename)
 	s= ros::package::getPath("osmosis_control");
 	s=s.append("/").append(filename);
 	g=parse(s); // grapIO.hpp method
-	this->graph=g;
+	graph=g;
 
 	// to check
 	//std::cout<<"HEY : "<<g.getNode("N49")->point.x<<std::endl;
@@ -237,7 +237,7 @@ void GraphPlanner::run()
 	{
 		//std::cout <<"HEY";
 		//this->goalKeyboard();
-		this-> graphPlannerFSM();
+		this->graphPlannerFSM();
 
 		ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate

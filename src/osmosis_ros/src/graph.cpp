@@ -10,8 +10,8 @@
 
 Node::Node(double x, double y)
 {
-	this->point.x = x;
-	this->point.y = y;
+	point.x = x;
+	point.y = y;
 }
 
 bool compare_astar (std::string first, std::string second,

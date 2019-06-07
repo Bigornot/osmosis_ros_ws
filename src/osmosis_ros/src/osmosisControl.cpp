@@ -12,12 +12,12 @@ void OsmosisControl::osmosisControlCallbackGoal(const osmosis_control::State_and
 
 void OsmosisControl::osmosisControlCallbackScan(const sensor_msgs::LaserScan & thescan)
 {
-	this->scan_=thescan;
+	scan_=thescan;
 }
 
 void OsmosisControl::osmosisControlCallbackPose(const geometry_msgs::Pose2D & msg)
 {
-	this->robot_pose = msg;
+	robot_pose = msg;
 }
 
 void OsmosisControl::publish_is_arrived()
@@ -259,7 +259,7 @@ void OsmosisControl::osmosisControlFSM()
 
 		case move_to_goal:
 			ROS_INFO("MOVE");
-			ROS_INFO("x: %f  y:%f", this->robot_pose.x , this->robot_pose.y );
+			ROS_INFO("x: %f  y:%f", robot_pose.x , robot_pose.y );
 			if (new_goal()) current_state=move_to_goal;
 			else if (is_arrived()) current_state=arrived_goal;
 			else updateMove();
