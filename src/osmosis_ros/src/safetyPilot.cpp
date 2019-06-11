@@ -9,7 +9,7 @@ geometry_msgs::Twist SafetyPilot::updateCmdWithLaserScan(geometry_msgs::Twist cm
 	double obs_dist = std::numeric_limits<double>::max();
 	double obs_lat = std::numeric_limits<double>::max();
 
-	for (int i = 0; i < s.ranges.size(); i++) 
+	for (int i = 0; i < s.ranges.size(); i++)
 	{
 		double r = s.ranges[i];
 		if (r > s.range_min)
@@ -37,7 +37,7 @@ geometry_msgs::Twist SafetyPilot::updateCmdWithLaserScan(geometry_msgs::Twist cm
 
 		}
 	}
-	else {/*
+	else {
 		cmd.linear.x = fmin(cmd.linear.x, + max_linear);
 		cmd.linear.y = fmin(cmd.linear.y, + max_linear);
 		cmd.linear.x = fmax(cmd.linear.x, - max_linear);
@@ -45,7 +45,7 @@ geometry_msgs::Twist SafetyPilot::updateCmdWithLaserScan(geometry_msgs::Twist cm
 		cmd.angular.x = fmin(cmd.angular.x, + max_angular);
 		cmd.angular.y = fmin(cmd.angular.y, + max_angular);
 		cmd.angular.x = fmax(cmd.angular.x, - max_angular);
-		cmd.angular.y = fmax(cmd.angular.y, - max_angular);*/
+		cmd.angular.y = fmax(cmd.angular.y, - max_angular);
 	}
 
 	// logger().debug("Sending safe command {}", i);
@@ -120,7 +120,7 @@ int main(int argc, char** argv)
 {
 	//init the ROS node
 	ros::init(argc, argv, "safety_pilot_node");
-	
+
 	SafetyPilot mySafePilot;
 	mySafePilot.run();
 }
