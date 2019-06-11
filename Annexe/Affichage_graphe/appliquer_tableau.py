@@ -67,18 +67,21 @@ for i in range(len(LN2)):
 
 
 for i in range(len(LN1)):
-
 	deltax=float(LX[LN2[i]]-LX[LN1[i]])
 	deltay=float(LY[LN2[i]]-LY[LN1[i]])
 
-	a=deltay/deltax
+	if deltax=0:
+		a=9999999999
+	else:
+		a=deltay/deltax
+
 	b=-a*LX[LN1[i]]+LY[LN1[i]]
 
 	X=range(abs(LX[LN2[i]]-LX[LN1[i]]))
 	for x in X:
 		y=int(a*(x+min(LX[LN1[i]],LX[LN2[i]]))+b)
 		image[y][x+min(LX[LN1[i]],LX[LN2[i]])]=(0, 0, 0)
-	
+
 	Y=range(abs(LY[LN2[i]]-LY[LN1[i]]))
 	for y in Y:
 		x=int( ( y+min(LY[LN1[i]],LY[LN2[i]]) - b)/a  )
@@ -101,4 +104,3 @@ for i in range(len(LN1)):
 
 
 mpimg.imsave("blagnac_graphe.jpg",image)
-
