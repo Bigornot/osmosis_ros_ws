@@ -1,6 +1,6 @@
 //juil2018 J.Guiochet @ LAAS
 #include <osmosis_control/missionManager.hpp>
-
+// test
 
 void MissionManager::driveMissionManager()
 {
