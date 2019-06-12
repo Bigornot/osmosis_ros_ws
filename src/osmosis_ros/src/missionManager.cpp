@@ -36,35 +36,44 @@ void MissionManager::driveMissionManager()
 				break;
 
 				case EXECUTEMISSION:
-					if(this->doMission())
+					this->doMission();
+					if(missionAborted_)
+					{
+						std::cout<<"Mission aborted !" << std::endl;
+						missionState_=WAITMISSION;
+						state_=IDLE;
+					}
+
+					else if(missionOver_)
 					{
 						std::cout<<"Mission done !" << std::endl;
 						missionState_=WAITMISSION;
 						state_=IDLE;
 					}
 					break;
-
 			}
 			break;
         }
   }
 
-bool MissionManager::doMission()
+void MissionManager::doMission()
 {
-	bool missionOver=false;
+	if(ros::Time::now()-timeStartMission_>timeout_)
+	{
+		missionAborted_=true;
+		missionOver_=true;
+	}
 
-	if(goal_reached_)
+	else if(goal_reached_)
 	{
 		mission_.step++;
 		if(this->isMissionOver())
 		{
-			missionOver=true;
+			missionOver_=true;
 		}
 		else
 			this->sendNextOrder();
 	}
-
-	return missionOver;
 }
 
 bool MissionManager::isMissionOver()
@@ -107,6 +116,8 @@ bool MissionManager::askMission()
 	if(initMission(name))
 	{
 		ok=true;
+		timeStartMission_=ros::Time::now();
+		missionOver_=false;
 		pub_on_=true;
 		mission_.step=0;
 		state_and_point_cmd_=mission_.orders[mission_.step];
@@ -125,7 +136,11 @@ MissionManager::MissionManager()
 	pub_on_=false;
 	state_=IDLE;
 	missionState_=WAITMISSION;
-	state_and_point_cmd_.taxi=true; // A enlever ?
+	state_and_point_cmd_.taxi=true;
+	missionAborted_=false;
+	missionOver_=true;
+	timeStartMission_=ros::Time::now();
+	timeout_=ros::Duration(30*60); // Timeout after the mission is stopped
 }
 
 
@@ -243,9 +258,9 @@ void MissionManager::run()
 
 int main(int argc, char** argv)
 {
-  //init the ROS node
-  ros::init(argc, argv, "navigation_node");
+	//init the ROS node
+	ros::init(argc, argv, "mission_manager_node");
 
-  MissionManager myMManager;
-  myMManager.run();
+	MissionManager myMManager;
+	myMManager.run();
 }
