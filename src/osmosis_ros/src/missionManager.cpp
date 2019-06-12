@@ -6,21 +6,33 @@ void MissionManager::driveMissionManager()
 	switch (state_)
 	{
 		case IDLE:
+			ROS_INFO("IDLE\n");
 			if(hmi_mission_)
+			{
 				state_=MISSION;
+				hmi_mission_=false;
+				hmi_point_=false;
+			}
 			else if(hmi_point_)
-				state_=POINT;
+			{
+				state_=POINT;	
+				hmi_mission_=false;
+				hmi_point_=false;
+			}
 			break;
 
 		case POINT:
+			ROS_INFO("POINT\n");
 			switch (pointState_)
 			{
 				case TARGETPOINT:
+					ROS_INFO("TARGETPOINT\n");
 					goalKeyboard();
 					pointState_=WAITPOINT;
 					break;
 				
 				case WAITPOINT:
+					ROS_INFO("WAITPOINT\n");
 					if(goal_reached_)
 					{
 						pointDone();
@@ -33,14 +45,17 @@ void MissionManager::driveMissionManager()
 		
 
 		case MISSION:
+			ROS_INFO("MISSION\n");
 			switch (missionState_)
 			{
 				case INITMISSION:
+					ROS_INFO("INITMISSION\n");
 					this->initMission(mission_name_);
 					missionState_=EXECUTEMISSION;
 					break;
 
 				case EXECUTEMISSION:
+					ROS_INFO("EXECUTEMISSION\n");
 					this->doMission();
 					if(missionAborted_)
 					{
@@ -133,7 +148,7 @@ MissionManager::MissionManager()
 	hmi_done_pub_ = nh_.advertise<osmosis_control::Hmi_DoneMsg>("hmi_done", 1);
 	goal_reached_sub_ = nh_.subscribe("/goal_reached", 1, &MissionManager::MissionManagerCallbackGoalReached, this);
 	emergency_sub_ = nh_.subscribe("/emergency_shutdown", 1, &MissionManager::MissionManagerCallbackEmergencyHit, this);
-	hmi_order_sub_ = nh_.subscribe("/hmi_order", 1, &MissionManager::MissionManagerCallbackOrder, this);
+	hmi_order_sub_ = nh_.subscribe("/order", 1, &MissionManager::MissionManagerCallbackOrder, this);
 
 	goal_reached_=false;
 	pub_on_=false;
@@ -165,6 +180,8 @@ void MissionManager::MissionManagerCallbackOrder(const osmosis_control::Hmi_Orde
 {
 	if(order.doMission)
 	{
+		ROS_INFO("MISSION\n");
+
 		hmi_mission_=true;
 		hmi_point_=false;
 		mission_name_=order.mission_name;
@@ -172,6 +189,8 @@ void MissionManager::MissionManagerCallbackOrder(const osmosis_control::Hmi_Orde
 
 	else
 	{
+		ROS_INFO("POINT\n");
+
 		hmi_mission_=false;
 		hmi_point_=true;
 		state_and_point_cmd_=order.state_and_point;

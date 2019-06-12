@@ -77,19 +77,17 @@ char HMI::askMode()
 bool HMI::askMission()
 {
 	bool ok=false;
+	orders_cmd_.doMission=true;
 
 	std::string name;
 	std::cout << "Enter the mission : " << std::endl;
 	std::cin >> name;
 
-	if(initMission(name))
+	if(checkMission(name))
 	{
 		ok=true;
-		timeStartMission_=ros::Time::now();
 		done_mission_=false;
 		pub_on_=true;
-		mission_.step=0;
-		state_and_point_cmd_=mission_.orders[mission_.step];
 	}
 	return ok;
 }
@@ -112,8 +110,6 @@ HMI::HMI()
 	done_point_=false;
 	done_mission_=true;
 	pub_on_=false;
-	timeStartMission_=ros::Time::now();
-	timeout_=ros::Duration(30*60); // Timeout after the mission is stopped
 }
 
 void HMI::goalKeyboard()
@@ -130,13 +126,13 @@ void HMI::goalKeyboard()
 	orders_cmd_.doMission=false;
 }
 
-bool HMI::initMission(std::string name)
+bool HMI::checkMission(std::string name)
 {
 	bool ok=false;
 	goal_reached_=false;
-  orders_cmd_.mission_name=name;
+	orders_cmd_.mission_name=name;
 
-	std::cout << "Init mission" << std::endl;
+	std::cout << "Mission ok" << std::endl;
 
 	std::string filename=ros::package::getPath("osmosis_control");
 	filename.append("/MISSION_" + name + ".miss");
@@ -145,26 +141,6 @@ bool HMI::initMission(std::string name)
 
 	if(fichier)
 	{
-
-		int i;
-		int taille=mission_.orders.size();
-		for(i=0;i<taille;i++)
-			mission_.orders.pop_back();
-
-		std::string line;
-
-		while(getline(fichier, line))
-			parse(line);
-
-		for(i=0; i<mission_.orders.size();i++)
-		{
-			std::cout<<"x:"<<mission_.orders[i].goal.x << " y:" << mission_.orders[i].goal.y;
-			if(mission_.orders[i].taxi)
-				std::cout << " taxi=true" << std::endl;
-			else
-				std::cout << " taxi=false" << std::endl;
-		}
-
 		ok=true;
 		fichier.close();
 	}
@@ -173,29 +149,6 @@ bool HMI::initMission(std::string name)
 		ROS_ERROR("Mission Not Found !\n");
 
 	return ok;
-}
-
-void HMI::parse(std::string line)
-{
-	osmosis_control::State_and_PointMsg order;
-
-	if(line.size()>=14)
-	{
-		int coma=line.find(',');
-		if(coma>=0)
-		{
-			int coma2=line.find(',', coma+1);
-			if(coma2>=0)
-			{
-				order.goal.x=stof(line.substr(2, coma-2));
-				order.goal.y=stof(line.substr(coma+3, coma2-coma-3));
-				order.taxi=stoi(line.substr(coma2+6,1))!=0;
-
-				mission_.orders.push_back(order);
-				orders_cmd_.doMission=true;
-			}
-		}
-	}
 }
 
 void HMI::run()
@@ -207,7 +160,7 @@ void HMI::run()
 		if(pub_on_)
 		{
 			orders_cmd_.state_and_point=state_and_point_cmd_;
-			orders_pub_.publish(state_and_point_cmd_);
+			orders_pub_.publish(orders_cmd_);
 			pub_on_=false;
 		}
 	 	ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages

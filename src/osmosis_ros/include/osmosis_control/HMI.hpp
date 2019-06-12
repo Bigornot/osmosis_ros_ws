@@ -31,28 +31,20 @@
 #include "osmosis_control/Hmi_OrderMsg.h"
 #include "osmosis_control/Hmi_DoneMsg.h"
 
-struct Mission
-{
-	std::string name;
-	int step;
-	std::vector<osmosis_control::State_and_PointMsg> orders;
-};
-
 class HMI
 {
 private:
 	ros::NodeHandle nh_;
 	ros::Publisher orders_pub_;
 	ros::Subscriber done_sub_;
+
 	enum StateDriveHMI{IDLE,POINT,MISSION};
 	StateDriveHMI state_;
 	enum StateMission {ASKMISSION,WAITMISSION};
 	StateMission missionState_;
 	enum StatePoint {TARGETPOINT,WAITPOINT};
 	StatePoint pointState_;
-	ros::Time timeStartMission_;
-	ros::Duration timeout_;
-	Mission mission_;
+
 	osmosis_control::State_and_PointMsg state_and_point_cmd_;
 	osmosis_control::Hmi_OrderMsg orders_cmd_;
 
@@ -66,12 +58,11 @@ public:
 
 	void goalKeyboard();
 	void run();
-  bool initMission(std::string name);
-	void parse(std::string line);
+	bool checkMission(std::string name);
 
 	char askMode();
 	bool askMission();
-  void HMICallbackHmiOrder(const osmosis_control::Hmi_DoneMsg &done);
+	void HMICallbackHmiOrder(const osmosis_control::Hmi_DoneMsg &done);
 	void driveHMI();
 
 
