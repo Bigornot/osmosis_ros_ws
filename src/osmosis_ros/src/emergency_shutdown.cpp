@@ -7,8 +7,9 @@ void EmergencyShutdown::driveEmergencyShutdown()
 	switch (state_)
 	{
 		case NOMINAL:
+			std::cout << "Press Return for emergency stop :";
 			std::cin >> emergency_hit;
-			state_=EMERGENCY;
+			state_=EMERGENCYHIT;
 		break;
 
 		case EMERGENCYHIT:
@@ -18,11 +19,13 @@ void EmergencyShutdown::driveEmergencyShutdown()
 		break;
 
 		case EMERGENCY:
+			ROS_ERROR("\nEMERGENCY STOP !\n");
 			std::cin >> emergency_hit;
 			state_=NOMINAL;
 		break;
   }
 }
+
 //! ROS node initialization
 EmergencyShutdown::EmergencyShutdown()
 {
@@ -36,11 +39,11 @@ void EmergencyShutdown::run()
 {
 	ros::Rate loop_rate(10); //using 10 makes the robot oscillating trajectories, TBD check with the PF algo ?
 	while (nh_.ok())
-	    {
-				this->driveEmergencyShutdown();
-			 	ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
-				loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate
-	    }
+	{
+		this->driveEmergencyShutdown();
+		ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
+		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate
+	}
 }
 
 int main(int argc, char** argv)

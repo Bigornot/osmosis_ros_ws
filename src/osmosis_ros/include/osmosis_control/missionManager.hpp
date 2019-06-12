@@ -42,6 +42,7 @@ private:
 	ros::NodeHandle nh_;
 	ros::Publisher goal_pub_;
 	ros::Subscriber goal_reached_sub_;
+	ros::Subscriber emergency_sub_;
 	//geometry_msgs::Point goal_;
 	osmosis_control::State_and_PointMsg state_and_point_cmd_;
 	enum StateDriveMission{IDLE,TARGETPOINT,MISSION};

@@ -40,6 +40,7 @@ void MissionManager::driveMissionManager()
 					if(missionAborted_)
 					{
 						std::cout<<"Mission aborted !" << std::endl;
+						missionAborted=false;
 						missionState_=WAITMISSION;
 						state_=IDLE;
 					}
@@ -132,6 +133,7 @@ MissionManager::MissionManager()
 	//set up the publisher for the goal topic
 	goal_pub_ = nh_.advertise<osmosis_control::State_and_PointMsg>("goal", 1);
 	goal_reached_sub_ = nh_.subscribe("/goal_reached", 1, &MissionManager::MissionManagerCallbackGoalReached, this);
+	emergency_sub_ = nh_.subscribe("/emergency_shutdown", 1, &MissionManager::MissionManagerCallbackEmergencyHit, this);
 	goal_reached_=false;
 	pub_on_=false;
 	state_=IDLE;
@@ -151,8 +153,8 @@ void MissionManager::MissionManagerCallbackGoalReached(const std_msgs::Bool &goa
 
 void MissionManager::MissionManagerCallbackEmergencyHit(const std_msgs::Bool &emergency_hit)
 {
-	//missionAborted_=true;
-	//missionOver_=true;
+	missionAborted_=emergency_hit.data;
+	missionOver_=emergency_hit.data;
 }
 
 void MissionManager::goalKeyboard()
