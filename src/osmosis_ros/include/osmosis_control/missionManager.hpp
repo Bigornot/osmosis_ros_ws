@@ -51,6 +51,10 @@ private:
 	Mission mission_;
 	bool goal_reached_;
 	bool pub_on_;
+	bool missionOver_;
+	bool missionAborted_;
+	ros::Time timeStartMission_;
+	ros::Duration timeout_;
 	
 public:
 	MissionManager();
@@ -59,7 +63,7 @@ public:
         bool initMission(std::string name);
 	void parse(std::string line);
 
-	bool doMission();
+	void doMission();
 	bool isMissionOver();
 	void sendNextOrder();
 	char askMode();
