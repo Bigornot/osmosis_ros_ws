@@ -159,6 +159,7 @@ add_executable(graph_planner_node src/graphPlanner.cpp src/graph.cpp)
 add_executable(mission_manager_node src/missionManager.cpp)
 add_executable(joy_teleop_node src/joy_teleop.cpp)
 add_executable(emergency_shutdown_node src/emergency_shutdown.cpp)
+add_executable(HMI_node src/HMI.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -187,6 +188,9 @@ add_executable(emergency_shutdown_node src/emergency_shutdown.cpp)
  target_link_libraries(joy_teleop_node ${catkin_LIBRARIES})
 
  target_link_libraries(emergency_shutdown_node ${catkin_LIBRARIES})
+
+ target_link_libraries(HMI_node ${catkin_LIBRARIES})
+
 
 
  #target_link_libraries(json  ${catkin_LIBRARIES}  ${JSONCPP_LIBRARIES})
