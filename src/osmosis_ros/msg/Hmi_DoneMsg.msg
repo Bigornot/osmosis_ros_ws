@@ -1,0 +1,2 @@
+bool point
+bool mission

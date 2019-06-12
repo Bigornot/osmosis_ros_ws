@@ -1,61 +1,92 @@
 //juil2018 J.Guiochet @ LAAS
 #include <osmosis_control/missionManager.hpp>
-// test
 
 void MissionManager::driveMissionManager()
 {
 	switch (state_)
 	{
 		case IDLE:
-			char mode;
-			mode=askMode();
-			if(mode=='K'||mode=='k')
-				state_=TARGETPOINT;
-			else if(mode=='M'||mode=='m')
+			if(hmi_mission_)
 				state_=MISSION;
-			else
-				ROS_ERROR("Input Error : Please try again.\n");
+			else if(hmi_point_)
+				state_=POINT;
 			break;
 
-		case TARGETPOINT:
-			goalKeyboard();
-			state_=IDLE;
+		case POINT:
+			switch (pointState_)
+			{
+				case TARGETPOINT:
+					goalKeyboard();
+					pointState_=WAITPOINT;
+					break;
+				
+				case WAITPOINT:
+					if(goal_reached_)
+					{
+						pointDone();
+						pointState_=TARGETPOINT;
+						state_=IDLE;
+					}
+					break;
+			}
 			break;
+		
 
 		case MISSION:
 			switch (missionState_)
 			{
-				case WAITMISSION:
-					if(askMission())
-						missionState_=EXECUTEMISSION;
-					else
-					{
-						ROS_ERROR("Mission Aborted");
-						state_=IDLE;
-					}
-				break;
+				case INITMISSION:
+					this->initMission(mission_name_);
+					missionState_=EXECUTEMISSION;
+					break;
 
 				case EXECUTEMISSION:
 					this->doMission();
 					if(missionAborted_)
 					{
-						std::cout<<"Mission aborted !" << std::endl;
-						missionAborted=false;
-						missionState_=WAITMISSION;
+						abortMission();
+						missionState_=INITMISSION;
 						state_=IDLE;
 					}
 
 					else if(missionOver_)
 					{
+						missionDone();
 						std::cout<<"Mission done !" << std::endl;
-						missionState_=WAITMISSION;
+						missionState_=INITMISSION;
 						state_=IDLE;
 					}
 					break;
 			}
 			break;
         }
-  }
+}
+
+void MissionManager::pointDone()
+{
+	osmosis_control::Hmi_DoneMsg done;
+	done.mission=false;
+	done.point=true;
+	hmi_done_pub_.publish(done);
+}
+
+void MissionManager::abortMission()
+{
+	missionAborted_=false;
+
+	osmosis_control::Hmi_DoneMsg done;
+	done.mission=true;
+	done.point=false;
+	hmi_done_pub_.publish(done);
+}
+
+void MissionManager::missionDone()
+{
+	osmosis_control::Hmi_DoneMsg done;
+	done.mission=true;
+	done.point=false;
+	hmi_done_pub_.publish(done);
+}
 
 void MissionManager::doMission()
 {
@@ -94,53 +125,26 @@ void MissionManager::sendNextOrder()
 	state_and_point_cmd_=mission_.orders[mission_.step];
 }
 
-char MissionManager::askMode()
-{
-	char mode;
-	std::string input;
-
-	std::cout << std::endl << "Enter the mode : ('K':keyboard 'M':mission)" << std::endl;
-	std::cin >> input;
-	mode=input[0];
-
-	return mode;
-}
-
-bool MissionManager::askMission()
-{
-	bool ok=false;
-
-	std::string name;
-	std::cout << "Enter the mission : " << std::endl;
-	std::cin >> name;
-
-	if(initMission(name))
-	{
-		ok=true;
-		timeStartMission_=ros::Time::now();
-		missionOver_=false;
-		pub_on_=true;
-		mission_.step=0;
-		state_and_point_cmd_=mission_.orders[mission_.step];
-	}
-
-	return ok;
-}
-
 //! ROS node initialization
 MissionManager::MissionManager()
 {
 	//set up the publisher for the goal topic
 	goal_pub_ = nh_.advertise<osmosis_control::State_and_PointMsg>("goal", 1);
+	hmi_done_pub_ = nh_.advertise<osmosis_control::Hmi_DoneMsg>("hmi_done", 1);
 	goal_reached_sub_ = nh_.subscribe("/goal_reached", 1, &MissionManager::MissionManagerCallbackGoalReached, this);
 	emergency_sub_ = nh_.subscribe("/emergency_shutdown", 1, &MissionManager::MissionManagerCallbackEmergencyHit, this);
+	hmi_order_sub_ = nh_.subscribe("/hmi_order", 1, &MissionManager::MissionManagerCallbackOrder, this);
+
 	goal_reached_=false;
 	pub_on_=false;
 	state_=IDLE;
-	missionState_=WAITMISSION;
+	missionState_=INITMISSION;
+	pointState_=TARGETPOINT;
 	state_and_point_cmd_.taxi=true;
 	missionAborted_=false;
 	missionOver_=true;
+	hmi_point_=false;
+	hmi_mission_=false;
 	timeStartMission_=ros::Time::now();
 	timeout_=ros::Duration(30*60); // Timeout after the mission is stopped
 }
@@ -157,23 +161,33 @@ void MissionManager::MissionManagerCallbackEmergencyHit(const std_msgs::Bool &em
 	missionOver_=emergency_hit.data;
 }
 
-void MissionManager::goalKeyboard()
+void MissionManager::MissionManagerCallbackOrder(const osmosis_control::Hmi_OrderMsg &order)
 {
-	geometry_msgs::Point thegoal;
-	std::cout << "Enter a new goal (x,y)\nx= ";
-	std::cin >> thegoal.x;
+	if(order.doMission)
+	{
+		hmi_mission_=true;
+		hmi_point_=false;
+		mission_name_=order.mission_name;
+	}
 
-	std::cout << "y= ";
-	std::cin >> thegoal.y;
-	state_=TARGETPOINT;
-
-	pub_on_=true;
-	state_and_point_cmd_.goal=thegoal;
+	else
+	{
+		hmi_mission_=false;
+		hmi_point_=true;
+		state_and_point_cmd_=order.state_and_point;
+	}
 }
 
-bool MissionManager::initMission(std::string name)
+void MissionManager::goalKeyboard()
 {
-	bool ok=false;
+	goal_reached_=false;
+	pub_on_=true;
+	hmi_mission_=false;
+	hmi_point_=false;
+}
+
+void MissionManager::initMission(std::string name)
+{
 	goal_reached_=false;
 
 	std::cout << "Init mission" << std::endl;
@@ -181,38 +195,33 @@ bool MissionManager::initMission(std::string name)
 	std::string filename=ros::package::getPath("osmosis_control");
 	filename.append("/MISSION_" + name + ".miss");
 
+	int i;
+	int taille=mission_.orders.size();
+	for(i=0;i<taille;i++)
+		mission_.orders.pop_back();
+
 	std::ifstream fichier(filename, std::ios::in);
+	std::string line;
 
-	if(fichier)
+	while(getline(fichier, line))
+		parse(line);
+	fichier.close();
+
+
+	for(i=0; i<mission_.orders.size();i++)
 	{
-
-		int i;
-		int taille=mission_.orders.size();
-		for(i=0;i<taille;i++)
-			mission_.orders.pop_back();
-
-		std::string line;
-
-		while(getline(fichier, line))
-			parse(line);
-
-		for(i=0; i<mission_.orders.size();i++)
-		{
-			std::cout<<"x:"<<mission_.orders[i].goal.x << " y:" << mission_.orders[i].goal.y;
-			if(mission_.orders[i].taxi)
-				std::cout << " taxi=true" << std::endl;
-			else
-				std::cout << " taxi=false" << std::endl;
-		}
-
-		ok=true;
-		fichier.close();
+		std::cout<<"x:"<<mission_.orders[i].goal.x << " y:" << mission_.orders[i].goal.y;
+		if(mission_.orders[i].taxi)
+			std::cout << " taxi=true" << std::endl;
+		else
+			std::cout << " taxi=false" << std::endl;
 	}
 
-	else
-		ROS_ERROR("Mission Not Found !\n");
-
-	return ok;
+	timeStartMission_=ros::Time::now();
+	missionOver_=false;
+	mission_.step=0;
+	pub_on_=true;
+	state_and_point_cmd_=mission_.orders[mission_.step];
 }
 
 void MissionManager::parse(std::string line)

@@ -28,6 +28,8 @@
 #include <ros/package.h>
 #include "std_msgs/Bool.h"
 #include "osmosis_control/State_and_PointMsg.h"
+#include "osmosis_control/Hmi_OrderMsg.h"
+#include "osmosis_control/Hmi_DoneMsg.h"
 
 struct Mission
 {
@@ -41,19 +43,29 @@ class MissionManager
 private:
 	ros::NodeHandle nh_;
 	ros::Publisher goal_pub_;
+	ros::Publisher hmi_done_pub_;
 	ros::Subscriber goal_reached_sub_;
 	ros::Subscriber emergency_sub_;
-	//geometry_msgs::Point goal_;
-	osmosis_control::State_and_PointMsg state_and_point_cmd_;
-	enum StateDriveMission{IDLE,TARGETPOINT,MISSION};
+	ros::Subscriber hmi_order_sub_;
+
+	enum StateDriveMission{IDLE,POINT,MISSION};
 	StateDriveMission state_;
-	enum StateMission {WAITMISSION,EXECUTEMISSION};
+	enum StateMission {INITMISSION,EXECUTEMISSION};
 	StateMission missionState_;
+	enum StatePoint {TARGETPOINT,WAITPOINT};
+	StatePoint pointState_;
+
+	osmosis_control::State_and_PointMsg state_and_point_cmd_;
 	Mission mission_;
+	std::string mission_name_;
+
 	bool goal_reached_;
 	bool pub_on_;
 	bool missionOver_;
 	bool missionAborted_;
+	bool hmi_point_;
+	bool hmi_mission_;
+
 	ros::Time timeStartMission_;
 	ros::Duration timeout_;
 
@@ -61,18 +73,22 @@ public:
 	MissionManager();
 	void goalKeyboard();
 	void run();
-        bool initMission(std::string name);
+        void initMission(std::string name);
 	void parse(std::string line);
 
 	void doMission();
 	bool isMissionOver();
 	void sendNextOrder();
-	char askMode();
-	bool askMission();
+
+	void abortMission();
+	void missionDone();
+
+	void pointDone();
 
 	void driveMissionManager();
 	void MissionManagerCallbackGoalReached(const std_msgs::Bool &goal_reached);
-  void MissionManagerCallbackEmergencyHit(const std_msgs::Bool &emergency_hit);
+	void MissionManagerCallbackEmergencyHit(const std_msgs::Bool &emergency_hit);
+	void MissionManagerCallbackOrder(const osmosis_control::Hmi_OrderMsg &order);
 	bool is_goal_reached();
 }; // end of class
 
