@@ -17,31 +17,30 @@ void HMI::driveHMI()
 				ROS_ERROR("Input Error : Please try again.\n");
 			break;
 
-
-
-
 		case POINT:
-
 			switch(pointState_)
 			{
 				case TARGETPOINT:
 					goalKeyboard();
+					pointState_=WAITPOINT;
 					break;
 
 				case WAITPOINT:
 					if (done_point_)
+						{
 						state_=IDLE;
+						pointState_=TARGETPOINT;
+						}
 					break;
 			}
-
 			break;
 
 			case MISSION:
 				switch (missionState_)
 				{
-					case WAITMISSION:
+					case ASKMISSION:
 						if(askMission())
-							missionState_=EXECUTEMISSION;
+							missionState_=WAITMISSION;
 						else
 						{
 							ROS_ERROR("Mission Aborted");
@@ -49,19 +48,11 @@ void HMI::driveHMI()
 						}
 					break;
 
-					case EXECUTEMISSION:
-						this->doMission();
-						if(missionAborted_)
-						{
-							std::cout<<"Mission aborted !" << std::endl;
-							missionAborted_=false;
-							missionState_=WAITMISSION;
-							state_=IDLE;
-						}
-						else if(missionOver_)
+					case WAITMISSION:
+						if(done_mission_)
 						{
 							std::cout<<"Mission done !" << std::endl;
-							missionState_=WAITMISSION;
+							missionState_=ASKMISSION;
 							state_=IDLE;
 						}
 						break;
@@ -95,7 +86,7 @@ bool HMI::askMission()
 	{
 		ok=true;
 		timeStartMission_=ros::Time::now();
-		missionOver_=false;
+		done_mission_=false;
 		pub_on_=true;
 		mission_.step=0;
 		state_and_point_cmd_=mission_.orders[mission_.step];
@@ -103,7 +94,7 @@ bool HMI::askMission()
 	return ok;
 }
 
-void HMI::HMICallbackHmiOrder(const std_msgs::DoneMsg &done)
+void HMI::HMICallbackHmiOrder(const osmosis_control::Hmi_DoneMsg &done)
 {
 	done_point_=done.point;
 	done_mission_=done.mission;
@@ -113,14 +104,13 @@ void HMI::HMICallbackHmiOrder(const std_msgs::DoneMsg &done)
 HMI::HMI()
 {
 	//set up the publisher for the goal topic
-	order_pub_ = nh_.advertise<osmosis_control::Hmi_OrderMsg>("order", 1);
+	orders_pub_ = nh_.advertise<osmosis_control::Hmi_OrderMsg>("order", 1);
 	done_sub_ = nh_.subscribe("/hmi_done", 1, &HMI::HMICallbackHmiOrder, this);
 	state_=IDLE;
-	missionState_=WAITMISSION;
-	missionAborted_=false;
-	missionOver_=true;
+	pointState_=TARGETPOINT;
+	missionState_=ASKMISSION;
 	done_point_=false;
-	done_mission_=false;
+	done_mission_=true;
 	pub_on_=false;
 	timeStartMission_=ros::Time::now();
 	timeout_=ros::Duration(30*60); // Timeout after the mission is stopped
@@ -134,7 +124,6 @@ void HMI::goalKeyboard()
 
 	std::cout << "y= ";
 	std::cin >> thegoal.y;
-	state_=TARGETPOINT;
 
 	pub_on_=true;
 	state_and_point_cmd_.goal=thegoal;

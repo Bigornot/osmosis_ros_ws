@@ -28,7 +28,8 @@
 #include <ros/package.h>
 #include "std_msgs/Bool.h"
 #include "osmosis_control/State_and_PointMsg.h"
-
+#include "osmosis_control/Hmi_OrderMsg.h"
+#include "osmosis_control/Hmi_DoneMsg.h"
 
 struct Mission
 {
@@ -45,7 +46,7 @@ private:
 	ros::Subscriber done_sub_;
 	enum StateDriveHMI{IDLE,POINT,MISSION};
 	StateDriveHMI state_;
-	enum StateMission {WAITMISSION,EXECUTEMISSION};
+	enum StateMission {ASKMISSION,WAITMISSION};
 	StateMission missionState_;
 	enum StatePoint {TARGETPOINT,WAITPOINT};
 	StatePoint pointState_;
@@ -60,8 +61,6 @@ public:
 
 	bool goal_reached_;
 	bool pub_on_;
-	bool missionOver_;
-	bool missionAborted_;
 	bool done_mission_;
 	bool done_point_;
 
@@ -70,10 +69,9 @@ public:
   bool initMission(std::string name);
 	void parse(std::string line);
 
-	void doMission();
 	char askMode();
 	bool askMission();
-  void HMICallbackHmiOrder(const std_msgs::DoneMsg &done);
+  void HMICallbackHmiOrder(const osmosis_control::Hmi_DoneMsg &done);
 	void driveHMI();
 
 
