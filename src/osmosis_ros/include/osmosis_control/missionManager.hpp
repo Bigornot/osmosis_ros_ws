@@ -44,9 +44,9 @@ private:
 	ros::Subscriber goal_reached_sub_;
 	//geometry_msgs::Point goal_;
 	osmosis_control::State_and_PointMsg state_and_point_cmd_;
-	enum StateDriveMission{CHOICE,KEYBOARD,MISSION};
+	enum StateDriveMission{IDLE,TARGETPOINT,MISSION};
 	StateDriveMission state_;
-	enum StateMission {WAITMISSION,WAITORDERDONE};
+	enum StateMission {WAITMISSION,EXECUTEMISSION};
 	StateMission missionState_;
 	Mission mission_;
 	bool goal_reached_;

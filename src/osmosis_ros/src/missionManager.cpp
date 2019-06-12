@@ -6,20 +6,20 @@ void MissionManager::driveMissionManager()
 {
 	switch (state_)
 	{
-		case CHOICE:
+		case IDLE:
 			char mode;
 			mode=askMode();
 			if(mode=='K'||mode=='k')
-				state_=KEYBOARD;
+				state_=TARGETPOINT;
 			else if(mode=='M'||mode=='m')
 				state_=MISSION;
 			else
 				ROS_ERROR("Input Error : Please try again.\n");
 			break;
 
-		case KEYBOARD:
+		case TARGETPOINT:
 			goalKeyboard();
-			state_=CHOICE;
+			state_=IDLE;
 			break;
 
 		case MISSION:
@@ -27,20 +27,20 @@ void MissionManager::driveMissionManager()
 			{
 				case WAITMISSION:
 					if(askMission())
-						missionState_=WAITORDERDONE;
+						missionState_=EXECUTEMISSION;
 					else
 					{
 						ROS_ERROR("Mission Aborted");
-						state_=CHOICE;
+						state_=IDLE;
 					}
 					break;
 
-				case WAITORDERDONE:
+				case EXECUTEMISSION:
 					if(this->doMission())
 					{
-						std::cout<<"Mission accomplie !" << std::endl;
+						std::cout<<"Mission done !" << std::endl;
 						missionState_=WAITMISSION;
-						state_=CHOICE;
+						state_=IDLE;
 					}
 					break;
 				
@@ -123,7 +123,7 @@ MissionManager::MissionManager()
 	goal_reached_sub_ = nh_.subscribe("/goal_reached", 1, &MissionManager::MissionManagerCallbackGoalReached, this); 
 	goal_reached_=false;
 	pub_on_=false;
-	state_=CHOICE;
+	state_=IDLE;
 	missionState_=WAITMISSION;
 	state_and_point_cmd_.taxi=true; // A enlever ?
 }
@@ -142,7 +142,7 @@ void MissionManager::goalKeyboard()
 
 	std::cout << "y= ";
 	std::cin >> thegoal.y;
-	state_=KEYBOARD;
+	state_=TARGETPOINT;
 
 	pub_on_=true;
 	state_and_point_cmd_.goal=thegoal;
