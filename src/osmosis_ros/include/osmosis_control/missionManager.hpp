@@ -28,6 +28,8 @@
 #include <ros/package.h>
 #include "std_msgs/Bool.h"
 #include "osmosis_control/State_and_PointMsg.h"
+#include "osmosis_control/Hmi_Order.h"
+#include "osmosis_control/Hmi_Done.h"
 
 struct Mission
 {
@@ -41,19 +43,25 @@ class MissionManager
 private:
 	ros::NodeHandle nh_;
 	ros::Publisher goal_pub_;
+	ros::Publisher hmi_done_pub_,
 	ros::Subscriber goal_reached_sub_;
 	ros::Subscriber emergency_sub_;
-	//geometry_msgs::Point goal_;
+	ros::Subscriber hmi_order_sub_;
+
 	osmosis_control::State_and_PointMsg state_and_point_cmd_;
 	enum StateDriveMission{IDLE,TARGETPOINT,MISSION};
 	StateDriveMission state_;
 	enum StateMission {WAITMISSION,EXECUTEMISSION};
 	StateMission missionState_;
+
 	Mission mission_;
 	bool goal_reached_;
 	bool pub_on_;
 	bool missionOver_;
 	bool missionAborted_;
+	bool hmi_point_;
+	bool hmi_mission_;
+
 	ros::Time timeStartMission_;
 	ros::Duration timeout_;
 
@@ -72,7 +80,8 @@ public:
 
 	void driveMissionManager();
 	void MissionManagerCallbackGoalReached(const std_msgs::Bool &goal_reached);
-  void MissionManagerCallbackEmergencyHit(const std_msgs::Bool &emergency_hit);
+	void MissionManagerCallbackEmergencyHit(const std_msgs::Bool &emergency_hit);
+	void MissionManagerCallbackOrder(const osmosis_control::Hmi_OrderMsg);
 	bool is_goal_reached();
 }; // end of class
 

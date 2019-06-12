@@ -1,6 +1,5 @@
 //juil2018 J.Guiochet @ LAAS
 #include <osmosis_control/missionManager.hpp>
-// test
 
 void MissionManager::driveMissionManager()
 {
@@ -132,8 +131,11 @@ MissionManager::MissionManager()
 {
 	//set up the publisher for the goal topic
 	goal_pub_ = nh_.advertise<osmosis_control::State_and_PointMsg>("goal", 1);
+	hmi_done_pub_ = nh_.advertise<osmosis_control::Hmi_DoneMsg>("hmi_done", 1);
 	goal_reached_sub_ = nh_.subscribe("/goal_reached", 1, &MissionManager::MissionManagerCallbackGoalReached, this);
 	emergency_sub_ = nh_.subscribe("/emergency_shutdown", 1, &MissionManager::MissionManagerCallbackEmergencyHit, this);
+	hmi_order_sub_ = nh_.subscribe("/hmi_order", 1, &MissionManager::MissionManagerCallbackOrder, this);
+
 	goal_reached_=false;
 	pub_on_=false;
 	state_=IDLE;
@@ -141,6 +143,8 @@ MissionManager::MissionManager()
 	state_and_point_cmd_.taxi=true;
 	missionAborted_=false;
 	missionOver_=true;
+	hmi_point_=false;
+	hmi_mission_=false;
 	timeStartMission_=ros::Time::now();
 	timeout_=ros::Duration(30*60); // Timeout after the mission is stopped
 }
@@ -155,6 +159,11 @@ void MissionManager::MissionManagerCallbackEmergencyHit(const std_msgs::Bool &em
 {
 	missionAborted_=emergency_hit.data;
 	missionOver_=emergency_hit.data;
+}
+
+void MissionManager::MissionManagerCallbackOrder(const osmosis_control::Hmi_OrderMsg)
+{
+	
 }
 
 void MissionManager::goalKeyboard()
