@@ -1,3 +1,3 @@
-geometry_msgs/Point point
+State_and_PointMsg state_and_point
 string mission_name
 bool doMission
