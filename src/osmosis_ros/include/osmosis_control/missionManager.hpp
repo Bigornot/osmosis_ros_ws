@@ -14,7 +14,7 @@
  *
  */
 
- 
+
 #ifndef OSMOSIS_MISSION_MANAGER_HPP
 #define OSMOSIS_MISSION_MANAGER_HPP
 
@@ -51,7 +51,7 @@ private:
 	Mission mission_;
 	bool goal_reached_;
 	bool pub_on_;
-	
+
 public:
 	MissionManager();
 	void goalKeyboard();
@@ -67,6 +67,7 @@ public:
 
 	void driveMissionManager();
 	void MissionManagerCallbackGoalReached(const std_msgs::Bool &goal_reached);
+  void MissionManagerCallbackEmergencyHit(const std_msgs::Bool &emergency_hit);
 	bool is_goal_reached();
 }; // end of class
 

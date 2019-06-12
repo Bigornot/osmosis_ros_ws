@@ -33,7 +33,7 @@ void MissionManager::driveMissionManager()
 						ROS_ERROR("Mission Aborted");
 						state_=IDLE;
 					}
-					break;
+				break;
 
 				case EXECUTEMISSION:
 					if(this->doMission())
@@ -43,7 +43,7 @@ void MissionManager::driveMissionManager()
 						state_=IDLE;
 					}
 					break;
-				
+
 			}
 			break;
         }
@@ -74,7 +74,7 @@ bool MissionManager::isMissionOver()
 	if(mission_.step==mission_.orders.size())
 		over=true;
 
-	return over;	
+	return over;
 }
 
 void MissionManager::sendNextOrder()
@@ -120,7 +120,7 @@ MissionManager::MissionManager()
 {
 	//set up the publisher for the goal topic
 	goal_pub_ = nh_.advertise<osmosis_control::State_and_PointMsg>("goal", 1);
-	goal_reached_sub_ = nh_.subscribe("/goal_reached", 1, &MissionManager::MissionManagerCallbackGoalReached, this); 
+	goal_reached_sub_ = nh_.subscribe("/goal_reached", 1, &MissionManager::MissionManagerCallbackGoalReached, this);
 	goal_reached_=false;
 	pub_on_=false;
 	state_=IDLE;
@@ -132,6 +132,12 @@ MissionManager::MissionManager()
 void MissionManager::MissionManagerCallbackGoalReached(const std_msgs::Bool &goal_reached)
 {
 	goal_reached_=goal_reached.data;
+}
+
+void MissionManager::MissionManagerCallbackEmergencyHit(const std_msgs::Bool &emergency_hit)
+{
+	//missionAborted_=true;
+	//missionOver_=true;
 }
 
 void MissionManager::goalKeyboard()
@@ -157,7 +163,7 @@ bool MissionManager::initMission(std::string name)
 
 	std::string filename=ros::package::getPath("osmosis_control");
 	filename.append("/MISSION_" + name + ".miss");
-	
+
 	std::ifstream fichier(filename, std::ios::in);
 
 	if(fichier)
@@ -181,7 +187,7 @@ bool MissionManager::initMission(std::string name)
 			else
 				std::cout << " taxi=false" << std::endl;
 		}
-		
+
 		ok=true;
 		fichier.close();
 	}
@@ -207,7 +213,7 @@ void MissionManager::parse(std::string line)
 				order.goal.x=stof(line.substr(2, coma-2));
 				order.goal.y=stof(line.substr(coma+3, coma2-coma-3));
 				order.taxi=stoi(line.substr(coma2+6,1))!=0;
-		
+
 				mission_.orders.push_back(order);
 			}
 		}
