@@ -34,6 +34,7 @@
 class HMI
 {
 private:
+	///////// Attributes /////////
 	ros::NodeHandle nh_;
 	ros::Publisher orders_pub_;
 	ros::Subscriber done_sub_;
@@ -48,23 +49,27 @@ private:
 	osmosis_control::State_and_PointMsg state_and_point_cmd_;
 	osmosis_control::Hmi_OrderMsg orders_cmd_;
 
-public:
-	HMI();
-
 	bool goal_reached_;
-	bool pub_on_;
 	bool done_mission_;
 	bool done_point_;
 
-	void goalKeyboard();
-	void run();
-	bool checkMission(std::string name);
-
-	char askMode();
-	bool askMission();
-	void HMICallbackHmiOrder(const osmosis_control::Hmi_DoneMsg &done);
+	/////////  Methods   ////////
 	void driveHMI();
 
+	char askMode();
+
+	void goalKeyboard();
+
+	bool askMission();
+	bool checkMission(std::string name);
+
+	void resetDone();
+
+public:
+	HMI();
+	void run();
+
+	void HMICallbackHmiOrder(const osmosis_control::Hmi_DoneMsg &done);
 
 }; // end of class
 

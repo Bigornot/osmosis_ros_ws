@@ -41,6 +41,7 @@ struct Mission
 class MissionManager
 {
 private:
+	///////// Attributes ////////
 	ros::NodeHandle nh_;
 	ros::Publisher goal_pub_;
 	ros::Publisher hmi_done_pub_;
@@ -60,7 +61,6 @@ private:
 	std::string mission_name_;
 
 	bool goal_reached_;
-	bool pub_on_;
 	bool missionOver_;
 	bool missionAborted_;
 	bool hmi_point_;
@@ -69,27 +69,31 @@ private:
 	ros::Time timeStartMission_;
 	ros::Duration timeout_;
 
-public:
-	MissionManager();
+	/////////  Methods   ////////
+	void driveMissionManager();
+
+	void resetIdle();
+	bool isGoalReached();
+
 	void goalKeyboard();
-	void run();
+	void endPoint();
+
         void initMission(std::string name);
 	void parse(std::string line);
-
 	void doMission();
 	bool isMissionOver();
 	void sendNextOrder();
-
 	void abortMission();
-	void missionDone();
+	void endMission();
 
-	void pointDone();
+public:
+	MissionManager();
+	void run();
 
-	void driveMissionManager();
 	void MissionManagerCallbackGoalReached(const std_msgs::Bool &goal_reached);
 	void MissionManagerCallbackEmergencyHit(const std_msgs::Bool &emergency_hit);
 	void MissionManagerCallbackOrder(const osmosis_control::Hmi_OrderMsg &order);
-	bool is_goal_reached();
+
 }; // end of class
 
 #endif
