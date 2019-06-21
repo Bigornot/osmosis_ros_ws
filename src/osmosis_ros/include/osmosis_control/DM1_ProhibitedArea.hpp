@@ -26,22 +26,21 @@
 class DM1_ProhibitedArea : public DetectionModule
 {
 private:
-  ros::NodeHandle nh_;
-  ros::Publisher DM1_pub_;
-  ros::Subscriber position_sub_;
-  geometry_msgs::Pose2D robot_pose_;
-  //geometry_msgs::Pose2D position_msg_; ?????????
-  float x_min;
-  float x_max;
-  float y_min;
-  float y_max;
+	ros::NodeHandle nh_;
+	ros::Publisher DM1_pub_;
+	ros::Subscriber position_sub_;
+	geometry_msgs::Pose2D robot_pose_;
+	float x_min;
+	float x_max;
+	float y_min;
+	float y_max;
 
 public:
-  bool detect();
-  void pub_to_FTM(std_msgs::Bool donnee);
-  void DM1_ProhibitedAreaCallback(const geometry_msgs::Pose2D & position_msg);
-  DM1_ProhibitedArea();
+	bool detect();
+	void pub_to_FTM(std_msgs::Bool donnee);
+	void DM1_ProhibitedAreaCallback(const geometry_msgs::Pose2D & position_msg);
+	DM1_ProhibitedArea();
 
-}; // end of class
+};
 
 #endif //OSMOSIS_DM1_ProhibitedArea_HPP

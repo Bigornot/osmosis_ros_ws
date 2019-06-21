@@ -1,9 +1,7 @@
 #include <osmosis_control/DM1_ProhibitedArea.hpp>
-#include <osmosis_control/DetectionModule.hpp>
-
 
 //! ROS node topics publishing and subscribing initialization
-DM1_ProhibitedArea::DM1_ProhibitedArea()
+DM1_ProhibitedArea::DM1_ProhibitedArea() : DetectionModule()
 {
 	position_sub_  = nh_.subscribe("pose", 1, &DM1_ProhibitedArea::DM1_ProhibitedAreaCallback, this);
 	DM1_pub_ = nh_.advertise<std_msgs::Bool>("DM1_ProhibitedArea", 10);
@@ -31,7 +29,6 @@ void DM1_ProhibitedArea::DM1_ProhibitedAreaCallback(const geometry_msgs::Pose2D 
 	robot_pose_ = position_msg;
 }
 
-
 void DM1_ProhibitedArea::pub_to_FTM(std_msgs::Bool donnee)
 {
 	DM1_pub_.publish(donnee);
@@ -43,6 +40,6 @@ int main(int argc, char** argv)
 	//init the ROS node
 	ros::init(argc, argv, "DM1_ProhibitedArea_node");
 	
-	DetectionModule myDM1_ProhibitedArea;
+	DM1_ProhibitedArea myDM1_ProhibitedArea;
 	myDM1_ProhibitedArea.run();
 }
