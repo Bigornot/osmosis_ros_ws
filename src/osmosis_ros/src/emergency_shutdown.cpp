@@ -48,9 +48,9 @@ void EmergencyShutdown::run()
 
 int main(int argc, char** argv)
 {
-  //init the ROS node
-  ros::init(argc, argv, "emergency_shutdown_node");
+	//init the ROS node
+	ros::init(argc, argv, "emergency_shutdown_node");
 
-  EmergencyShutdown myEmergencyShutdown;
-  myEmergencyShutdown.run();
+	EmergencyShutdown myEmergencyShutdown;
+	myEmergencyShutdown.run();
 }

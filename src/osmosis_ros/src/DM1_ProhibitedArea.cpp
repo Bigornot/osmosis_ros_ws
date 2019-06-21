@@ -19,7 +19,6 @@ bool DM1_ProhibitedArea::detect()
 	}
 	else
 		return false;
-
 }
 
 //Topic callback
@@ -37,9 +36,9 @@ void DM1_ProhibitedArea::pub_to_FTM(std_msgs::Bool donnee)
 
 int main(int argc, char** argv)
 {
-  //init the ROS node
-  ros::init(argc, argv, "DM1_ProhibitedArea_node");
-
-  DetectionModule* myDM1_ProhibitedArea=new DM1_ProhibitedArea();
-  myDM1_ProhibitedArea->run();
+	//init the ROS node
+	ros::init(argc, argv, "DM1_ProhibitedArea_node");
+	
+	DetectionModule* myDM1_ProhibitedArea=new DM1_ProhibitedArea();
+	myDM1_ProhibitedArea->run();
 }

@@ -162,10 +162,7 @@ add_executable(mission_manager_node src/missionManager.cpp)
 add_executable(joy_teleop_node src/joy_teleop.cpp)
 add_executable(emergency_shutdown_node src/emergency_shutdown.cpp)
 add_executable(HMI_node src/HMI.cpp)
-
-add_executable(DetectionModule_node src/DetectionModule.cpp)
-add_executable(DM1_ProhibitedArea_node src/DM1_ProhibitedArea.cpp)
-
+add_executable(DM1_ProhibitedArea_node src/DM1_ProhibitedArea.cpp src/DetectionModule.cpp)
 
 add_dependencies(osmosis_control_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(safety_pilot_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
@@ -174,8 +171,6 @@ add_dependencies(graph_planner_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin
 add_dependencies(mission_manager_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(joy_teleop_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(HMI_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
-add_dependencies(DetectionModule_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(DM1_ProhibitedArea_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Rename C++ executable without prefix
@@ -190,15 +185,16 @@ add_dependencies(DM1_ProhibitedArea_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${c
 
 
 ## Specify libraries to link a library or executable target against
- target_link_libraries(osmosis_control_node ${catkin_LIBRARIES} )
- target_link_libraries(safety_pilot_node ${catkin_LIBRARIES})
- target_link_libraries(localization_node ${catkin_LIBRARIES})
- target_link_libraries(teleop_node ${catkin_LIBRARIES})
- target_link_libraries(graph_planner_node ${catkin_LIBRARIES} -ljsoncpp)
- target_link_libraries(mission_manager_node ${catkin_LIBRARIES})
- target_link_libraries(joy_teleop_node ${catkin_LIBRARIES})
- target_link_libraries(emergency_shutdown_node ${catkin_LIBRARIES})
- target_link_libraries(HMI_node ${catkin_LIBRARIES})
+target_link_libraries(osmosis_control_node ${catkin_LIBRARIES} )
+target_link_libraries(safety_pilot_node ${catkin_LIBRARIES})
+target_link_libraries(localization_node ${catkin_LIBRARIES})
+target_link_libraries(teleop_node ${catkin_LIBRARIES})
+target_link_libraries(graph_planner_node ${catkin_LIBRARIES} -ljsoncpp)
+target_link_libraries(mission_manager_node ${catkin_LIBRARIES})
+target_link_libraries(joy_teleop_node ${catkin_LIBRARIES})
+target_link_libraries(emergency_shutdown_node ${catkin_LIBRARIES})
+target_link_libraries(HMI_node ${catkin_LIBRARIES})
+target_link_libraries(DM1_ProhibitedArea_node ${catkin_LIBRARIES})
 
 
 
