@@ -7,6 +7,10 @@ DM1_ProhibitedArea::DM1_ProhibitedArea()
 {
 	position_sub_  = nh_.subscribe("pose", 1, &DM1_ProhibitedArea::DM1_ProhibitedAreaCallback, this);
 	DM1_pub_ = nh_.advertise<std_msgs::Bool>("DM1_ProhibitedArea", 10);
+	x_min = -10;
+	x_max = 10;
+	y_min = -15;
+	y_max = 15;
 }
 
 //compute detection out of zone
@@ -39,6 +43,6 @@ int main(int argc, char** argv)
 	//init the ROS node
 	ros::init(argc, argv, "DM1_ProhibitedArea_node");
 	
-	DetectionModule* myDM1_ProhibitedArea=new DM1_ProhibitedArea();
-	myDM1_ProhibitedArea->run();
+	DetectionModule myDM1_ProhibitedArea;
+	myDM1_ProhibitedArea.run();
 }

@@ -31,10 +31,10 @@ private:
   ros::Subscriber position_sub_;
   geometry_msgs::Pose2D robot_pose_;
   //geometry_msgs::Pose2D position_msg_; ?????????
-  float x_min = -10;
-  float x_max = 10;
-  float y_min = -15;
-  float y_max = 15;
+  float x_min;
+  float x_max;
+  float y_min;
+  float y_max;
 
 public:
   bool detect();
