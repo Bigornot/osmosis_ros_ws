@@ -21,7 +21,7 @@
 #include <ros/ros.h>
 #include <geometry_msgs/Pose2D.h>
 #include <std_msgs/Bool.h>
-#include <osmosis_control/DetectionModule.hpp>
+#include <osmosis_control/DetectionModules/DetectionModule.hpp>
 
 class DM1_ProhibitedArea : public DetectionModule
 {

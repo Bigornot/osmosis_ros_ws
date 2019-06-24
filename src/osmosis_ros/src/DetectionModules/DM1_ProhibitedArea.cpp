@@ -1,4 +1,4 @@
-#include <osmosis_control/DM1_ProhibitedArea.hpp>
+#include <osmosis_control/DetectionModules/DM1_ProhibitedArea.hpp>
 
 //! ROS node topics publishing and subscribing initialization
 DM1_ProhibitedArea::DM1_ProhibitedArea() : DetectionModule()
@@ -41,7 +41,7 @@ int main(int argc, char** argv)
 {
 	//init the ROS node
 	ros::init(argc, argv, "DM1_ProhibitedArea_node");
-	
+
 	DM1_ProhibitedArea myDM1_ProhibitedArea;
 	myDM1_ProhibitedArea.run();
 }

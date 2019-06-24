@@ -1,6 +1,4 @@
-#include <osmosis_control/DM3_WrongCommand.hpp>
-#include <osmosis_control/DetectionModule.hpp>
-
+#include <osmosis_control/DetectionModules/DM3_WrongCommand.hpp>
 
 //! ROS node topics publishing and subscribing initialization
 DM3_WrongCommand::DM3_WrongCommand()

@@ -1,4 +1,4 @@
-#include <osmosis_control/DM2_CmdNotUpdated.hpp>
+#include <osmosis_control/DetectionModules/DM2_CmdNotUpdated.hpp>
 
 //! ROS node topics publishing and subscribing initialization
 DM2_CmdNotUpdated::DM2_CmdNotUpdated() : DetectionModule()
@@ -35,7 +35,7 @@ int main(int argc, char** argv)
 {
 	//init the ROS node
 	ros::init(argc, argv, "DM2_CmdNotUpdated_node");
-	
+
 	DM2_CmdNotUpdated myDM2_CmdNotUpdated;
 	myDM2_CmdNotUpdated.run();
 }
