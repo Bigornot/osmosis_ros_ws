@@ -163,6 +163,7 @@ add_executable(joy_teleop_node src/joy_teleop.cpp)
 add_executable(emergency_shutdown_node src/emergency_shutdown.cpp)
 add_executable(HMI_node src/HMI.cpp)
 add_executable(DM1_ProhibitedArea_node src/DM1_ProhibitedArea.cpp src/DetectionModule.cpp)
+add_executable(DM2_CmdNotUpdated_node src/DM2_CmdNotUpdated.cpp src/DetectionModule.cpp)
 
 add_dependencies(osmosis_control_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(safety_pilot_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
@@ -172,6 +173,7 @@ add_dependencies(mission_manager_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catk
 add_dependencies(joy_teleop_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(HMI_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(DM1_ProhibitedArea_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(DM2_CmdNotUpdated_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -195,7 +197,7 @@ target_link_libraries(joy_teleop_node ${catkin_LIBRARIES})
 target_link_libraries(emergency_shutdown_node ${catkin_LIBRARIES})
 target_link_libraries(HMI_node ${catkin_LIBRARIES})
 target_link_libraries(DM1_ProhibitedArea_node ${catkin_LIBRARIES})
-
+target_link_libraries(DM2_CmdNotUpdated_node ${catkin_LIBRARIES})
 
 
  #target_link_libraries(json  ${catkin_LIBRARIES}  ${JSONCPP_LIBRARIES})

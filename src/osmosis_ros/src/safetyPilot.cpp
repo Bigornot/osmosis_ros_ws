@@ -4,8 +4,6 @@
 // from MAUVE safetyPilot update operation
 geometry_msgs::Twist SafetyPilot::updateCmdWithLaserScan(geometry_msgs::Twist cmd,sensor_msgs::LaserScan s)
 {
-
-	//auto s = shell().scan.read();
 	double obs_dist = std::numeric_limits<double>::max();
 	double obs_lat = std::numeric_limits<double>::max();
 

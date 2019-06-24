@@ -31,8 +31,10 @@ void DM1_ProhibitedArea::DM1_ProhibitedAreaCallback(const geometry_msgs::Pose2D 
 
 void DM1_ProhibitedArea::pub_to_FTM(std_msgs::Bool donnee)
 {
+	bool b = donnee.data;
 	DM1_pub_.publish(donnee);
-	std::cout << "Publication de DM1 : ProhibitedArea" << '\n';
+	std::cout << "Publication de DM1 : ProhibitedArea : ";
+	std::cout << std::boolalpha << b << std::endl;
 }
 
 int main(int argc, char** argv)
