@@ -34,6 +34,7 @@ void DM1_ProhibitedArea::pub_to_FTM(std_msgs::Bool donnee)
 	bool b = donnee.data;
 	DM1_pub_.publish(donnee);
 	std::cout << "Publication de DM1 : ProhibitedArea : ";
+	std::cout << debug_msg <<" ";
 	std::cout << std::boolalpha << b << std::endl;
 }
 

@@ -28,6 +28,7 @@ void DM2_CmdNotUpdated::pub_to_FTM(std_msgs::Bool donnee)
 	bool b = donnee.data;
 	DM2_pub_.publish(donnee);
 	std::cout << "Publication of DM2 : CmdNotUpdated : ";
+	std::cout << debug_msg <<" ";
 	std::cout << std::boolalpha << b << std::endl;
 }
 

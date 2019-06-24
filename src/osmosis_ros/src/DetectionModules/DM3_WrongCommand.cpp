@@ -32,6 +32,7 @@ void DM3_WrongCommand::pub_to_FTM(std_msgs::Bool donnee)
 	bool b = donnee.data;
 	DM3_pub_.publish(donnee);
 	std::cout << "Publication of DM3 : WrongCommand : ";
+	std::cout << debug_msg <<" ";
 	std::cout << std::boolalpha << b << std::endl;
 }
 
