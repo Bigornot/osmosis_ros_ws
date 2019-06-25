@@ -17,12 +17,13 @@ def poseCallback(data):
     X=int( (80+float(data.x)) * (828/160) * 1.04)
     Y=int( (80-float(data.y)) * (740/160) * 1.15)
  
-    if image[Y][X][0] >= 250 :
-	print("Couleur :", image[Y][X][0], image[Y][X][1], image[Y][X][2], "TRUE")
+    
+    if int(image[Y][X][0]) > 250 :
+	print("Couleur :", int(image[Y][X][0]), image[Y][X][1], image[Y][X][2], "TRUE")
         pub.publish(True)
 
     else :
- 	print("Couleur :", image[Y][X][0], image[Y][X][1], image[Y][X][2], "FALSE")
+ 	print("Couleur :", int(image[Y][X][0]), image[Y][X][1], image[Y][X][2], "FALSE")
         pub.publish(False)
 
 rospack = rospkg.RosPack()
