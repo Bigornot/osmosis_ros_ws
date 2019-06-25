@@ -11,11 +11,11 @@
 <node name="emergency_shutdown_node" type="emergency_shutdown_node" pkg="osmosis_control" output="screen" launch-prefix="xterm -e"/>
 <node name="HMI_node" type="HMI_node" pkg="osmosis_control" output="screen" launch-prefix="xterm -e"/>
 
+<node name="checkProhibitedArea_node" type="checkProhibitedArea.py" pkg="osmosis_control" output="screen" launch-prefix="xterm -e"/>
 <node name="DM1_ProhibitedArea_node" type="DM1_ProhibitedArea_node" pkg="osmosis_control" output="screen" launch-prefix="xterm -e"/>
 <node name="DM2_CmdNotUpdated_node" type="DM2_CmdNotUpdated_node" pkg="osmosis_control" output="screen" launch-prefix="xterm -e"/>
 <node name="DM3_WrongCommand_node" type="DM3_WrongCommand_node" pkg="osmosis_control" output="screen" launch-prefix="xterm -e"/>
 <node name="DM5_NodeCrash_node" type="DM5_NodeCrash_node" pkg="osmosis_control" output="screen" launch-prefix="xterm -e"/>
-
 
 <!--node name="navigation_node" type="navigation_node" pkg="osmosis_control" output="screen" launch-prefix="xterm -e"/-->
 
