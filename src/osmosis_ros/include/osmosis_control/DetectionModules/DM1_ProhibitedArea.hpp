@@ -19,7 +19,6 @@
 #include <iostream>
 #include <cmath>
 #include <ros/ros.h>
-#include <geometry_msgs/Pose2D.h>
 #include <std_msgs/Bool.h>
 #include <osmosis_control/DetectionModules/DetectionModule.hpp>
 
@@ -28,17 +27,14 @@ class DM1_ProhibitedArea : public DetectionModule
 private:
 	ros::NodeHandle nh_;
 	ros::Publisher DM1_pub_;
-	ros::Subscriber position_sub_;
-	geometry_msgs::Pose2D robot_pose_;
-	float x_min;
-	float x_max;
-	float y_min;
-	float y_max;
+	ros::Subscriber state_sub_;
+	std_msgs::Bool state;
+	bool state_;
 
 public:
 	bool detect();
 	void pub_to_FTM(std_msgs::Bool donnee);
-	void DM1_ProhibitedAreaCallback(const geometry_msgs::Pose2D & position_msg);
+	void DM1_ProhibitedAreaCallback(const std_msgs::Bool & state);
 	DM1_ProhibitedArea();
 
 };
