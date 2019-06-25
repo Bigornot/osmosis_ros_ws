@@ -13,31 +13,27 @@
 *
 */
 
-#ifndef OSMOSIS_DM2_CmdNotUpdated_HPP
-#define OSMOSIS_DM2_CmdNotUpdated_HPP
+#ifndef OSMOSIS_DM5_NodeCrash_HPP
+#define OSMOSIS_DM5_NodeCrash_HPP
 
 #include <iostream>
 #include <ros/ros.h>
-#include <geometry_msgs/Twist.h>
+#include <ros/master.h>
 #include <std_msgs/Bool.h>
 #include <osmosis_control/DetectionModules/DetectionModule.hpp>
 
-class DM2_CmdNotUpdated : public DetectionModule
+class DM5_NodeCrash : public DetectionModule
 {
 private:
 	ros::NodeHandle nh_;
-	ros::Publisher DM2_pub_;
-	ros::Subscriber cmd_vel_sub_;
-	ros::Time lastUpdate_;
-	ros::Duration timeOut_;
+	ros::Publisher DM5_pub_;
+	ros::V_string aliveNodes_;
+	ros::V_string nodesToCheck_;
 
 public:
-	DM2_CmdNotUpdated();
-
 	bool detect();
 	void pub_to_FTM(std_msgs::Bool donnee);
-
-	void DM2_CmdNotUpdatedCallback(const geometry_msgs::Twist &cmd_vel);
+	DM5_NodeCrash();
 };
 
-#endif //OSMOSIS_DM2_CmdNotUpdated_HPP
+#endif //OSMOSIS_DM5_NodeCrash_HPP
