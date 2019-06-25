@@ -5,6 +5,7 @@ DM1_ProhibitedArea::DM1_ProhibitedArea() : DetectionModule()
 {
 	state_sub_  = nh_.subscribe("inProhibitedArea", 1, &DM1_ProhibitedArea::DM1_ProhibitedAreaCallback, this);
 	DM1_pub_ = nh_.advertise<std_msgs::Bool>("DM1_ProhibitedArea", 10);
+ 	state_=false;
 }
 
 //compute detection out of zone
