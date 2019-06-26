@@ -82,7 +82,7 @@ for i in range(len(LN1)):
 
 	Y=range(abs(LY[LN2[i]]-LY[LN1[i]]))
 	for y in Y:
-			x=int( ( y+min(LY[LN1[i]],LY[LN2[i]]) - b)/a  )
+			x=int((y+min(LY[LN1[i]],LY[LN2[i]]) - b)/a  )
 			image[y+min(LY[LN1[i]],LY[LN2[i]])][x]=(0, 0, 0)
 
 mpimg.imsave("blagnac_graphe.jpg",image)
@@ -109,9 +109,9 @@ for i in range(len(LN1)):
 
 
 for i in range(len(LN1)):
-	LN1[i]=int(LN1[i])-1
+	LN1[i]=int(LN1[i])
 for i in range(len(LN2)):
-	LN2[i]=int(LN2[i])-1
+	LN2[i]=int(LN2[i])
 
 
 for i in range(len(LN1)):
@@ -127,7 +127,7 @@ for i in range(len(LN1)):
 
 	X=range(abs(LX[LN2[i]]-LX[LN1[i]]))
 	for x in X:
-		for l in range(25):
+		for l in range(15):
 			y=int(a*(x+min(LX[LN1[i]],LX[LN2[i]]))+b)
 			if y<len(image):
 				if y+l<len(image):
@@ -137,7 +137,7 @@ for i in range(len(LN1)):
 
 	Y=range(abs(LY[LN2[i]]-LY[LN1[i]]))
 	for y in Y:
-		for l in range(25):
+		for l in range(15):
 				x=int((y+min(LY[LN1[i]],LY[LN2[i]])-b)/a)
 				if x+l<len(image[0]):
 					if x-l>0:
