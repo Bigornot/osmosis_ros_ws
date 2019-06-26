@@ -25,7 +25,6 @@
 class DM5_NodeCrash : public DetectionModule
 {
 private:
-	ros::NodeHandle nh_;
 	ros::Publisher DM5_pub_;
 	ros::V_string aliveNodes_;
 	ros::V_string nodesToCheck_;

@@ -25,7 +25,6 @@
 class DM1_ProhibitedArea : public DetectionModule
 {
 private:
-	ros::NodeHandle nh_;
 	ros::Publisher DM1_pub_;
 	ros::Subscriber state_sub_;
 	std_msgs::Bool state;

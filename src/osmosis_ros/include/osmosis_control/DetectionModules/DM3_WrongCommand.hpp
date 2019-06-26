@@ -26,7 +26,6 @@
 class DM3_WrongCommand : public DetectionModule
 {
 private:
-  ros::NodeHandle nh_;
   ros::Publisher DM3_pub_;
   ros::Subscriber cmd_sub_;
   geometry_msgs::Twist cmd_;

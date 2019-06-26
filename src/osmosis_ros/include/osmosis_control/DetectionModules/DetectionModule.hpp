@@ -12,12 +12,12 @@ class DetectionModule
 {
 private :
 	std_msgs::Bool state_;
-	ros::NodeHandle nh_;
 	enum driveState{DETECTION_MODE,START_RECOVERY,ERROR_DETECTED};
 	driveState driveState_;
 
 protected:
 	string debug_msg;
+	ros::NodeHandle nh_;
 
 public :
 	DetectionModule();

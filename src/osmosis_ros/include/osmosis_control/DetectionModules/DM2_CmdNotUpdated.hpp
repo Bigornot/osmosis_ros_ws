@@ -25,7 +25,6 @@
 class DM2_CmdNotUpdated : public DetectionModule
 {
 private:
-	ros::NodeHandle nh_;
 	ros::Publisher DM2_pub_;
 	ros::Subscriber cmd_vel_sub_;
 	ros::Time lastUpdate_;
