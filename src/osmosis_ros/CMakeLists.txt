@@ -167,6 +167,8 @@ add_executable(DM1_ProhibitedArea_node src/DetectionModules/DM1_ProhibitedArea.c
 add_executable(DM2_CmdNotUpdated_node src/DetectionModules/DM2_CmdNotUpdated.cpp src/DetectionModules/DetectionModule.cpp)
 add_executable(DM3_WrongCommand_node src/DetectionModules/DM3_WrongCommand.cpp src/DetectionModules/DetectionModule.cpp)
 add_executable(DM5_NodeCrash_node src/DetectionModules/DM5_NodeCrash.cpp src/DetectionModules/DetectionModule.cpp)
+add_executable(R3_EmergencyStop_node src/RecoveryModules/R3_EmergencyStop.cpp src/RecoveryModules/Recov.cpp)
+
 
 add_dependencies(osmosis_control_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(safety_pilot_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
@@ -180,6 +182,8 @@ add_dependencies(DM1_ProhibitedArea_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${c
 add_dependencies(DM2_CmdNotUpdated_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(DM3_WrongCommand_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(DM5_NodeCrash_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(R3_EmergencyStop_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -207,6 +211,7 @@ target_link_libraries(DM1_ProhibitedArea_node ${catkin_LIBRARIES})
 target_link_libraries(DM2_CmdNotUpdated_node ${catkin_LIBRARIES})
 target_link_libraries(DM3_WrongCommand_node ${catkin_LIBRARIES})
 target_link_libraries(DM5_NodeCrash_node ${catkin_LIBRARIES})
+target_link_libraries(R3_EmergencyStop_node ${catkin_LIBRARIES})
 
 
  #target_link_libraries(json  ${catkin_LIBRARIES}  ${JSONCPP_LIBRARIES})

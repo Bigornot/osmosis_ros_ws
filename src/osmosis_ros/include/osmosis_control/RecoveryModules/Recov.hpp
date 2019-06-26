@@ -1,31 +1,25 @@
 #ifndef OSMOSIS_RECOV_HPP
 #define OSMOSIS_RECOV_HPP
 
-
 #include <iostream>
-#include <math.h>
-#include <cmath>
 #include <ros/ros.h>
-#include <geometry_msgs/Twist.h>
 #include <std_msgs/Bool.h>
-
-using namespace std;
 
 class Recov
 {
-  private :
-    bool recovery;
+  private:
+    std_msgs::Bool recov_msg_;
 
-    std_msgs::Bool rok;
+  protected:
     ros::NodeHandle nh_;
+    ros::Subscriber Call_sub_;
+    bool recovery_;
 
-  public :
+  public:
     Recov();
-    bool makeRecovery();
+    bool is_recovery_on();
     void run();
     virtual void pub_topic_recov(std_msgs::Bool)=0;
-    bool recovery_action_;
-
 };
 
 #endif
