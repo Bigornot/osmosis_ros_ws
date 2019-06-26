@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 #include <std_msgs/Bool.h>
-#include <osmosis_control/FTM_Rule.hpp>
+#include <osmosis_control/FTM_rule.hpp>
 #include <osmosis_control/Tree_Vector.hpp>
 
 using namespace std;

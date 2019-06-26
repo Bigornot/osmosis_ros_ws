@@ -18,7 +18,7 @@ private :
 	ros::Publisher Recov_pub_;
 	string name_recovery_;
 	bool detection_etat_;
-	std_msgs::Bool recouvrement_;
+	std_msgs::Bool recovery_;
 
 public :
 	FTM_rule(string name1,string name2); //constructor

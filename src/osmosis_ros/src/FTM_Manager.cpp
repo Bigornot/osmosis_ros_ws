@@ -35,8 +35,14 @@ bool FTM_Manager::run()
 		FTM_Tree->Detection_list[3]=FTM_detect4;
 		FTM_Tree->Detection_list[4]=FTM_detect5;
 		FTM_Tree->Detection_list[5]=FTM_detect6;
+	
+		// Set the right Recovery_list depending of the Detection_list
+		//FTM_Manager::Algo_FTM();
 
-		FTM_Manager::Algo_FTM();
+		// Forcing the FTM Algorithm
+		for(int i=0; i<FTM_Tree->Detection_list.size(); i++)
+			FTM_Tree->Recovery_list[i]=FTM_Tree->Detection_list[i];
+
 		//Send the state of recovery to trigger it or not
 		std::cout << "1"<<FTM_Tree->Recovery_list[0] << '\n';
 		std::cout << "2"<<FTM_Tree->Recovery_list[1] << '\n';
@@ -46,9 +52,9 @@ bool FTM_Manager::run()
 		std::cout << "6"<<FTM_Tree->Recovery_list[5] << '\n';
 
 		FTM_Rule1->recovery_state(FTM_Tree->Recovery_list[0]);
-		FTM_Rule2->recovery_state(FTM_Tree->Recovery_list[1]);
+		//FTM_Rule2->recovery_state(FTM_Tree->Recovery_list[1]);
 		//FTM_Rule3->recovery_state(FTM_Tree->Recovery_list[2]);
-		FTM_Rule6->recovery_state(FTM_Tree->Recovery_list[5]);
+		//FTM_Rule6->recovery_state(FTM_Tree->Recovery_list[5]);
 	}
 
 	return true;
