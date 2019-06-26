@@ -5,7 +5,9 @@ FTM_Manager::FTM_Manager()
 	//Initialisation du graphe
 
 	//Initialisation des FTM
-	FTM_Rule1 = new FTM_rule("DM1_ProhibitedArea","/Call_EmergencyStop");
+	ROS_INFO("1\n");
+	FTM_Rule1 = new FTM_rule("DM1_ProhibitedArea","/call_R3_EmergencyStop");
+	ROS_INFO("2\n");
 	//FTM_Rule2 = new FTM_rule("CmdNotUpdated","/Call_ControlStop");
 	//FTM_Rule3 = new FTM_rule("OutRange","/Call_ControlStop");
 	//FTM_Rule6 = new FTM_rule("BadApprox","/Call_ControlStop");
@@ -19,42 +21,55 @@ bool FTM_Manager::run()
 	ros::Rate loop_rate(10);
 	while (nh_.ok())
 	{
-		ros::spinOnce();
-		loop_rate.sleep();
 
+		ROS_INFO("3\n");
 		FTM_detect1=FTM_Rule1->detection_state();
-		FTM_detect2=FTM_Rule2->detection_state();
+		/*FTM_detect2=FTM_Rule2->detection_state();
 		FTM_detect3=false;//FTM_Rule3->detection_state();
 		FTM_detect4=false;
 		FTM_detect5=false;
-		FTM_detect6=FTM_Rule6->detection_state();
+		FTM_detect6=FTM_Rule6->detection_state();*/
 
-		FTM_Tree->Detection_list[0]=FTM_detect1;
+		ROS_INFO("4\n");
+
+		/*FTM_Tree->Detection_list[0]=FTM_detect1;
 		FTM_Tree->Detection_list[1]=FTM_detect2;
 		FTM_Tree->Detection_list[2]=FTM_detect3;
 		FTM_Tree->Detection_list[3]=FTM_detect4;
 		FTM_Tree->Detection_list[4]=FTM_detect5;
-		FTM_Tree->Detection_list[5]=FTM_detect6;
+		FTM_Tree->Detection_list[5]=FTM_detect6;*/
 	
 		// Set the right Recovery_list depending of the Detection_list
 		//FTM_Manager::Algo_FTM();
 
+		ROS_INFO("5\n");
+
 		// Forcing the FTM Algorithm
-		for(int i=0; i<FTM_Tree->Detection_list.size(); i++)
-			FTM_Tree->Recovery_list[i]=FTM_Tree->Detection_list[i];
+		/*for(int i=0; i<FTM_Tree->Detection_list.size(); i++)
+			FTM_Tree->Recovery_list[i]=FTM_Tree->Detection_list[i];*/
+
+
+
+		ROS_INFO("6\n");
 
 		//Send the state of recovery to trigger it or not
-		std::cout << "1"<<FTM_Tree->Recovery_list[0] << '\n';
+		/*std::cout << "1"<<FTM_Tree->Recovery_list[0] << '\n';
 		std::cout << "2"<<FTM_Tree->Recovery_list[1] << '\n';
 		std::cout << "3"<<FTM_Tree->Recovery_list[2] << '\n';
 		std::cout << "4"<<FTM_Tree->Recovery_list[3] << '\n';
 		std::cout << "5"<<FTM_Tree->Recovery_list[4] << '\n';
-		std::cout << "6"<<FTM_Tree->Recovery_list[5] << '\n';
+		std::cout << "6"<<FTM_Tree->Recovery_list[5] << '\n';*/
 
-		FTM_Rule1->recovery_state(FTM_Tree->Recovery_list[0]);
+		ROS_INFO("7\n");
+
+		FTM_Rule1->recovery_state(FTM_detect1);
+		//FTM_Rule1->recovery_state(FTM_Tree->Recovery_list[0]);
 		//FTM_Rule2->recovery_state(FTM_Tree->Recovery_list[1]);
 		//FTM_Rule3->recovery_state(FTM_Tree->Recovery_list[2]);
 		//FTM_Rule6->recovery_state(FTM_Tree->Recovery_list[5]);
+
+		ros::spinOnce();
+		loop_rate.sleep();
 	}
 
 	return true;
