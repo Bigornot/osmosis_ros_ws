@@ -2,208 +2,121 @@
 
 FTM_Manager::FTM_Manager()
 {
-	//Initialisation du graphe
+	//TO THE USER :
+	//All subscribers and publishers must be declared here
+	//publishers (all the RM)
+	RM3_emergency_pub_ = nh_.advertise<std_msgs::Bool>("RM3_emergency_shutdown", 1);
 
-	//Initialisation des FTM
-	ROS_INFO("1\n");
-	FTM_Rule1 = new FTM_rule("DM1_ProhibitedArea","/call_R3_EmergencyStop");
-	ROS_INFO("2\n");
-	//FTM_Rule2 = new FTM_rule("CmdNotUpdated","/Call_ControlStop");
-	//FTM_Rule3 = new FTM_rule("OutRange","/Call_ControlStop");
-	//FTM_Rule6 = new FTM_rule("BadApprox","/Call_ControlStop");
-	//FTM_Tree = new Tree_Vector();
+	//subscribers (all the DM)
+	DM1_ProhibitedArea_sub_  = nh_.subscribe("DM1_ProhibitedArea", 1, &FTM_Manager::DM1_Callback, this);
+	DM2_CmdNotUpdated_sub_  = nh_.subscribe("DM2_CmdNotUpdated", 1, &FTM_Manager::DM2_Callback, this);
+	DM3_WrongCommand_sub_  = nh_.subscribe("DM3_WrongCommand", 1, &FTM_Manager::DM3_Callback, this);
+	DM5_NodeCrash_sub_  = nh_.subscribe("DM5_NodeCrash", 1, &FTM_Manager::DM5_Callback, this);
 
-	//FTM_Tree->Recovery_list={false, false ,false ,false ,false, false, false, false};
+	//We need a array of all the IDs of DM that we use, don't forget to complete it and the numbers of DM in hpp
+	//same for RM
+
+	//now we build the matrix that define the rules
+	//the example under has a unique rule "if we have DM1 then do RM3"
+	//
+	//						_______RM______
+	//						id1 id2 id3 id4
+	//       |id1  0   0   1   0
+	//       |id2  0   0   0   0
+	//   DM  |id3  0   0   0   0
+	//       |id4  0   0   0   0
+	//       |id5  0   0   0   0
+	//
+
+	//it starts filled with 0 with ids on the sides
+
+	first_line.push_back(0);
+	line.push_back(0);
+	for(int j=0;j<NB_RM;j++)
+	{
+		first_line.push_back(RM_id[j]);
+		line.push_back(0);
+	}
+
+	rules_matrix.push_back(first_line);
+
+	for (int i=1;i<=NB_DM;i++)
+	{
+		line[0]=DM_id[i-1];
+		rules_matrix.push_back(line);
+	}
+	//now add your connections between DMi and RMj with add_rule(i,j)
+	add_rule(1,3);
+	add_rule(2,4);
+	add_rule(6,5);
+	add_rule(9,5);
+	add_rule(7,6);
+
 }
 
 bool FTM_Manager::run()
 {
+
 	ros::Rate loop_rate(10);
 	while (nh_.ok())
 	{
+		///
+		cout<<"debut matrice"<<endl;
+		for (int i=0;i<=NB_DM;i++)
+		{
+			for (int j=0;j<=NB_RM;j++)
+			{
+				cout<<rules_matrix[i][j];
+			}
+			cout<<endl;
+		}
 
-		ROS_INFO("3\n");
-		FTM_detect1=FTM_Rule1->detection_state();
-		/*FTM_detect2=FTM_Rule2->detection_state();
-		FTM_detect3=false;//FTM_Rule3->detection_state();
-		FTM_detect4=false;
-		FTM_detect5=false;
-		FTM_detect6=FTM_Rule6->detection_state();*/
-
-		ROS_INFO("4\n");
-
-		/*FTM_Tree->Detection_list[0]=FTM_detect1;
-		FTM_Tree->Detection_list[1]=FTM_detect2;
-		FTM_Tree->Detection_list[2]=FTM_detect3;
-		FTM_Tree->Detection_list[3]=FTM_detect4;
-		FTM_Tree->Detection_list[4]=FTM_detect5;
-		FTM_Tree->Detection_list[5]=FTM_detect6;*/
-	
-		// Set the right Recovery_list depending of the Detection_list
-		//FTM_Manager::Algo_FTM();
-
-		ROS_INFO("5\n");
-
-		// Forcing the FTM Algorithm
-		/*for(int i=0; i<FTM_Tree->Detection_list.size(); i++)
-			FTM_Tree->Recovery_list[i]=FTM_Tree->Detection_list[i];*/
-
-
-
-		ROS_INFO("6\n");
-
-		//Send the state of recovery to trigger it or not
-		/*std::cout << "1"<<FTM_Tree->Recovery_list[0] << '\n';
-		std::cout << "2"<<FTM_Tree->Recovery_list[1] << '\n';
-		std::cout << "3"<<FTM_Tree->Recovery_list[2] << '\n';
-		std::cout << "4"<<FTM_Tree->Recovery_list[3] << '\n';
-		std::cout << "5"<<FTM_Tree->Recovery_list[4] << '\n';
-		std::cout << "6"<<FTM_Tree->Recovery_list[5] << '\n';*/
-
-		ROS_INFO("7\n");
-
-		FTM_Rule1->recovery_state(FTM_detect1);
-		//FTM_Rule1->recovery_state(FTM_Tree->Recovery_list[0]);
-		//FTM_Rule2->recovery_state(FTM_Tree->Recovery_list[1]);
-		//FTM_Rule3->recovery_state(FTM_Tree->Recovery_list[2]);
-		//FTM_Rule6->recovery_state(FTM_Tree->Recovery_list[5]);
-
+		cout<<"fin matrice"<<endl;
+///
 		ros::spinOnce();
 		loop_rate.sleep();
 	}
-
 	return true;
 }
 
-void FTM_Manager::Algo_FTM()
+void FTM_Manager::add_rule(int i,int j)
 {
-	//Get the data of the detection
-	FTM_Tree->Liste_FTM.clear();
-	for (int k=0;k<FTM_Tree->Detection_list.size();k++)
-	{
-		bool test=FTM_Tree->Detection_list[k];
-		if(test)
-		{
-			FTM_Tree->Liste_FTM.push_back(FTM_Tree->Liste_FTM_originale[k]);
-		}
-		else
-		{
+	int line_nb=1;
+	while (rules_matrix[line_nb][0]!=i)
+		line_nb++;
 
-		}
-	}
+	int column_nb=1;
+	while (rules_matrix[0][column_nb]!=j)
+		column_nb++;
 
-	Nb_FTM=FTM_Tree->Liste_FTM.size();
-	Nb_BRANCH=FTM_Tree->FTM_Branch.size();
-
-	for (int i=0;i<Nb_BRANCH;i++)
-	{
-		tableau.clear();
-		for (int j=0;j<Nb_FTM;j++)
-		{
-			pointer=std::find(FTM_Tree->FTM_Branch[i].begin(),FTM_Tree->FTM_Branch[i].end(),FTM_Tree->Liste_FTM[j]);
-			if (*pointer==FTM_Tree->Liste_FTM[j])
-			{	
-				tableau.push_back(pointer);
-			}
-		}
-		if (tableau.size()==1)
-		{
-			pointer2=std::find(FTM_Tree->Liste_FTM_originale.begin(),FTM_Tree->Liste_FTM_originale.end(),*tableau[0]);
-			if(*pointer2==*tableau[0])
-			{
-				FTM_Tree->Recovery_list[std::distance(FTM_Tree->Liste_FTM_originale.begin(),pointer2)]=true;
-			}
-		}
-
-		if(tableau.size()>1)
-		{
-			for(int l=0;l<tableau.size()-1;l++)
-			{
-				if(distance(tableau[l],tableau[l+1])<0)
-				{
-					pointergagnant=tableau[l];
-				}
-			}
-			pointer2=std::find(FTM_Tree->Liste_FTM_originale.begin(),FTM_Tree->Liste_FTM_originale.end(),*pointergagnant);
-			if(*pointer2==*pointergagnant)
-			{
-				FTM_Tree->Recovery_list[std::distance(FTM_Tree->Liste_FTM_originale.begin(),pointer2)]=true;
-			}
-
-		}
-		else
-		{
-		}
-	}
-	//FROM HERE WE HAVE ALREADY CHOOSEN THE FTM WHICH WIN OVER
-
-	FTM_Tree->Liste_Recovery.clear();
-
-	for (int k=0;k<FTM_Tree->Recovery_list.size();k++)
-	{
-		bool test2=FTM_Tree->Recovery_list[k];
-		if(test2)
-		{
-			FTM_Tree->Liste_Recovery.push_back(FTM_Tree->Liste_Recovery_originale[k]);
-		}
-		else
-		{
-		}
-	}
-
-	int Nb_Recovery=FTM_Tree->Liste_Recovery.size();
-	int Nb_BRANCH1=FTM_Tree->Recovery_Branch.size();
-
-	for (int i=0;i<Nb_BRANCH1;i++)
-	{
-		tableau1.clear();
-		for (int j=0;j<Nb_Recovery;j++)
-		{
-			pointer3=std::find(FTM_Tree->Recovery_Branch[i].begin(),FTM_Tree->Recovery_Branch[i].end(),FTM_Tree->Liste_Recovery[j]);
-			if (*pointer3==FTM_Tree->Liste_Recovery[j])
-			{
-				tableau1.push_back(pointer3);
-			}
-		}
-		if (tableau1.size()==1)
-		{
-			pointer4=std::find(FTM_Tree->Liste_Recovery_originale.begin(),FTM_Tree->Liste_Recovery_originale.end(),*tableau1[0]);
-			if(*pointer4==*tableau1[0])
-			{
-				FTM_Tree->Recovery_list[std::distance(FTM_Tree->Liste_Recovery_originale.begin(),pointer4)]=true;
-			}
-		}
-		if(tableau1.size()>1)
-		{
-			for(int l=0;l<tableau1.size()-1;l++)
-			{
-				if(distance(tableau1[l],tableau1[l+1])<0)
-				{
-					pointergagnant1=tableau1[l];
-					pointerperdant1=tableau1[l+1];
-				}
-			}
-			pointer4=std::find(FTM_Tree->Liste_Recovery_originale.begin(),FTM_Tree->Liste_Recovery_originale.end(),*pointergagnant1);
-			pointer5=std::find(FTM_Tree->Liste_Recovery_originale.begin(),FTM_Tree->Liste_Recovery_originale.end(),*pointerperdant1);
-			if(*pointer4==*pointergagnant1)
-			{
-				FTM_Tree->Recovery_list[std::distance(FTM_Tree->Liste_Recovery_originale.begin(),pointer4)]=true;
-			}
-
-			if(*pointer5==*pointerperdant1)
-			{
-				FTM_Tree->Recovery_list[std::distance(FTM_Tree->Liste_Recovery_originale.begin(),pointer5)]=false;
-			}
-
-
-		}
-		else
-		{
-		}
-	}
-
-	a=0;
+	rules_matrix[line_nb][column_nb]=1;
 }
+
+
+void FTM_Manager::DM1_Callback(const std_msgs::Bool &detected)
+{
+	if (detected.data)
+		DM_activated.push_back(1);
+}
+
+void FTM_Manager::DM2_Callback(const std_msgs::Bool &detected)
+{
+	if (detected.data)
+		DM_activated.push_back(2);
+}
+
+void FTM_Manager::DM3_Callback(const std_msgs::Bool &detected)
+{
+	if (detected.data)
+		DM_activated.push_back(3);
+}
+
+void FTM_Manager::DM5_Callback(const std_msgs::Bool &detected)
+{
+	if (detected.data)
+		DM_activated.push_back(5);
+}
+
 
 int main(int argc, char** argv)
 {
