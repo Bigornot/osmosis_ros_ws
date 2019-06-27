@@ -1,7 +1,7 @@
 #include <osmosis_control/RecoveryModules/R3_EmergencyStop.hpp>
 #include <osmosis_control/RecoveryModules/Recov.hpp>
 
-R3_EmergencyStop::R3_EmergencyStop() : Recov()
+R3_EmergencyStop::R3_EmergencyStop() : Recov() //constructeur
 {
 	Call_sub_=nh_.subscribe("call_R3_EmergencyStop", 1, &R3_EmergencyStop::R3_EmergencyStopCallback, this);
 	R3_EmergencyStop_pub_=nh_.advertise<std_msgs::Bool>("/do_R3_EmergencyStop", 1);
