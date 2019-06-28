@@ -60,7 +60,6 @@ bool FTM_Manager::run()
 	ros::Rate loop_rate(10);
 	while (nh_.ok())
 	{
-		///
 		cout<<"debut matrice"<<endl;
 		for (int i=0;i<=NB_DM;i++)
 		{
@@ -70,14 +69,38 @@ bool FTM_Manager::run()
 			}
 			cout<<endl;
 		}
-
 		cout<<"fin matrice"<<endl;
-///
+
+		DM_Dominant=FTM_Tree.findDMDominant();
+		apply_rules();
+		RM_Dominant=FTM_Tree.findRMDominant();
+
 		ros::spinOnce();
 		loop_rate.sleep();
 	}
 	return true;
 }
+
+void apply_rules()
+{
+	for (int i=0;i<DM_Dominant.size();i++)
+	{
+		current_rule=DM_Dominant[i];
+
+		int line_nb=1;
+		while (rules_matrix[line_nb][0]!=current_rule)
+			line_nb++;
+
+		for (int column_nb=1;column_nb<DM_Dominant.size();column_nb++)
+				{
+					if (rules_matrix[line_nb][column_nb]==1)
+						RM_activated=rules_matrix[line_nb][column_nb];
+				}
+	}
+}
+
+
+
 
 void FTM_Manager::add_rule(int i,int j)
 {

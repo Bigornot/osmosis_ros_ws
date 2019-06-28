@@ -24,16 +24,17 @@ private:
 	ros::Subscriber DM3_WrongCommand_sub_;
 	ros::Subscriber DM5_NodeCrash_sub_;
 
-	std_msgs::Bool detected;
-
-
 	vector<int> DM_activated;
+	vector<int> RM_activated;
 	int DM_id[NB_DM]={1, 2, 3, 5, 7, 6, 4, 9};
 	int RM_id[NB_RM]={3, 4, 1, 6, 5};
 
 	vector<int> line;
 	vector<int> first_line;
 	vector<vector<int>> rules_matrix;
+
+	vector<int> DM_Dominant;
+	vector<int> RM_Dominant;
 
 public:
 	FTM_Manager();
@@ -43,6 +44,7 @@ public:
 	void DM3_Callback(const std_msgs::Bool & detected);
 	void DM5_Callback(const std_msgs::Bool & detected);
 	void add_rule(int i,int j);
+	void apply_rules();
 
 };
 
