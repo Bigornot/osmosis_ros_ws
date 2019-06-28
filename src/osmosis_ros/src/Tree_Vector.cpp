@@ -12,7 +12,7 @@ Tree_Vector::Tree_Vector()
 	DM_Branches_.push_back({1,3,6});
 
 	// RECOVERY TREE //
-	Recovery_Branches_.push_back({1,2,3});
+	RM_Branches_.push_back({1,2,3});
 
 
 //////////////////// Example ////////////////////
@@ -98,30 +98,43 @@ void Tree_Vector::findDominant(char moduleType)
 		}
 	}
 
+	// Find the dominant RMs and the ones to shutdown
 	else if(moduleType=='R')
 	{
-		// For each Activated RM
-		for(int k=0; k<RM_activated_.size(); k++)
+		// For each Branch
+		for(int i=0; i<RM_Branches_.size(); i++)
 		{
-			// For each Branch
-			for(int i=0; i<Recovery_Branches_.size(); i++)
-			{
-				found=false;
+			found=false;
 
-				// For each tree level
-				for(int j=0; j<Recovery_Branches_[i].size()&&!found; i++)
+			// For each tree level
+			for(int j=0; j<RM_Branches_[i].size(); j++)
+			{
+				// For each Activated RM
+				if(!found)
 				{
-					if(Recovery_Branches_[i][j]==RM_activated_[k])
+					for(int k=0; k<RM_activated_.size(); k++)
 					{
-						found=true;
-						
-						if(find(RM_dominant_.begin(), RM_dominant_.end(), RM_activated_[k])==RM_dominant_.end());
-							RM_dominant_.push_back(RM_activated_[k]);
+						if(RM_Branches_[i][j]==RM_activated_[k])
+						{
+							found=true;
+							if(find(RM_dominant_.begin(), RM_dominant_.end(), RM_activated_[k])==RM_dominant_.end())
+								RM_dominant_.push_back(RM_activated_[k]);
+						}
 					}
 				}
-				
+				else
+				{
+					if(find(RM_toShutdown_.begin(), RM_toShutdown_.end(), RM_Branches_[i][j])==RM_toShutdown_.end())
+						RM_toShutdown_.push_back(RM_Branches_[i][j]);
+				}
 			}
 		}
+
 	}
 
+}
+
+vector<int> Tree_Vector::getRMToShutdown()
+{
+	return RM_toShutdown_;
 }
