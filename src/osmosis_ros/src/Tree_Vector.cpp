@@ -5,12 +5,15 @@ using namespace std;
 Tree_Vector::Tree_Vector()
 {
 	// FAULT TREE //
-	DM_Branches_.push_back({1,2,4});
+	DM_Branches_.push_back({1,7});
 	DM_Branches_.push_back({1,2,5});
-	DM_Branches_.push_back({1,3,6});
+	DM_Branches_.push_back({1,3,5,6});
+
 
 	// RECOVERY TREE //
-	RM_Branches_.push_back({1,2,3});
+	RM_Branches_.push_back({1,2,6});
+	RM_Branches_.push_back({1,2,3,7});
+	RM_Branches_.push_back({1,5});
 
 
 //////////////////// Example ////////////////////
@@ -24,7 +27,7 @@ Tree_Vector::Tree_Vector()
 		DM_Branches.push_back({6,3,1});
 
 	 Corresponds to :
-	
+
                      FTM1
                       |
                       OR
@@ -33,9 +36,9 @@ Tree_Vector::Tree_Vector()
            FTM2     FTM2      FTM3
             |                  |
             OR                FTM6
-          _/ \_      
-         |     |     
-        FTM4  FTM5      
+          _/ \_
+         |     |
+        FTM4  FTM5
 */
 /////////////////////////////////////////////////
 
@@ -91,7 +94,7 @@ void Tree_Vector::findDominant(char moduleType)
 							DM_dominant_.push_back(DM_activated_[k]);
 					}
 				}
-				
+
 			}
 		}
 	}
@@ -142,7 +145,7 @@ void Tree_Vector::showDMActivated()
 {
 	cout << "DM activated : ";
 	for(int i=0; i<DM_activated_.size(); i++)
-		cout << DM_activated_[i];
+		cout << DM_activated_[i]<<" ";
 	cout << endl << endl;
 }
 
@@ -151,6 +154,6 @@ void Tree_Vector::showRMActivated()
 {
 	cout << "RM activated : ";
 	for(int i=0; i<RM_activated_.size(); i++)
-		cout << RM_activated_[i];
+		cout << RM_activated_[i]<<" ";
 	cout << endl << endl;
 }

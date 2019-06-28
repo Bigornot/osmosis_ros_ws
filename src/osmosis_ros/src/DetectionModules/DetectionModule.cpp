@@ -24,7 +24,7 @@ void DetectionModule::driveDetectionModule()
 
 		case ERROR_DETECTED:
 			debug_msg="ERROR_DETECTED";
-			//attendre l'acquisition, bloquant pour l'instant
+			driveState_=DETECTION_MODE;
 			break;
 	}
 }

@@ -2,6 +2,8 @@
 
 FTM_Manager::FTM_Manager()
 {
+	FTM_Tree.push_DM(6);
+
 	//TO THE USER :
 	//All subscribers and publishers must be declared here
 	//publishers (all the RM)
@@ -46,12 +48,14 @@ FTM_Manager::FTM_Manager()
 		rules_matrix.push_back(line);
 	}
 	//now add your connections between DMi and RMj with add_rule(i,j)
-	add_rule(1,3);
-	add_rule(2,4);
-	add_rule(6,5);
-	add_rule(9,5);
-	add_rule(7,6);
-
+	add_rule(1,1);
+	add_rule(2,2);
+	add_rule(3,2);
+	add_rule(5,6);
+	add_rule(5,3);
+	add_rule(6,7);
+	add_rule(7,2);
+	add_rule(7,5);
 }
 
 bool FTM_Manager::run()
@@ -78,8 +82,6 @@ bool FTM_Manager::run()
 
 		DM_Dominant=FTM_Tree.findDMDominant();
 
-
-
 		cout << "DM Dominant : ";
 		for (int i=0; i<DM_Dominant.size(); i++)
 		{
@@ -88,16 +90,11 @@ bool FTM_Manager::run()
 		cout<<endl;
 		cout<<endl;
 
-
 		apply_rules();
 
-
-		FTM_Tree.showRMActivated()
-
-
+		FTM_Tree.showRMActivated();
 
 		RM_Dominant=FTM_Tree.findRMDominant();
-
 
 
 		cout << "RM Dominant : ";
@@ -158,20 +155,24 @@ vector<int>::iterator FTM_Manager::search_in_RM_Dominant(int id)
 
 void FTM_Manager::apply_rules()
 {
-	int current_rule=0;
+	int current_id_Dominant=0;
 	for (int i=0;i<DM_Dominant.size();i++)
 	{
-		current_rule=DM_Dominant[i];
+		current_id_Dominant=DM_Dominant[i];
 
 		int line_nb=1;
-		while (rules_matrix[line_nb][0]!=current_rule)
-			line_nb++;
+		while (rules_matrix[line_nb][0]!=current_id_Dominant)
+			{
+				line_nb++;
+			}
 
-		for (int column_nb=1;column_nb<DM_Dominant.size();column_nb++)
-				{
-					if (rules_matrix[line_nb][column_nb]==1)
-						FTM_Tree.push_RM(rules_matrix[line_nb][column_nb]);
-				}
+		for (int column_nb=1;column_nb<rules_matrix[0].size();column_nb++)
+		{
+			if (rules_matrix[line_nb][column_nb]==1)
+			{
+				FTM_Tree.push_RM(rules_matrix[0][column_nb]);
+			}
+		}
 	}
 }
 

@@ -8,8 +8,8 @@
 #include <std_msgs/Bool.h>
 #include <osmosis_control/Tree_Vector.hpp>
 
-#define NB_DM 8
-#define NB_RM 5
+#define NB_DM 6
+#define NB_RM 6
 
 using namespace std;
 
@@ -26,10 +26,8 @@ private:
 
 	Tree_Vector FTM_Tree;
 
-	vector<int> DM_activated;
-	vector<int> RM_activated;
-	int DM_id[NB_DM]={1, 2, 3, 5, 7, 6, 4, 9};
-	int RM_id[NB_RM]={3, 4, 1, 6, 5};
+	int DM_id[NB_DM]={1, 2, 3, 5, 6, 7};
+	int RM_id[NB_RM]={1, 2, 3, 5, 6, 7};
 
 	vector<int> line;
 	vector<int> first_line;
