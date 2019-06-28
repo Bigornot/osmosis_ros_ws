@@ -136,3 +136,21 @@ vector<int> Tree_Vector::getRMToShutdown()
 {
 	return RM_toShutdown_;
 }
+
+
+void Tree_Vector::showDMActivated()
+{
+	cout << "DM activated : ";
+	for(int i=0; i<DM_activated_.size(); i++)
+		cout << DM_activated_[i];
+	cout << endl << endl;
+}
+
+
+void Tree_Vector::showRMActivated()
+{
+	cout << "RM activated : ";
+	for(int i=0; i<RM_activated_.size(); i++)
+		cout << RM_activated_[i];
+	cout << endl << endl;
+}

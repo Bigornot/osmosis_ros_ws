@@ -31,4 +31,7 @@ public :
 	vector<int> findRMDominant();
 
 	vector<int> getRMToShutdown();
+
+	void showDMActivated();
+	void showRMActivated();
 };
