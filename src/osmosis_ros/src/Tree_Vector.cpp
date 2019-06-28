@@ -7,12 +7,12 @@ Tree_Vector::Tree_Vector()
 	cout << "1" << endl;
 
 	// FAULT TREE //
-	DM_Branches.push_back({1,2,4});
-	DM_Branches.push_back({1,2,5});
-	DM_Branches.push_back({1,3,6});
+	DM_Branches_.push_back({1,2,4});
+	DM_Branches_.push_back({1,2,5});
+	DM_Branches_.push_back({1,3,6});
 
 	// RECOVERY TREE //
-	Recovery_Branches.push_back({1,2,3});
+	Recovery_Branches_.push_back({1,2,3});
 
 
 //////////////////// Example ////////////////////
@@ -46,27 +46,27 @@ Tree_Vector::Tree_Vector()
 void Tree_Vector::push_DM(int dm)
 {
 	// Check if dm is not already in the list
-	if(find(DM_activated.begin(), DM_activated.end(), dm) == DM_activated.end())
-		DM_activated.push_back(dm);
+	if(find(DM_activated_.begin(), DM_activated_.end(), dm) == DM_activated_.end())
+		DM_activated_.push_back(dm);
 }
 
 void Tree_Vector::push_RM(int rm)
 {
 	// Check if rm is not already in the list
-	if(find(RM_activated.begin(), RM_activated.end(), rm) == RM_activated.end())
-		RM_activated.push_back(rm);
+	if(find(RM_activated_.begin(), RM_activated_.end(), rm) == RM_activated_.end())
+		RM_activated_.push_back(rm);
 }
 
 vector<int> Tree_Vector::findDMDominant()
 {
 	this->findDominant('D');
-	return DM_dominant;
+	return DM_dominant_;
 }
 
 vector<int> Tree_Vector::findRMDominant()
 {
 	this->findDominant('R');
-	return RM_dominant;
+	return RM_dominant_;
 }
 
 void Tree_Vector::findDominant(char moduleType)
@@ -76,21 +76,21 @@ void Tree_Vector::findDominant(char moduleType)
 	if(moduleType=='D')
 	{
 		// For each Branch
-		for(int i=0; i<DM_Branches.size(); i++)
+		for(int i=0; i<DM_Branches_.size(); i++)
 		{
 			found=false;
 
 			// For each tree level
-			for(int j=0; j<DM_Branches[i].size()&&!found; j++)
+			for(int j=0; j<DM_Branches_[i].size()&&!found; j++)
 			{
 				// For each Activated DM
-				for(int k=0; k<DM_activated.size()&&!found; k++)
+				for(int k=0; k<DM_activated_.size()&&!found; k++)
 				{
-					if(DM_Branches[i][j]==DM_activated[k])
+					if(DM_Branches_[i][j]==DM_activated_[k])
 					{
 						found=true;
-						if(find(DM_dominant.begin(), DM_dominant.end(), DM_activated[k])==DM_dominant.end())
-							DM_dominant.push_back(DM_activated[k]);
+						if(find(DM_dominant_.begin(), DM_dominant_.end(), DM_activated_[k])==DM_dominant_.end())
+							DM_dominant_.push_back(DM_activated_[k]);
 					}
 				}
 				
@@ -101,22 +101,22 @@ void Tree_Vector::findDominant(char moduleType)
 	else if(moduleType=='R')
 	{
 		// For each Activated RM
-		for(int k=0; k<RM_activated.size(); k++)
+		for(int k=0; k<RM_activated_.size(); k++)
 		{
 			// For each Branch
-			for(int i=0; i<Recovery_Branches.size(); i++)
+			for(int i=0; i<Recovery_Branches_.size(); i++)
 			{
 				found=false;
 
 				// For each tree level
-				for(int j=0; j<Recovery_Branches[i].size()&&!found; i++)
+				for(int j=0; j<Recovery_Branches_[i].size()&&!found; i++)
 				{
-					if(Recovery_Branches[i][j]==RM_activated[k])
+					if(Recovery_Branches_[i][j]==RM_activated_[k])
 					{
 						found=true;
 						
-						if(find(RM_dominant.begin(), RM_dominant.end(), RM_activated[k])==RM_dominant.end());
-							RM_dominant.push_back(RM_activated[k]);
+						if(find(RM_dominant_.begin(), RM_dominant_.end(), RM_activated_[k])==RM_dominant_.end());
+							RM_dominant_.push_back(RM_activated_[k]);
 					}
 				}
 				
