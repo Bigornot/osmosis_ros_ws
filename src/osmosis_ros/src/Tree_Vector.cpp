@@ -4,8 +4,6 @@ using namespace std;
 
 Tree_Vector::Tree_Vector()
 {
-	cout << "1" << endl;
-
 	// FAULT TREE //
 	DM_Branches_.push_back({1,2,4});
 	DM_Branches_.push_back({1,2,5});
