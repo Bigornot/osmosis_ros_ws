@@ -69,20 +69,96 @@ bool FTM_Manager::run()
 			}
 			cout<<endl;
 		}
-		cout<<"fin matrice"<<endl;
+		cout<<endl;
+		cout<<endl;
+
+
+		FTM_Tree.showDMActivated();
+
 
 		DM_Dominant=FTM_Tree.findDMDominant();
+
+
+
+		cout << "DM Dominant : ";
+		for (int i=0; i<DM_Dominant.size(); i++)
+		{
+				cout<<DM_Dominant[i]<<" ";
+		}
+		cout<<endl;
+		cout<<endl;
+
+
 		apply_rules();
+
+
+		FTM_Tree.showRMActivated()
+
+
+
 		RM_Dominant=FTM_Tree.findRMDominant();
 
+
+
+		cout << "RM Dominant : ";
+		for (int i=0; i<RM_Dominant.size(); i++)
+		{
+				cout<<RM_Dominant[i]<<" ";
+		}
+		cout<<endl;
+		cout<<endl;
+
+		RM_To_Shutdown=FTM_Tree.getRMToShutdown();
+
+		cout << "RM To Shutdown : ";
+		for (int i=0; i<RM_To_Shutdown.size(); i++)
+		{
+				cout<<RM_To_Shutdown[i]<<" ";
+		}
+		cout<<endl;
+		cout<<endl;
+		/*RM_To_Activate=compatibility();
+
+		cout << "RM To activate (after compatibility) : ";
+		for (int i=0; i<RM_To_Activate.size(); i++)
+		{
+				cout<<RM_To_Activate[i]<<" ";
+		}
+		cout<<endl;
+*/
 		ros::spinOnce();
 		loop_rate.sleep();
 	}
+
 	return true;
 }
 
-void apply_rules()
+/*vector<int> FTM_Manager::compatibility()
 {
+		//add you incompatibilities here
+		//Dominance is already handle by the tree
+		//be aware that order matters
+/*
+		vector<int>::iterator pos1=search_in_RM_Dominant(id1);
+		vector<int>::iterator pos2=search_in_RM_Dominant(id2);
+
+		if (pos1!=RM_Dominant.end()&&pos2!=RM_Dominant.end())
+		{
+			RM_Dominant.erase(pos1);
+			RM_Dominant.erase(search_in_RM_Dominant(id2));
+			RM_Dominant.push_back(id3);
+		}
+	*/
+//}
+
+vector<int>::iterator FTM_Manager::search_in_RM_Dominant(int id)
+{
+	return find(RM_Dominant.begin(), RM_Dominant.end(),id);
+}
+
+void FTM_Manager::apply_rules()
+{
+	int current_rule=0;
 	for (int i=0;i<DM_Dominant.size();i++)
 	{
 		current_rule=DM_Dominant[i];
@@ -94,13 +170,10 @@ void apply_rules()
 		for (int column_nb=1;column_nb<DM_Dominant.size();column_nb++)
 				{
 					if (rules_matrix[line_nb][column_nb]==1)
-						RM_activated=rules_matrix[line_nb][column_nb];
+						FTM_Tree.push_RM(rules_matrix[line_nb][column_nb]);
 				}
 	}
 }
-
-
-
 
 void FTM_Manager::add_rule(int i,int j)
 {
@@ -119,25 +192,25 @@ void FTM_Manager::add_rule(int i,int j)
 void FTM_Manager::DM1_Callback(const std_msgs::Bool &detected)
 {
 	if (detected.data)
-		DM_activated.push_back(1);
+		FTM_Tree.push_DM(1);
 }
 
 void FTM_Manager::DM2_Callback(const std_msgs::Bool &detected)
 {
 	if (detected.data)
-		DM_activated.push_back(2);
+		FTM_Tree.push_DM(2);
 }
 
 void FTM_Manager::DM3_Callback(const std_msgs::Bool &detected)
 {
 	if (detected.data)
-		DM_activated.push_back(3);
+		FTM_Tree.push_DM(3);
 }
 
 void FTM_Manager::DM5_Callback(const std_msgs::Bool &detected)
 {
 	if (detected.data)
-		DM_activated.push_back(5);
+		FTM_Tree.push_DM(5);
 }
 
 

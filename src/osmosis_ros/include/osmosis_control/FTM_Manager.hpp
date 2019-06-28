@@ -24,6 +24,8 @@ private:
 	ros::Subscriber DM3_WrongCommand_sub_;
 	ros::Subscriber DM5_NodeCrash_sub_;
 
+	Tree_Vector FTM_Tree;
+
 	vector<int> DM_activated;
 	vector<int> RM_activated;
 	int DM_id[NB_DM]={1, 2, 3, 5, 7, 6, 4, 9};
@@ -35,6 +37,8 @@ private:
 
 	vector<int> DM_Dominant;
 	vector<int> RM_Dominant;
+	vector<int> RM_To_Shutdown;
+	vector<int> RM_To_Activate;
 
 public:
 	FTM_Manager();
@@ -45,6 +49,8 @@ public:
 	void DM5_Callback(const std_msgs::Bool & detected);
 	void add_rule(int i,int j);
 	void apply_rules();
+	vector<int>::iterator search_in_RM_Dominant(int id);
+	//vector<int> compatibility():
 
 };
 
