@@ -13,25 +13,25 @@
 *
 */
 
-#ifndef OSMOSIS_R3_EmergencyStop_HPP
-#define OSMOSIS_R3_EmergencyStop_HPP
+#ifndef RM3_EMERGENCYSTOP_HPP
+#define RM3_EMERGENCYSTOP_HPP
 
 #include <iostream>
 #include <ros/ros.h>
 #include <std_msgs/Bool.h>
-#include <osmosis_control/RecoveryModules/Recov.hpp>
+#include <osmosis_control/RecoveryModules/RecoveryModule.hpp>
 
-class R3_EmergencyStop : public Recov
+class RM3_EmergencyStop : public RecoveryModule
 {
   private:
-    ros::Publisher R3_EmergencyStop_pub_;
+    ros::Publisher RM3_EmergencyStop_pub_;
     bool r3;
     std_msgs::Bool donnee;
 
   public:
-    R3_EmergencyStop();
+    RM3_EmergencyStop();
     void pub_topic_recov(std_msgs::Bool donnee);
-    void R3_EmergencyStopCallback(const std_msgs::Bool & r3);
-}; // end of class
+    void RM3_EmergencyStopCallback(const std_msgs::Bool & r3);
+};
 
-#endif //OSMOSIS_R3_EmergencyStop_HPP
+#endif 

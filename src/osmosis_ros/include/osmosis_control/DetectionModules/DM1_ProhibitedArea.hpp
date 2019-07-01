@@ -25,17 +25,15 @@
 class DM1_ProhibitedArea : public DetectionModule
 {
 private:
-	ros::Publisher DM1_pub_;
 	ros::Subscriber state_sub_;
 	std_msgs::Bool state;
 	bool state_;
 
 public:
-	bool detect();
-	void pub_to_FTM(std_msgs::Bool donnee);
-	void DM1_ProhibitedAreaCallback(const std_msgs::Bool & state);
 	DM1_ProhibitedArea();
-
+	bool detect();
+	void DM1_ProhibitedAreaCallback(const std_msgs::Bool & state);
+	bool getState();
 };
 
 #endif //OSMOSIS_DM1_ProhibitedArea_HPP

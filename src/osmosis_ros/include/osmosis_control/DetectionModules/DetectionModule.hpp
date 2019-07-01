@@ -24,7 +24,6 @@ public :
 	void driveDetectionModule();
 	void run(); //method to lauch the detection node
 	virtual bool detect()=0; //method for the condition of the detection
-	virtual void pub_to_FTM(std_msgs::Bool)=0; //method to publish on the designated topics
 };
 
 #endif
