@@ -20,3 +20,8 @@ vector<int> FTM_Rule::getSuc()
 	return successors_;
 }
 
+int FTM_Rule::getId()
+{
+	return id_;
+}
+

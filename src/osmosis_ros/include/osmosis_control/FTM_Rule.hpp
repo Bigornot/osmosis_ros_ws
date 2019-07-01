@@ -6,6 +6,7 @@
 #include <string>
 #include "std_msgs/Bool.h"
 #include <vector>
+
 #include <osmosis_control/DetectionModules/DetectionModule.hpp>
 #include <osmosis_control/RecoveryModules/RecoveryModule.hpp>
 
@@ -25,6 +26,7 @@ private:
 public:
 	FTM_Rule(int id, int antecedent, vector<int> successor, DetectionModule* DM, RecoveryModule* RM);
 
+	int getId();
 	int getAnt();
 	vector<int> getSuc();
 };

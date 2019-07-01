@@ -4,7 +4,6 @@ FTM_Manager::FTM_Manager()
 {
 	//FTM.push_back(new FTM_Rule(1, 0, {2,3}, &DM1_prohibited_area_, &RM3_emergency_stop_));
 	
-	//FTM_Tree = new Tree(FTM);
 	nbTriggeredFTM_=0;
 }
 

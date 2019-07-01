@@ -4,7 +4,7 @@
 #include <iostream>
 #include <ros/ros.h>
 #include <vector>
-#include <osmosis_control/Tree_Vector.hpp>
+#include <osmosis_control/Tree.hpp>
 
 using namespace std;
 
@@ -14,7 +14,7 @@ private:
 	ros::NodeHandle nh_;
 
 	int nbTriggeredFTM_;
-	Tree_Vector FTM_Tree;
+	Tree FTM_Tree;
 public:
 	FTM_Manager();
 	bool run();

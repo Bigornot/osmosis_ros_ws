@@ -7,40 +7,45 @@ Tree::Tree()
 
 }
 
-void Tree::FindDominant(vector<FTM_Rule> Triggered_rules_)
+void Tree::findDominant(vector<FTM_Rule> Triggered_rules_)
 {
 	bool promoted_to_dominant=true;
-	dominant.clear();
-	vector<FTM_Rule> dominated;
-	vector<FTM_Rule> successors;
+	dominant_.clear();
+	dominated_.clear();
 
 	for (int i=0; i<Triggered_rules_.size(); i++)//for each Rules
 	{
-		FindDominated(Triggered_rules_[i]);
+		findDominated(Triggered_rules_[i]);
 	}
 
 	for (int i=0; i<Triggered_rules_.size(); i++)//for each Dominated Rules
 	{
 		promoted_to_dominant=true;
-		for (int j=0;j<dominated.size();j++)
+		for (int j=0;j<dominated_.size();j++)
 		{
-			if (dominated[j]==Triggered_rules_[i])
+			if(dominated_[j].getId()==Triggered_rules_[i].getId())
 			{
 				promoted_to_dominant=false;
 			}
 		}
 		if (promoted_to_dominant)
-			dominant.push_back(Triggered_rules_);
+			dominant_.push_back(Triggered_rules_[i]);
 	}
 }
 
-void Tree::FindDominated(FTM_Rule Dominant_rule)
+void Tree::findDominated(FTM_Rule Dominant_rule)
 {
-	successors=getSuc(Dominant_rule);
-	for (int i=0; i<successors.size();i++)
+	vector<int> successorsId = Dominant_rule.getSuc();
+	for (int i=0; i<successorsId.size();i++)
 	{
-		dominated.push_back(successors[i]);
-		FindDominated(successors[i]);
+		for(int j=0; j<FTM.size(); j++)
+		{
+			if(successorsId[i]==FTM[j]->getId())
+			{
+				dominated_.push_back(*FTM[j]);
+				findDominated(*FTM[j]);
+			}
+		}
 	}
 }
 
