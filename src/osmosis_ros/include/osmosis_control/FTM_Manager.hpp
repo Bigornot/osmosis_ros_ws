@@ -13,7 +13,8 @@ class FTM_Manager
 private:
 	ros::NodeHandle nh_;
 
-	Tree_Vector* FTM_Tree;
+	int nbTriggeredFTM_;
+	Tree_Vector FTM_Tree;
 public:
 	FTM_Manager();
 	bool run();
