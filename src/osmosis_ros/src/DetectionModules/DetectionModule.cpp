@@ -11,8 +11,8 @@ void DetectionModule::driveDetectionModule()
 	{
 		case DETECTION_MODE:
 		  debug_msg="DETECTION_MODE";
-			state_.data=this->detect();
-			if (state_.data)
+			state_=this->detect();
+			if (state_)
 				driveState_=START_RECOVERY;
 			break;
 
@@ -31,11 +31,12 @@ void DetectionModule::driveDetectionModule()
 
 void DetectionModule::run()
 {
-	ros::Rate loop_rate(10);
-	while (nh_.ok())
-	{
-		this->driveDetectionModule();
-		ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
-		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate
-	}
+	this->driveDetectionModule();
+	ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 }
+
+bool DetectionModule::getState()
+{
+	return state_;
+}
+

@@ -26,7 +26,3 @@ void DM1_ProhibitedArea::DM1_ProhibitedAreaCallback(const std_msgs::Bool & state
 	std::cout << "SALLUT je suis DM1" << endl;
 }
 
-bool DM1_ProhibitedArea::getState()
-{
-	return state_;
-}

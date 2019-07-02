@@ -14,7 +14,7 @@ private:
 	ros::NodeHandle nh_;
 
 	int nbTriggeredFTM_;
-	Tree FTM_Tree;
+	Tree FTM_Tree_;
 public:
 	FTM_Manager();
 	bool run();

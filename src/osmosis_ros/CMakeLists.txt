@@ -163,7 +163,8 @@ add_executable(joy_teleop_node src/joy_teleop.cpp)
 add_executable(emergency_shutdown_node src/emergency_shutdown.cpp)
 add_executable(HMI_node src/HMI.cpp)
 add_executable(FTM_Manager_node src/FTM_Manager.cpp src/Tree.cpp src/FTM_Rule.cpp 
-src/DetectionModules/DetectionModule.cpp src/DetectionModules/DM1_ProhibitedArea 
+src/DetectionModules/DetectionModule.cpp src/DetectionModules/DM1_ProhibitedArea.cpp 
+#src/DetectionModules/DM2_CmdNotUpdated.cpp src/DetectionModules/DM3_WrongCommand.cpp src/DetectionModules/DM5_NodeCrash.cpp
 src/RecoveryModules/RecoveryModule.cpp src/RecoveryModules/RM3_EmergencyStop.cpp)
 
 

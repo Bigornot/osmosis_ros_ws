@@ -26,14 +26,11 @@ class DM1_ProhibitedArea : public DetectionModule
 {
 private:
 	ros::Subscriber state_sub_;
-	std_msgs::Bool state;
-	bool state_;
 
 public:
 	DM1_ProhibitedArea();
 	bool detect();
 	void DM1_ProhibitedAreaCallback(const std_msgs::Bool & state);
-	bool getState();
 };
 
 #endif //OSMOSIS_DM1_ProhibitedArea_HPP

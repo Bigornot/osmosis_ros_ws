@@ -29,6 +29,9 @@ public:
 	int getId();
 	int getAnt();
 	vector<int> getSuc();
+
+	void runDM();
+	bool getStateDM();
 };
 
 #endif
