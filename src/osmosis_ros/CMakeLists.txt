@@ -162,11 +162,9 @@ add_executable(mission_manager_node src/missionManager.cpp)
 add_executable(joy_teleop_node src/joy_teleop.cpp)
 add_executable(emergency_shutdown_node src/emergency_shutdown.cpp)
 add_executable(HMI_node src/HMI.cpp)
-add_executable(FTM_Manager_node src/FTM_Manager.cpp src/Tree.cpp src/FTM_Rule.cpp 
-src/DetectionModules/DetectionModule.cpp src/DetectionModules/DM1_ProhibitedArea.cpp 
-#src/DetectionModules/DM2_CmdNotUpdated.cpp src/DetectionModules/DM3_WrongCommand.cpp src/DetectionModules/DM5_NodeCrash.cpp
-src/RecoveryModules/RecoveryModule.cpp src/RecoveryModules/RM3_EmergencyStop.cpp)
+add_executable(FTM_Manager_node src/FTM_Manager.cpp src/Tree.cpp src/FTM_Rule.cpp src/DetectionModules/DetectionModule.cpp src/DetectionModules/DM1_ProhibitedArea.cpp src/RecoveryModules/RecoveryModule.cpp src/RecoveryModules/RM3_EmergencyStop.cpp src/RecoveryModules/RM1_test1.cpp src/RecoveryModules/RM2_test2.cpp src/RecoveryModules/RM4_test4.cpp src/RecoveryModules/RM5_test5.cpp)
 
+#src/DetectionModules/DM2_CmdNotUpdated.cpp src/DetectionModules/DM3_WrongCommand.cpp src/DetectionModules/DM5_NodeCrash.cpp
 
 add_dependencies(osmosis_control_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(safety_pilot_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})

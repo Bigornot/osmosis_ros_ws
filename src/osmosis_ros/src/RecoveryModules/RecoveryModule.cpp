@@ -1,10 +1,14 @@
 #include <osmosis_control/RecoveryModules/RecoveryModule.hpp>
 
+using namespace std;
+
 RecoveryModule::RecoveryModule(int id, int antecedent, vector<int> successors)
 {
+	driveState_=IDLE;
 	id_=id;
 	antecedent_=antecedent;
 	successors_=successors;
+	state_=false;
 }
 
 void RecoveryModule::driveRecoveryModule()
@@ -33,6 +37,7 @@ bool RecoveryModule::getState()
 
 void RecoveryModule::start()
 {
+	cout << "RM Activated" << endl;
 	state_=true;
 }
 
@@ -43,6 +48,7 @@ void RecoveryModule::stop()
 
 void RecoveryModule::run()
 {
+	cout << "debut run" << endl;
 	this->driveRecoveryModule();
 	ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 }
