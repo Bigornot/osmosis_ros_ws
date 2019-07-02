@@ -25,26 +25,31 @@ private :
 
 	RM3_EmergencyStop RM3_emergency_stop_;
 
-	vector<FTM_Rule> dominant_;
-	vector<FTM_Rule> dominated_;
-	vector<FTM_Rule> Triggered_rules_;
+	vector<FTM_Rule*> dominant_;
+	vector<FTM_Rule*> dominated_;
+	vector<FTM_Rule*> Triggered_rules_;
+	FTM_Rule* commonDominant;
 
 	void findDominant();
-	void findDominated(FTM_Rule Dominant_rule);
+	void findDominantRecovery();
+	void findDominated(FTM_Rule* Dominant_rule);
+	void findDominatedRecovery(FTM_Rule* Dominant_rule);
+
 
 	void runDMs();
 
 public :
 	Tree();
-	
+
 	void showDominants();
-
-
 	bool onlyOneDominantFTM();
-	bool onlyOneDominantRecovery(){return true;};
+
+	bool onlyOneDominantRecovery();
+
 	int getNbTriggeredFTM();
-	void doLowestCommonDominantRecovery(){};
-	void doRecovery(){};
+	void doLowestCommonDominantRecovery();
+	void findLowestCommonDominant();
+	void doRecovery();
 
 
 };
