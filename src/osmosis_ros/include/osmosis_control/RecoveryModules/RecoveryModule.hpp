@@ -4,22 +4,34 @@
 #include <iostream>
 #include <ros/ros.h>
 #include <std_msgs/Bool.h>
+#include <vector>
+
+using namespace std;
 
 class RecoveryModule
 {
-  private:
-    std_msgs::Bool recov_msg_;
+private:
+	enum driveState{IDLE, RECOVERY};
+	driveState driveState_;
 
-  protected:
-    ros::NodeHandle nh_;
-    ros::Subscriber Call_sub_;
-    bool recovery_;
+	int id_;
+	int antecedent_;
+	vector<int> successors_;
 
-  public:
-    RecoveryModule();
-    bool is_recovery_on();
-    void run();
-    virtual void pub_topic_recov(std_msgs::Bool)=0;
+protected:
+	ros::NodeHandle nh_;
+	bool state_;
+
+public:
+	RecoveryModule(int id, int antecedent, vector<int> successors);
+	bool getState();
+	void run();
+	void start();
+	void stop();
+	void driveRecoveryModule();
+	int getId();
+	vector<int> getSuc();
+	virtual void doRecovery()=0;
 };
 
 #endif

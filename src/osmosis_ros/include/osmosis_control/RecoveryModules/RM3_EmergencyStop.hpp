@@ -23,15 +23,12 @@
 
 class RM3_EmergencyStop : public RecoveryModule
 {
-  private:
-    ros::Publisher RM3_EmergencyStop_pub_;
-    bool r3;
-    std_msgs::Bool donnee;
+private:
+	ros::Publisher pub_;
 
-  public:
-    RM3_EmergencyStop();
-    void pub_topic_recov(std_msgs::Bool donnee);
-    void RM3_EmergencyStopCallback(const std_msgs::Bool & r3);
+public:
+	RM3_EmergencyStop(int id, int antecedent, vector<int> successors);
+	void doRecovery();
 };
 
 #endif 

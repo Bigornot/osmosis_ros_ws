@@ -37,3 +37,33 @@ bool FTM_Rule::getStateDM()
 	return DM_->getState();
 }
 
+void FTM_Rule::runRM()
+{
+	RM_->run();
+}
+
+bool FTM_Rule::getStateRM()
+{
+	return RM_->getState();
+}
+
+void FTM_Rule::startRM()
+{
+	RM_->start();
+}
+
+void FTM_Rule::stopRM()
+{
+	RM_->stop();
+}
+
+int FTM_Rule::getRMId()
+{
+	return RM_->getId();
+}
+
+vector<int> FTM_Rule::getRMSuc()
+{
+	return RM_->getSuc();
+}
+

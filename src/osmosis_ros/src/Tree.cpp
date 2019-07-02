@@ -4,12 +4,15 @@ using namespace std;
 
 Tree::Tree()
 {
-	FTM_.push_back(new FTM_Rule(1, 0, {2, 3}, &DM1_prohibited_area_, &RM3_emergency_stop_));
-	FTM_.push_back(new FTM_Rule(2, 1, {4}, &DM1_prohibited_area_, &RM3_emergency_stop_));
-	FTM_.push_back(new FTM_Rule(3, 1, {5,6}, &DM1_prohibited_area_, &RM3_emergency_stop_));
-	FTM_.push_back(new FTM_Rule(4, 2, {}, &DM1_prohibited_area_, &RM3_emergency_stop_));
-	FTM_.push_back(new FTM_Rule(5, 3, {}, &DM1_prohibited_area_, &RM3_emergency_stop_));
-	FTM_.push_back(new FTM_Rule(6, 3, {}, &DM1_prohibited_area_, &RM3_emergency_stop_));
+	DM1_prohibited_area_ = new DM1_ProhibitedArea();
+	RM3_emergency_stop_ = new RM3_EmergencyStop(3, 0, {});
+
+	FTM_.push_back(new FTM_Rule(1, 0, {2, 3}, DM1_prohibited_area_, RM3_emergency_stop_));
+	FTM_.push_back(new FTM_Rule(2, 1, {4}, DM1_prohibited_area_, RM3_emergency_stop_));
+	FTM_.push_back(new FTM_Rule(3, 1, {5,6}, DM1_prohibited_area_, RM3_emergency_stop_));
+	FTM_.push_back(new FTM_Rule(4, 2, {}, DM1_prohibited_area_, RM3_emergency_stop_));
+	FTM_.push_back(new FTM_Rule(5, 3, {}, DM1_prohibited_area_, RM3_emergency_stop_));
+	FTM_.push_back(new FTM_Rule(6, 3, {}, DM1_prohibited_area_, RM3_emergency_stop_));
 }
 
 void Tree::runDMs()
@@ -96,3 +99,5 @@ int Tree::getNbTriggeredFTM()
 
 	return Triggered_rules_.size();
 }
+
+

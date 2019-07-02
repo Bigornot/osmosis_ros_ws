@@ -32,6 +32,14 @@ public:
 
 	void runDM();
 	bool getStateDM();
+	void runRM();
+	bool getStateRM();
+
+	void startRM();
+	void stopRM();
+
+	int getRMId();
+	vector<int> getRMSuc();
 };
 
 #endif

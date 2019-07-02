@@ -18,12 +18,12 @@ class Tree
 private :
 	vector<FTM_Rule*> FTM_;
 
-	DM1_ProhibitedArea DM1_prohibited_area_;
-	//DM2_CmdNotUpdated DM2_cmd_not_updated_;
-	//DM3_WrongCommand DM3_wrong_command_;
-	//DM5_NodeCrash DM5_node_crash_;
+	DM1_ProhibitedArea* DM1_prohibited_area_;
+	//DM2_CmdNotUpdated* DM2_cmd_not_updated_;
+	//DM3_WrongCommand* DM3_wrong_command_;
+	//DM5_NodeCrash* DM5_node_crash_;
 
-	RM3_EmergencyStop RM3_emergency_stop_;
+	RM3_EmergencyStop* RM3_emergency_stop_;
 
 	vector<FTM_Rule> dominant_;
 	vector<FTM_Rule> dominated_;
@@ -38,7 +38,6 @@ public :
 	Tree();
 	
 	void showDominants();
-
 
 	bool onlyOneDominantFTM();
 	bool onlyOneDominantRecovery(){return true;};

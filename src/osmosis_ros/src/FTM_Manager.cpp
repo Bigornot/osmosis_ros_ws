@@ -47,7 +47,7 @@ bool FTM_Manager::run()
 				// If there are still many dominant recoveries
 				// The choosen strategy is applied
 				else
-					FTM_Tree_.doLowestCommonDominantRecovery(); // Safety First : so the lowest common dominant recovy is done
+					FTM_Tree_.doLowestCommonDominantRecovery(); // Safety First : so the lowest common dominant recovery is done
 			}
 		}
 
