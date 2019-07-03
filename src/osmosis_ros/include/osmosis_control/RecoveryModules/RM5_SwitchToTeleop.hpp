@@ -13,21 +13,21 @@
 *
 */
 
-#ifndef RM1_HPP
-#define RM1_HPP
+#ifndef RM5_SWITCHTOTELEOPHPP
+#define RM5_SWITCHTOTELEOPHPP
 
 #include <iostream>
 #include <ros/ros.h>
 #include <std_msgs/Bool.h>
 #include <osmosis_control/RecoveryModules/RecoveryModule.hpp>
 
-class RM1_test1 : public RecoveryModule
+class RM5_SwitchToTeleop : public RecoveryModule
 {
 private:
 	ros::Publisher pub_;
 
 public:
-	RM1_test1(int id, int antecedent, vector<int> successors);
+	RM5_SwitchToTeleop(int id, int antecedent, vector<int> successors);
 	void doRecovery();
 };
 

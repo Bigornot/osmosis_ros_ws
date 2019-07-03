@@ -13,21 +13,21 @@
 *
 */
 
-#ifndef RM3_EMERGENCYSTOP_HPP
-#define RM3_EMERGENCYSTOP_HPP
+#ifndef RM2_CONTROLLEDSTOPHPP
+#define RM2_CONTROLLEDSTOPHPP
 
 #include <iostream>
 #include <ros/ros.h>
 #include <std_msgs/Bool.h>
 #include <osmosis_control/RecoveryModules/RecoveryModule.hpp>
 
-class RM3_EmergencyStop : public RecoveryModule
+class RM2_ControlledStop : public RecoveryModule
 {
 private:
 	ros::Publisher pub_;
 
 public:
-	RM3_EmergencyStop(int id, int antecedent, vector<int> successors);
+	RM2_ControlledStop(int id, int antecedent, vector<int> successors);
 	void doRecovery();
 };
 

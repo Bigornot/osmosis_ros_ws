@@ -9,11 +9,11 @@
 #include <osmosis_control/DetectionModules/DM3_WrongCommand.hpp>
 #include <osmosis_control/DetectionModules/DM5_NodeCrash.hpp>
 
-#include <osmosis_control/RecoveryModules/RM1_test1.hpp>
-#include <osmosis_control/RecoveryModules/RM2_test2.hpp>
-#include <osmosis_control/RecoveryModules/RM3_EmergencyStop.hpp>
+#include <osmosis_control/RecoveryModules/RM1_EmergencyStop.hpp>
+#include <osmosis_control/RecoveryModules/RM2_ControlledStop.hpp>
+#include <osmosis_control/RecoveryModules/RM3_test3.hpp>
 #include <osmosis_control/RecoveryModules/RM4_test4.hpp>
-#include <osmosis_control/RecoveryModules/RM5_test5.hpp>
+#include <osmosis_control/RecoveryModules/RM5_SwitchToTeleop.hpp>
 
 using namespace std;
 
@@ -27,11 +27,11 @@ private :
 	DM3_WrongCommand* DM3_wrong_command_;
 	DM5_NodeCrash* DM5_node_crash_;
 
-	RM1_test1* RM1_;
-	RM2_test2* RM2_;
-	RM3_EmergencyStop* RM3_emergency_stop_;
+	RM1_EmergencyStop* RM1_emergency_stop_;
+	RM2_ControlledStop* RM2_controlled_stop_;
+	RM3_test3* RM3_;
 	RM4_test4* RM4_;
-	RM5_test5* RM5_;
+	RM5_SwitchToTeleop* RM5_switch_to_teleop_;
 
 	vector<FTM_Rule*> Triggered_rules_;
 	vector<FTM_Rule*> dominant_;

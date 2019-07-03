@@ -171,11 +171,11 @@ src/DetectionModules/DM3_WrongCommand.cpp
 src/DetectionModules/DM5_NodeCrash.cpp
 
 src/RecoveryModules/RecoveryModule.cpp 
-src/RecoveryModules/RM3_EmergencyStop.cpp 
-src/RecoveryModules/RM1_test1.cpp 
-src/RecoveryModules/RM2_test2.cpp 
+src/RecoveryModules/RM1_EmergencyStop.cpp 
+src/RecoveryModules/RM2_ControlledStop.cpp 
+src/RecoveryModules/RM3_test3.cpp 
 src/RecoveryModules/RM4_test4.cpp 
-src/RecoveryModules/RM5_test5.cpp)
+src/RecoveryModules/RM5_SwitchToTeleop.cpp)
 
 
 add_dependencies(osmosis_control_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})

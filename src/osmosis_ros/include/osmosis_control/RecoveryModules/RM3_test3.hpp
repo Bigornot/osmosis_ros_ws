@@ -13,21 +13,21 @@
 *
 */
 
-#ifndef RM5_HPP
-#define RM5_HPP
+#ifndef RM3_HPP
+#define RM3_HPP
 
 #include <iostream>
 #include <ros/ros.h>
 #include <std_msgs/Bool.h>
 #include <osmosis_control/RecoveryModules/RecoveryModule.hpp>
 
-class RM5_test5 : public RecoveryModule
+class RM3_test3 : public RecoveryModule
 {
 private:
 	ros::Publisher pub_;
 
 public:
-	RM5_test5(int id, int antecedent, vector<int> successors);
+	RM3_test3(int id, int antecedent, vector<int> successors);
 	void doRecovery();
 };
 
