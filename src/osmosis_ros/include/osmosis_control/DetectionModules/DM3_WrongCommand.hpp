@@ -17,26 +17,24 @@
 #define OSMOSIS_DM3_WrongCommand_HPP
 
 #include <iostream>
-#include <cmath>
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
-#include <std_msgs/Bool.h>
 #include <osmosis_control/DetectionModules/DetectionModule.hpp>
 
 class DM3_WrongCommand : public DetectionModule
 {
 private:
-  ros::Publisher DM3_pub_;
-  ros::Subscriber cmd_sub_;
-  geometry_msgs::Twist cmd_;
-  float cmd_linear_x_max_;
-  float cmd_angular_z_max_;
+	ros::Subscriber cmd_sub_;
+	geometry_msgs::Twist cmd_;
+	float cmd_linear_x_max_;
+	float cmd_linear_x_min_;
+	float cmd_angular_z_max_;
+	float cmd_angular_z_min_;
 
 public:
-  bool detect();
-  void pub_to_FTM(std_msgs::Bool donnee);
-  void DM3_WrongCommandCallback(const geometry_msgs::Twist & cmd_msg);
-  DM3_WrongCommand();
+	DM3_WrongCommand();
+	bool detect();
+	void DM3_WrongCommandCallback(const geometry_msgs::Twist & cmd_msg);
 
 }; // end of class
 

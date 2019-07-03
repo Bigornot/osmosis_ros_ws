@@ -11,10 +11,7 @@ DM1_ProhibitedArea::DM1_ProhibitedArea() : DetectionModule()
 bool DM1_ProhibitedArea::detect()
 {
 	if (state_)
-	{
-		std::cout << "The robot is in a prohibited area." << endl;
 		return true;
-	}
 	else
 		return false;
 }
@@ -23,6 +20,5 @@ bool DM1_ProhibitedArea::detect()
 void DM1_ProhibitedArea::DM1_ProhibitedAreaCallback(const std_msgs::Bool & state)
 {
 	state_ = state.data;
-	std::cout << "SALLUT je suis DM1" << endl;
 }
 

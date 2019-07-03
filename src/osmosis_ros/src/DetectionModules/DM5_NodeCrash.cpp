@@ -3,8 +3,6 @@
 //! ROS node topics publishing and subscribing initialization
 DM5_NodeCrash::DM5_NodeCrash() : DetectionModule()
 {
-	DM5_pub_ = nh_.advertise<std_msgs::Bool>("DM5_NodeCrash", 10);
-
 	nodesToCheck_.push_back("/DM1_ProhibitedArea_node");
 	nodesToCheck_.push_back("/DM2_CmdNotUpdated_node");
 	nodesToCheck_.push_back("/DM3_WrongCommand_node");
@@ -21,14 +19,12 @@ DM5_NodeCrash::DM5_NodeCrash() : DetectionModule()
 	nodesToCheck_.push_back("/teleop_node");
 }
 
-//compute detection out of zone
 bool DM5_NodeCrash::detect()
 {
-	int i=0, j=0;
+	int i,j;
 	bool found=true;
 
 	ros::master::getNodes(aliveNodes_);	
-
 	for(i=0; i<nodesToCheck_.size() && found; i++)
 	{
 		found = false;
@@ -48,22 +44,3 @@ bool DM5_NodeCrash::detect()
 		return false;
 }
 
-void DM5_NodeCrash::pub_to_FTM(std_msgs::Bool donnee)
-{
-	bool b = donnee.data;
-	DM5_pub_.publish(donnee);
-	std::cout << "Publication of DM5 : NodeCrash : ";
-	std::cout << debug_msg <<" ";
-	std::cout << std::boolalpha << b << std::endl;
-}
-
-int main(int argc, char** argv)
-{
-	//init the ROS node
-	ros::init(argc, argv, "DM5_NodeCrash_node");
-	DM5_NodeCrash myDM5_NodeCrash;
-
-	ros::Duration(1).sleep();
-
-	myDM5_NodeCrash.run();
-}

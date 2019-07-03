@@ -19,23 +19,18 @@
 #include <iostream>
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
-#include <std_msgs/Bool.h>
 #include <osmosis_control/DetectionModules/DetectionModule.hpp>
 
 class DM2_CmdNotUpdated : public DetectionModule
 {
 private:
-	ros::Publisher DM2_pub_;
 	ros::Subscriber cmd_vel_sub_;
 	ros::Time lastUpdate_;
 	ros::Duration timeOut_;
 
 public:
 	DM2_CmdNotUpdated();
-
 	bool detect();
-	void pub_to_FTM(std_msgs::Bool donnee);
-
 	void DM2_CmdNotUpdatedCallback(const geometry_msgs::Twist &cmd_vel);
 };
 

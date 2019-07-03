@@ -19,20 +19,17 @@
 #include <iostream>
 #include <ros/ros.h>
 #include <ros/master.h>
-#include <std_msgs/Bool.h>
 #include <osmosis_control/DetectionModules/DetectionModule.hpp>
 
 class DM5_NodeCrash : public DetectionModule
 {
 private:
-	ros::Publisher DM5_pub_;
 	ros::V_string aliveNodes_;
 	ros::V_string nodesToCheck_;
 
 public:
-	bool detect();
-	void pub_to_FTM(std_msgs::Bool donnee);
 	DM5_NodeCrash();
+	bool detect();
 };
 
 #endif //OSMOSIS_DM5_NodeCrash_HPP

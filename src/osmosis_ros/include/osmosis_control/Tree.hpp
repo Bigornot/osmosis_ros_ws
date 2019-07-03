@@ -5,9 +5,9 @@
 #include <osmosis_control/FTM_Rule.hpp>
 
 #include <osmosis_control/DetectionModules/DM1_ProhibitedArea.hpp>
-//#include <osmosis_control/DetectionModules/DM2_CmdNotUpdated.hpp>
-//#include <osmosis_control/DetectionModules/DM3_WrongCommand.hpp>
-//#include <osmosis_control/DetectionModules/DM5_NodeCrash.hpp>
+#include <osmosis_control/DetectionModules/DM2_CmdNotUpdated.hpp>
+#include <osmosis_control/DetectionModules/DM3_WrongCommand.hpp>
+#include <osmosis_control/DetectionModules/DM5_NodeCrash.hpp>
 
 #include <osmosis_control/RecoveryModules/RM1_test1.hpp>
 #include <osmosis_control/RecoveryModules/RM2_test2.hpp>
@@ -23,9 +23,9 @@ private :
 	vector<FTM_Rule*> FTM_;
 
 	DM1_ProhibitedArea* DM1_prohibited_area_;
-	//DM2_CmdNotUpdated* DM2_cmd_not_updated_;
-	//DM3_WrongCommand* DM3_wrong_command_;
-	//DM5_NodeCrash* DM5_node_crash_;
+	DM2_CmdNotUpdated* DM2_cmd_not_updated_;
+	DM3_WrongCommand* DM3_wrong_command_;
+	DM5_NodeCrash* DM5_node_crash_;
 
 	RM1_test1* RM1_;
 	RM2_test2* RM2_;

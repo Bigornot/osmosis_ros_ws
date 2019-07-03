@@ -4,14 +4,25 @@ using namespace std;
 
 Tree::Tree()
 {
+	// Declarations of the recovery modules 
+	// The recovery tree is built here
+	// RMx_ = new RM_type(id, antecedent, {successors})
 	RM1_ = new RM1_test1(1, 0, {2,3});
 	RM2_ = new RM2_test2(2, 1, {3,4,5});
 	RM3_emergency_stop_ = new RM3_EmergencyStop(3, 2, {});
 	RM4_ = new RM4_test4(4, 2, {});
 	RM5_ = new RM5_test5(5, 2, {});
 
-	DM1_prohibited_area_ = new DM1_ProhibitedArea();
+	// Declarations of the detection modules 
+	// DMx_ = new DM_type()
+	DM1_prohibited_area_ = new DM1_ProhibitedArea();	
+	DM2_cmd_not_updated_ = new DM2_CmdNotUpdated();
+	DM3_wrong_command_ = new DM3_WrongCommand();
+	DM5_node_crash_ = new DM5_NodeCrash();
 
+	// Declarations of the rules (linking of detection modules and recovery modules)
+	// The FMT tree the built here
+	// FTM_.push_back(new FTM_Rule(id, antecedent, {successors}, DMx_, RMx_))
 	FTM_.push_back(new FTM_Rule(1, 0, {2, 3}, DM1_prohibited_area_, RM1_));
 	FTM_.push_back(new FTM_Rule(2, 1, {4}, DM1_prohibited_area_, RM2_));
 	FTM_.push_back(new FTM_Rule(3, 1, {5,6}, DM1_prohibited_area_, RM2_));

@@ -9,7 +9,6 @@ FTM_Rule::FTM_Rule(int id, int antecedent, vector<int> successors, DetectionModu
 	successors_=successors;
 	DM_ = DM;
 	RM_ = RM;
-	
 }
 
 int FTM_Rule::getAnt()

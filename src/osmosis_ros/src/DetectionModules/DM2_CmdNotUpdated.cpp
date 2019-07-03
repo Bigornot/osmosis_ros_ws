@@ -4,7 +4,6 @@
 DM2_CmdNotUpdated::DM2_CmdNotUpdated() : DetectionModule()
 {
 	cmd_vel_sub_  = nh_.subscribe("summit_xl_a/robotnik_base_control/cmd_vel", 1, &DM2_CmdNotUpdated::DM2_CmdNotUpdatedCallback, this);
-	DM2_pub_ = nh_.advertise<std_msgs::Bool>("DM2_CmdNotUpdated", 10);
 
 	ros::Duration(1).sleep();
 
@@ -25,21 +24,3 @@ void DM2_CmdNotUpdated::DM2_CmdNotUpdatedCallback(const geometry_msgs::Twist &cm
 	lastUpdate_ = ros::Time::now();
 }
 
-void DM2_CmdNotUpdated::pub_to_FTM(std_msgs::Bool donnee)
-{
-	bool b = donnee.data;
-	DM2_pub_.publish(donnee);
-	std::cout << "Publication of DM2 : CmdNotUpdated : ";
-	std::cout << debug_msg <<" ";
-	std::cout << std::boolalpha << b << std::endl;
-}
-
-int main(int argc, char** argv)
-{
-	//init the ROS node
-	ros::init(argc, argv, "DM2_CmdNotUpdated_node");
-
-	DM2_CmdNotUpdated myDM2_CmdNotUpdated;
-
-	myDM2_CmdNotUpdated.run();
-}
