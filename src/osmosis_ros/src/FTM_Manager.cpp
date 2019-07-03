@@ -4,56 +4,45 @@ using namespace std;
 
 FTM_Manager::FTM_Manager()
 {
-	nbTriggeredFTM_=0;
 }
 
 bool FTM_Manager::run()
 {
-	ROS_INFO("DEBUT DEBUG\n");
 	ros::Rate loop_rate(10);
 	while (nh_.ok())
 	{
-		// checks all DMs' state 
+		// checks all DMs' state
 
-		nbTriggeredFTM_ = FTM_Tree_.getNbTriggeredFTM();
-		cout << "nb:" << nbTriggeredFTM_ << endl;
+		Triggered_FTM = FTM_Tree_.getTriggeredFTM();
 
 		// If there is only one triggered FTM
-		if(nbTriggeredFTM_==1)
-			FTM_Tree_.doRecovery(); // Then there is no conflict, the recovery can be done
+		if(Triggered_FTM.size()==1)
+			FTM_Tree_.doRecovery(Triggered_FTM); // Then there is no conflict, the recovery can be done
 
-		// If there are many FTMs
-		else if(nbTriggeredFTM_>1)
+		dominant=FTM_Tree_.findDominantFTM();
+		if(dominant.size()==1) // Save the found dominants and return if there is only one
 		{
-			// If there is only one dominant
-			if(FTM_Tree_.onlyOneDominantFTM()) // Save the found dominants and return if there is only one
-			{
-				FTM_Tree_.doRecovery(); // Then there is no conflict, the recovery can be done
-				FTM_Tree_.showDominants(); // DEBUG
-			}
-
-			// If there are many dominant FTMs
+			FTM_Tree_.doRecovery(dominant); // Then there is no conflict, the recovery can be done
+		}
+		// If there are many dominant FTMs
+		else
+		{
+			dominant_recov=FTM_Tree_.findDominantRM();
+			// If there is only one dominant recovery
+			if(dominant_recov.size()==1) // Check the Recovery Tree to select the right FTM to execute
+					FTM_Tree_.doRecovery(dominant_recov); // Then this recovery can be done
+			// If there are still many dominant recoveries
+			// The choosen strategy is applied
 			else
 			{
-				FTM_Tree_.showDominants(); // DEBUG
-
-				// If there is only one dominant recovery
-				if(FTM_Tree_.onlyOneDominantRecovery()) // Check the Recovery Tree to select the right FTM to execute
-					FTM_Tree_.doRecovery(); // Then this recovery can be done
-
-				// If there are still many dominant recoveries
-				// The choosen strategy is applied
-				else
-					FTM_Tree_.doLowestCommonDominantRecovery(); // Safety First : so the lowest common dominant recovery is done
+				commonDominant=FTM_Tree_.findLowestCommonDominant(dominant); // Safety First : so the lowest common dominant recovery is done
+				FTM_Tree_.doRecovery({commonDominant});
 			}
 		}
-	
-		ros::spinOnce();
-		ROS_INFO("FIN DEBUG\n");
 
+		ros::spinOnce();
 		loop_rate.sleep();
 	}
-
 	return true;
 }
 

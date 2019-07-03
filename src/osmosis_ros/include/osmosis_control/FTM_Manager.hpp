@@ -13,7 +13,13 @@ class FTM_Manager
 private:
 	ros::NodeHandle nh_;
 
-	int nbTriggeredFTM_;
+	vector<FTM_Rule*> Triggered_FTM;
+	vector<FTM_Rule*> dominant;
+	vector<FTM_Rule*> dominant_recov;
+
+	FTM_Rule* commonDominant;
+
+
 	Tree FTM_Tree_;
 public:
 	FTM_Manager();
