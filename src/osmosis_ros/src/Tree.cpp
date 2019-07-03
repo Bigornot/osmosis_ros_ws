@@ -39,13 +39,6 @@ vector<FTM_Rule*> Tree::findDominantFTM()
 	return dominant;
 }
 
-vector<FTM_Rule*> Tree::findDominantRM()
-{
-	vector<FTM_Rule*> dominant_recovery;
-	dominant_recovery=this->findDominantRecovery(Triggered_rules_);
-	return dominant_recovery;
-}
-
 vector<FTM_Rule*> Tree::findDominant(vector<FTM_Rule*> Rules)
 {
 	bool promoted_to_dominant=true;
@@ -97,6 +90,12 @@ vector<FTM_Rule*> Tree::findDominated(FTM_Rule* Dominant_rule, vector<FTM_Rule*>
 
 vector<FTM_Rule*> Tree::findDominantRecovery(vector<FTM_Rule*> Rules)
 {
+	Rules=checkSameRM(Rules);
+	if (Rules.size()==1)
+	{
+		return Rules;
+	}
+
 	bool promoted_to_dominant=true;
 	vector<FTM_Rule*> dominated;
 	vector<FTM_Rule*> dominant;
@@ -147,7 +146,7 @@ vector<FTM_Rule*>  Tree::findDominatedRecovery(FTM_Rule* Dominant_rule, vector<F
 FTM_Rule* Tree::findLowestCommonDominant(vector<FTM_Rule*> dominant)
 {
 	//using attribute recursiveDominant
-	recursiveDominant=dominant;
+	recursiveDominant=checkSameRM(dominant);
 	recursiveLowestCommonDominant();
 	return recursiveDominant[0];
 }
@@ -161,7 +160,7 @@ void Tree::recursiveLowestCommonDominant()
 		{
 			for (int j=0; j<FTM_.size(); j++)
 			{
-				if (recursiveDominant[i]->getAnt()==FTM_[j]->getId() && !findRule(recursiveDominant, FTM_[j]))
+				if (recursiveDominant[i]->getAnt()==FTM_[j]->getId() && !findRule(temprecursiveDominant, FTM_[j]))
 				{
 					temprecursiveDominant.push_back(FTM_[j]);
 				}
@@ -237,7 +236,26 @@ vector<FTM_Rule*> Tree::getTriggeredFTM()
 
 	Triggered_rules_.push_back(FTM_[1]);
 	Triggered_rules_.push_back(FTM_[2]);
-	Triggered_rules_.push_back(FTM_[4]);
 
 	return Triggered_rules_;
+}
+
+void Tree::debugDisplayFTMid(vector<FTM_Rule*> vector)
+{
+	for (int i=0; i<vector.size();i++)
+	{
+		cout<<vector[i]->getId()<<" ";
+	}
+	cout<<endl;
+	cout<<endl;
+}
+
+void Tree::debugDisplayRMid(vector<FTM_Rule*> vector)
+{
+	for (int i=0; i<vector.size();i++)
+	{
+		cout<<vector[i]->getRMId()<<" ";
+	}
+	cout<<endl;
+	cout<<endl;
 }

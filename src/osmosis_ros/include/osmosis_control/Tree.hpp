@@ -43,7 +43,6 @@ private :
 
 	vector<FTM_Rule*> findDominant(vector<FTM_Rule*> Rules);
 	vector<FTM_Rule*> findDominated(FTM_Rule* Dominant_rule, vector<FTM_Rule*>* dominated);
-	vector<FTM_Rule*> findDominantRecovery(vector<FTM_Rule*> Rules);
 	vector<FTM_Rule*> findDominatedRecovery(FTM_Rule* Dominant_rule, vector<FTM_Rule*>* dominated);
 	void recursiveLowestCommonDominant();
 	bool findRM(vector<FTM_Rule*> rules, FTM_Rule* rule);
@@ -55,7 +54,9 @@ public :
 	vector<FTM_Rule*> getTriggeredFTM();
 	void doRecovery(vector<FTM_Rule*> Triggered_FTM);
 	vector<FTM_Rule*> findDominantFTM();
-	vector<FTM_Rule*> findDominantRM();
+	vector<FTM_Rule*> findDominantRecovery(vector<FTM_Rule*> Rules);
 	FTM_Rule* findLowestCommonDominant(vector<FTM_Rule*> dominant);
+	void debugDisplayFTMid(vector<FTM_Rule*> Vector);
+	void debugDisplayRMid(vector<FTM_Rule*> Vector);
 
 };
