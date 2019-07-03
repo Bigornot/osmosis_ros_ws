@@ -37,7 +37,6 @@ bool RecoveryModule::getState()
 
 void RecoveryModule::start()
 {
-	cout << "RM Activated" << endl;
 	state_=true;
 }
 
@@ -48,7 +47,6 @@ void RecoveryModule::stop()
 
 void RecoveryModule::run()
 {
-	cout << "debut run" << endl;
 	this->driveRecoveryModule();
 	ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 }

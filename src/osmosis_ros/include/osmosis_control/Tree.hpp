@@ -33,35 +33,29 @@ private :
 	RM4_test4* RM4_;
 	RM5_SwitchToTeleop* RM5_switch_to_teleop_;
 
+	//we have access to:
 	vector<FTM_Rule*> Triggered_rules_;
-	vector<FTM_Rule*> dominant_;
-	vector<FTM_Rule*> dominated_;
-	vector<FTM_Rule*> RMdominant_;
-	FTM_Rule* commonDominant;
-
-	void findDominant();
-	void findDominantRecovery();
-	void findDominated(FTM_Rule* Dominant_rule);
-	void findDominatedRecovery(FTM_Rule* Dominant_rule);
-
+	vector<FTM_Rule*> recursiveDominant;
+	
 	void runDMs();
 	void runRMs();
 
-	void checkSameRM();
-	bool findRule(vector<FTM_Rule*> &rules, FTM_Rule* rule);
-	bool findRM(vector<FTM_Rule*> &rules, FTM_Rule* rule);
+	vector<FTM_Rule*> findDominant(vector<FTM_Rule*> Rules);
+	vector<FTM_Rule*> findDominated(FTM_Rule* Dominant_rule, vector<FTM_Rule*>* dominated);
+	vector<FTM_Rule*> findDominatedRecovery(FTM_Rule* Dominant_rule, vector<FTM_Rule*>* dominated);
+	void recursiveLowestCommonDominant();
+	bool findRM(vector<FTM_Rule*> rules, FTM_Rule* rule);
+	bool findRule(vector<FTM_Rule*> rules, FTM_Rule* rule);
+	vector<FTM_Rule*> checkSameRM(vector<FTM_Rule*> Rules);
 
 public :
 	Tree();
-
-	void showDominants();
-	bool onlyOneDominantFTM();
-	bool onlyOneDominantRecovery();
-
-	int getNbTriggeredFTM();
-	void doLowestCommonDominantRecovery();
-	void findLowestCommonDominant();
-	void doRecovery();
-
+	vector<FTM_Rule*> getTriggeredFTM();
+	void doRecovery(vector<FTM_Rule*> Triggered_FTM);
+	vector<FTM_Rule*> findDominantFTM();
+	vector<FTM_Rule*> findDominantRecovery(vector<FTM_Rule*> Rules);
+	FTM_Rule* findLowestCommonDominant(vector<FTM_Rule*> dominant);
+	void debugDisplayFTMid(vector<FTM_Rule*> Vector);
+	void debugDisplayRMid(vector<FTM_Rule*> Vector);
 
 };
