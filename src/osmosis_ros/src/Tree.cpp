@@ -5,7 +5,7 @@ using namespace std;
 Tree::Tree()
 {
 	RM1_ = new RM1_test1(1, 0, {2,3});
-	RM2_ = new RM2_test2(2, 1, {4,5});
+	RM2_ = new RM2_test2(2, 1, {3,4,5});
 	RM3_emergency_stop_ = new RM3_EmergencyStop(3, 2, {});
 	RM4_ = new RM4_test4(4, 2, {});
 	RM5_ = new RM5_test5(5, 2, {});
@@ -45,6 +45,8 @@ bool Tree::onlyOneDominantFTM()
 bool Tree::onlyOneDominantRecovery()
 {
 	this->findDominantRecovery();
+	
+	return dominant_.size()==1;
 }
 
 void Tree::findDominant()
@@ -66,8 +68,9 @@ void Tree::findDominant()
 				promoted_to_dominant=false;
 			}
 		}
-		if (promoted_to_dominant)
+		if (promoted_to_dominant && !this->findRule(dominant_, Triggered_rules_[i]))
 			dominant_.push_back(Triggered_rules_[i]);
+		
 	}
 }
 
@@ -85,7 +88,7 @@ void Tree::findDominated(FTM_Rule* Dominant_rule)
 	{
 		for(int j=0; j<FTM_.size(); j++)
 		{
-			if(successorsId[i]==FTM_[j]->getId())
+			if(successorsId[i]==FTM_[j]->getId() && !this->findRule(dominated_, FTM_[j]))
 			{
 				dominated_.push_back(FTM_[j]);
 				findDominated(FTM_[j]);
@@ -96,37 +99,61 @@ void Tree::findDominated(FTM_Rule* Dominant_rule)
 
 void Tree::doLowestCommonDominantRecovery()
 {
+	cout << "before check" << endl;
+	showDominants();
+	checkSameRM();	
+	cout << "after check" << endl;
+	showDominants();
 	findLowestCommonDominant();
 	commonDominant->startRM();
 	this->runRMs();
 }
 
+void Tree::checkSameRM()
+{
+	vector<FTM_Rule*> back_dominant=dominant_;
+	dominant_.clear();
+
+	for(int i=0; i<back_dominant.size(); i++)
+	{
+		if(!findRM(dominant_, back_dominant[i]))
+			dominant_.push_back(back_dominant[i]);
+	}
+}
+
 void Tree::findLowestCommonDominant()
 {
-	vector<FTM_Rule*> new_dominant;
-	if (onlyOneDominantFTM())
-		commonDominant=dominant_[0];
+	vector<FTM_Rule*> new_RMdominant;
+	if (onlyOneDominantRecovery())
+		commonDominant=RMdominant_[0];
 	else
 	{
-		cout << "Taille du dominant " << dominant_.size() << endl;
 		for (int i=0; i<dominant_.size(); i++)
 		{
 			for (int j=0; j<FTM_.size(); j++)
 			{
-				cout << "do" << i << " Ant " << dominant_[i]->getAnt() << "FTM id " << FTM_[j]->getId() << endl;
-				if (dominant_[i]->getAnt()==FTM_[j]->getId() && !findRule(new_dominant, FTM_[j]))
+				if (dominant_[i]->getAnt()==FTM_[j]->getId() && !findRule(new_RMdominant, FTM_[j]))
 				{
-					new_dominant.push_back(FTM_[j]);
+					new_RMdominant.push_back(FTM_[j]);
 				}
 			}
 		}
-		cout << "new_dom size " << new_dominant.size() << endl;
-		for(int i=0; i<new_dominant.size(); i++)
-			cout << "new_dom " << new_dominant[i]->getId() << endl;
-		cout << endl;
-		Triggered_rules_=new_dominant;
+		RMdominant_=new_RMdominant;
 		findLowestCommonDominant();
 	}
+}
+
+bool Tree::findRM(vector<FTM_Rule*> &rules, FTM_Rule* rule)
+{
+	bool found=false;
+
+	for(int i=0; i<rules.size(); i++)
+	{
+		if(rules[i]->getRMId() == rule->getRMId())
+			found=true;
+	}
+
+	return found;
 }
 
 bool Tree::findRule(vector<FTM_Rule*> &rules, FTM_Rule* rule)
@@ -157,27 +184,27 @@ void Tree::doRecovery()
 
 void Tree::findDominantRecovery()
 {
-	bool promoted_to_dominant=true;
-	dominant_.clear();
+	bool promoted_to_RMdominant=true;
+	RMdominant_.clear();
 	dominated_.clear();
 
-	for (int i=0; i<Triggered_rules_.size(); i++)//for each Triggered rules
+	for (int i=0; i<dominant_.size(); i++)//for each dominant
 	{
-		findDominatedRecovery(Triggered_rules_[i]);
+		findDominatedRecovery(dominant_[i]);
 	}
 
-	for (int i=0; i<Triggered_rules_.size(); i++)//for each Triggered rules
+	for (int i=0; i<dominant_.size(); i++)//for each dominant
 	{
-		promoted_to_dominant=true;
+		promoted_to_RMdominant=true;
 		for (int j=0;j<dominated_.size();j++)
 		{
-			if(dominated_[j]->getId()==Triggered_rules_[i]->getRMId())
+			if(dominated_[j]->getId()==dominant_[i]->getRMId())
 			{
-				promoted_to_dominant=false;
+				promoted_to_RMdominant=false;
 			}
 		}
-		if (promoted_to_dominant)
-			dominant_.push_back(Triggered_rules_[i]);
+		if (promoted_to_RMdominant && !this->findRM(RMdominant_, dominant_[i]))
+			RMdominant_.push_back(dominant_[i]);
 	}
 }
 
@@ -188,7 +215,7 @@ void Tree::findDominatedRecovery(FTM_Rule* Dominant_rule)
 	{
 		for(int j=0; j<FTM_.size(); j++)
 		{
-			if(successorsId[i]==FTM_[j]->getRMId())
+			if(successorsId[i]==FTM_[j]->getRMId() && !findRM(dominated_, FTM_[j]))
 			{
 				dominated_.push_back(FTM_[j]);
 				findDominatedRecovery(FTM_[j]);
@@ -212,8 +239,9 @@ int Tree::getNbTriggeredFTM()
 			Triggered_rules_.push_back(*FTM_[i]);
 	}*/
 
+	Triggered_rules_.push_back(FTM_[1]);
+	Triggered_rules_.push_back(FTM_[2]);
 	Triggered_rules_.push_back(FTM_[4]);
-	Triggered_rules_.push_back(FTM_[5]);
 
 	return Triggered_rules_.size();
 }

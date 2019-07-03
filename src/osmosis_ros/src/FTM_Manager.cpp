@@ -29,13 +29,13 @@ bool FTM_Manager::run()
 			if(FTM_Tree_.onlyOneDominantFTM()) // Save the found dominants and return if there is only one
 			{
 				FTM_Tree_.doRecovery(); // Then there is no conflict, the recovery can be done
-				FTM_Tree_.showDominants();
+				FTM_Tree_.showDominants(); // DEBUG
 			}
 
 			// If there are many dominant FTMs
 			else
 			{
-				FTM_Tree_.showDominants();
+				FTM_Tree_.showDominants(); // DEBUG
 
 				// If there is only one dominant recovery
 				if(FTM_Tree_.onlyOneDominantRecovery()) // Check the Recovery Tree to select the right FTM to execute
