@@ -2,11 +2,11 @@
 
 using namespace std;
 
-RecoveryModule::RecoveryModule(int id, int antecedent, vector<int> successors)
+RecoveryModule::RecoveryModule(int id, int predecessor, vector<int> successors)
 {
 	driveState_=IDLE;
 	id_=id;
-	antecedent_=antecedent;
+	predecessor_=predecessor;
 	successors_=successors;
 	state_=false;
 }

@@ -26,7 +26,7 @@ private:
 	ros::Publisher pub_;
 
 public:
-	RM1_EmergencyStop(int id, int antecedent, vector<int> successors);
+	RM1_EmergencyStop(int id, int predecessor, vector<int> successors);
 	void doRecovery();
 };
 

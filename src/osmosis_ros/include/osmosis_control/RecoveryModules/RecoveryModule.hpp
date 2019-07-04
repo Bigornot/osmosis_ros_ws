@@ -15,7 +15,7 @@ private:
 	driveState driveState_;
 
 	int id_;
-	int antecedent_;
+	int predecessor_;
 	vector<int> successors_;
 
 protected:
@@ -23,7 +23,7 @@ protected:
 	bool state_;
 
 public:
-	RecoveryModule(int id, int antecedent, vector<int> successors);
+	RecoveryModule(int id, int predecessor, vector<int> successors);
 	bool getState();
 	void run();
 	void start();

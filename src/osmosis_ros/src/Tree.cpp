@@ -6,7 +6,7 @@ Tree::Tree()
 {
 	// Declarations of the recovery modules 
 	// The recovery tree is built here
-	// RMx_ = new RM_type(id, antecedent, {successors})
+	// RMx_ = new RM_type(id, predecessor, {successors})
 	RM1_emergency_stop_ = new RM1_EmergencyStop(1, 0, {2});
 	RM2_controlled_stop_ = new RM2_ControlledStop(2, 1, {3,4,5});
 	RM3_ = new RM3_test3(3, 2, {});
@@ -22,7 +22,7 @@ Tree::Tree()
 
 	// Declarations of the rules (linking of detection modules and recovery modules)
 	// The FMT tree the built here
-	// FTM_.push_back(new FTM_Rule(id, antecedent, {successors}, DMx_, RMx_))
+	// FTM_.push_back(new FTM_Rule(id, predecessor, {successors}, DMx_, RMx_))
 	FTM_.push_back(new FTM_Rule(1, 0, {2, 3}, DM1_prohibited_area_, RM1_emergency_stop_));
 	FTM_.push_back(new FTM_Rule(2, 1, {4}, DM1_prohibited_area_, RM3_));
 	FTM_.push_back(new FTM_Rule(3, 1, {5,6}, DM1_prohibited_area_, RM3_));
@@ -176,7 +176,7 @@ void Tree::recursiveLowestCommonDominant()
 		{
 			for (int j=0; j<FTM_.size(); j++)
 			{
-				if (recursiveDominant[i]->getAnt()==FTM_[j]->getId() && !findRule(temprecursiveDominant, FTM_[j]))
+				if (recursiveDominant[i]->getPredecessor()==FTM_[j]->getId() && !findRule(temprecursiveDominant, FTM_[j]))
 				{
 					temprecursiveDominant.push_back(FTM_[j]);
 				}

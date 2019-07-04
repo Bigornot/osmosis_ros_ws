@@ -1,6 +1,6 @@
 #include <osmosis_control/RecoveryModules/RM3_test3.hpp>
 
-RM3_test3::RM3_test3(int id, int antecedent, vector<int> successors) : RecoveryModule(id, antecedent, successors) 
+RM3_test3::RM3_test3(int id, int predecessor, vector<int> successors) : RecoveryModule(id, predecessor, successors) 
 {
 	pub_=nh_.advertise<std_msgs::Bool>("/do_RM3_test3", 1);
 }

@@ -27,7 +27,7 @@ private:
 	ros::Publisher pub_;
 
 public:
-	RM3_test3(int id, int antecedent, vector<int> successors);
+	RM3_test3(int id, int predecessor, vector<int> successors);
 	void doRecovery();
 };
 

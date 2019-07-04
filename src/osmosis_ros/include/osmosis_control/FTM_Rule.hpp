@@ -20,14 +20,14 @@ private:
 	
 	int id_;
 
-	int antecedent_;
+	int predecessor_;
 	vector<int> successors_;
 	
 public:
-	FTM_Rule(int id, int antecedent, vector<int> successor, DetectionModule* DM, RecoveryModule* RM);
+	FTM_Rule(int id, int predecessor, vector<int> successor, DetectionModule* DM, RecoveryModule* RM);
 
 	int getId();
-	int getAnt();
+	int getPredecessor();
 	vector<int> getSuc();
 
 	void runDM();

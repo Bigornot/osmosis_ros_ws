@@ -1,6 +1,6 @@
 #include <osmosis_control/RecoveryModules/RM5_SwitchToTeleop.hpp>
 
-RM5_SwitchToTeleop::RM5_SwitchToTeleop(int id, int antecedent, vector<int> successors) : RecoveryModule(id, antecedent, successors) 
+RM5_SwitchToTeleop::RM5_SwitchToTeleop(int id, int predecessor, vector<int> successors) : RecoveryModule(id, predecessor, successors) 
 {
 	pub_=nh_.advertise<std_msgs::Bool>("/do_RM5_SwitchToTeleop", 1);
 }

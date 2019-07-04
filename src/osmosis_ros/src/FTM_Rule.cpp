@@ -2,18 +2,18 @@
 
 using namespace std;
 
-FTM_Rule::FTM_Rule(int id, int antecedent, vector<int> successors, DetectionModule* DM, RecoveryModule* RM)
+FTM_Rule::FTM_Rule(int id, int predecessor, vector<int> successors, DetectionModule* DM, RecoveryModule* RM)
 {
 	id_=id;
-	antecedent_=antecedent;
+	predecessor_=predecessor;
 	successors_=successors;
 	DM_ = DM;
 	RM_ = RM;
 }
 
-int FTM_Rule::getAnt()
+int FTM_Rule::getPredecessor()
 {
-	return antecedent_;
+	return predecessor_;
 }
 
 vector<int> FTM_Rule::getSuc()
