@@ -13,6 +13,9 @@ class FTM_Manager
 private:
 	ros::NodeHandle nh_;
 
+	enum Strategies{SAFETY_FIRST};
+	Strategies strategy_;
+
 	vector<FTM_Rule*> Triggered_FTM;
 	vector<FTM_Rule*> dominant;
 	vector<FTM_Rule*> dominant_recov;

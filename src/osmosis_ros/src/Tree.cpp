@@ -100,35 +100,40 @@ vector<FTM_Rule*> Tree::findDominated(FTM_Rule* Dominant_rule, vector<FTM_Rule*>
 }
 
 vector<FTM_Rule*> Tree::findDominantRecovery(vector<FTM_Rule*> Rules)
-{
-	Rules=checkSameRM(Rules);
+{	
+	vector<FTM_Rule*> dominant;
+	
 	if (Rules.size()==1)
 	{
-		return Rules;
+		dominant=Rules;
 	}
 
-	bool promoted_to_dominant=true;
-	vector<FTM_Rule*> dominated;
-	vector<FTM_Rule*> dominant;
-
-	for (int i=0; i<Rules.size(); i++)//for each dominant
+	else
 	{
-		dominated=findDominatedRecovery(Rules[i],&dominated);
-	}
+		bool promoted_to_dominant=true;
+		vector<FTM_Rule*> dominated;
+		Rules=checkSameRM(Rules);
 
-	for (int i=0; i<dominant.size(); i++)//for each dominant
-	{
-		promoted_to_dominant=true;
-		for (int j=0;j<dominated.size();j++)
+		for (int i=0; i<Rules.size(); i++)//for each dominant
 		{
-			if(dominated[j]->getId()==Rules[i]->getRMId())
-			{
-				promoted_to_dominant=false;
-			}
+			dominated=findDominatedRecovery(Rules[i],&dominated);
 		}
-		if (promoted_to_dominant && !this->findRM(dominant, Rules[i]))
-			dominant.push_back(Rules[i]);
+
+		for (int i=0; i<dominant.size(); i++)//for each dominant
+		{
+			promoted_to_dominant=true;
+			for (int j=0;j<dominated.size();j++)
+			{
+				if(dominated[j]->getId()==Rules[i]->getRMId())
+				{
+					promoted_to_dominant=false;
+				}
+			}
+			if (promoted_to_dominant && !this->findRM(dominant, Rules[i]))
+				dominant.push_back(Rules[i]);
+		}
 	}
+
 	return dominant;
 }
 
