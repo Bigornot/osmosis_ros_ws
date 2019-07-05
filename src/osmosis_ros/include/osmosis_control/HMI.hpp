@@ -14,7 +14,6 @@
  *
  */
 
-
 #ifndef OSMOSIS_HMI_HPP
 #define OSMOSIS_HMI_HPP
 

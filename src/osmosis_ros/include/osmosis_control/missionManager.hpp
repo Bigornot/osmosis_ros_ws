@@ -14,7 +14,6 @@
  *
  */
 
-
 #ifndef OSMOSIS_MISSION_MANAGER_HPP
 #define OSMOSIS_MISSION_MANAGER_HPP
 
@@ -32,7 +31,7 @@ struct Mission
 {
 	std::string name;
 	int step;
-	std::vector<osmosis_control::State_and_PointMsg> orders;
+	std::vector<osmosis_control::State_and_PointMsg> mission_steps;
 };
 
 class MissionManager
@@ -87,9 +86,9 @@ public:
 	MissionManager();
 	void run();
 
-	void MissionManagerCallbackGoalReached(const std_msgs::Bool &goal_reached);
-	void MissionManagerCallbackEmergencyHit(const std_msgs::Bool &emergency_hit);
-	void MissionManagerCallbackOrder(const osmosis_control::Hmi_OrderMsg &order);
+	void CallbackGoalReached(const std_msgs::Bool &goal_reached);
+	void CallbackEmergencyStop(const std_msgs::Bool &stop);
+	void CallbackOrder(const osmosis_control::Hmi_OrderMsg &order);
 
 }; // end of class
 

@@ -1,5 +1,62 @@
 #include <osmosis_control/graphPlanner.hpp>
 
+void GraphPlanner::graphPlannerFSM()
+{
+	switch (state_)
+	{
+		case wait_goal:
+			ROS_INFO("WAIT GOAL");
+			if (new_goal())
+			{
+				compute_plan();
+				state_=wait_compute_plan;
+			}
+			break;
+
+		case wait_compute_plan:
+			ROS_INFO("WAIT_COMPUTE PLAN");
+			if (plan_computed())
+			{
+				state_=send;
+			}
+			break;
+
+		case send:
+			ROS_INFO("SEND");
+			target_index ++; // needed to test plan_done()
+			ROS_INFO ("target_index : %d   plan.size(): %u",target_index,(int)plan.size());
+			if (plan_done()==true)
+			{
+				state_=goal_done;
+			}
+			else
+			{
+				send_target();
+				state_=follow;
+			}
+			break;
+
+		case follow:
+			ROS_INFO("FOLLOW");
+			if (is_arrived())
+			{
+				state_=send;
+				target_reached_=false; //re-init
+			}
+			else execute_plan();
+			break;
+
+		case goal_done:
+			ROS_INFO("DONE");
+			done();
+			state_=wait_goal;
+			break;
+
+		default : state_=wait_goal;
+
+	}
+}
+
 
 //! ROS node initialization
 GraphPlanner::GraphPlanner()
@@ -143,7 +200,6 @@ void GraphPlanner::send_target()
 
 bool GraphPlanner::is_arrived()
 {
-	//return Graph::distance(this->current, plan[target_index]) < TH;
 	return target_reached_;
 }
 
@@ -171,64 +227,6 @@ void GraphPlanner::initGraph(const std::string& filename)
 	//std::cout<<"HEY : "<<g.getNode("N49")->point.x<<std::endl;
 }
 
-void GraphPlanner::graphPlannerFSM()
-{
-	State next_state=state_;
-	switch (state_)
-	{
-		case wait_goal:
-			ROS_INFO("WAIT GOAL");
-			if (new_goal())
-			{
-				compute_plan();
-				next_state=wait_compute_plan;
-			}
-			break;
-
-		case wait_compute_plan:
-			ROS_INFO("WAIT_COMPUTE PLAN");
-			if (plan_computed())
-			{
-				next_state=send;
-			}
-			break;
-
-		case send:
-			ROS_INFO("SEND");
-			target_index ++; // needed to test plan_done()
-			ROS_INFO ("target_index : %d   plan.size(): %u",target_index,(int)plan.size());
-			if (plan_done()==true)
-			{
-				next_state=goal_done;
-			}
-			else
-			{
-				send_target();
-				next_state=follow;
-			}
-			break;
-
-		case follow:
-			ROS_INFO("FOLLOW");
-			if (is_arrived())
-			{
-				next_state=send;
-				target_reached_=false; //re-init
-			}
-			else execute_plan();
-			break;
-
-		case goal_done:
-			ROS_INFO("DONE");
-			done();
-			next_state=wait_goal;
-			break;
-
-		default : next_state=wait_goal;
-
-	}
-	state_=next_state;
-}
 
 void GraphPlanner::run()
 {

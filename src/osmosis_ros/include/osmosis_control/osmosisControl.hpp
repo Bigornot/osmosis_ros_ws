@@ -13,6 +13,7 @@
  * GNU General Public License for more details.
  *
  */
+
 #ifndef OSMOSIS_CONTROL_HPP
 #define OSMOSIS_CONTROL_HPP
 
@@ -36,23 +37,17 @@ const double safety_distance=0.9;
 const double nu=0.1;
 const double psi=0.1;
 
-
-
-
 class OsmosisControl
 {
 private:
-
-
-  ros::NodeHandle nh_;
-  ros::Publisher cmd_vel_pub_;
-  ros::Publisher goal_reach_pub_;
+	ros::NodeHandle nh_;
+	ros::Publisher cmd_vel_pub_;
+	ros::Publisher goal_reach_pub_;
 
 	geometry_msgs::Pose2D robot_pose;
 	geometry_msgs::Point obstacle;
 	osmosis_control::State_and_PointMsg state_and_target_;
 	double obstacle_lw, obstacle_radius;
-	//bool new_goal_, is_arrived_;
 	geometry_msgs::Point old_goal_;
 	geometry_msgs::Twist cmd_;
 
@@ -68,11 +63,9 @@ private:
 public:
 
 	void osmosisControlCallbackGoal(const osmosis_control::State_and_PointMsg & thegoal);
-
 	void osmosisControlCallbackScan(const sensor_msgs::LaserScan & thescan);
-
 	void osmosisControlCallbackPose(const geometry_msgs::Pose2D & msg);
-	  void publish_is_arrived();
+	void publish_is_arrived();
 
 	//! ROS node initialization
 	OsmosisControl();
@@ -87,9 +80,7 @@ public:
 	bool obstacleFromScan(const sensor_msgs::LaserScan& scan);
 
 	geometry_msgs::Twist PF(double x_p, double y_p,
-	    double theta_p, double obs_dx, double obs_dy);
-
-
+	double theta_p, double obs_dx, double obs_dy);
 
 	bool run();
 

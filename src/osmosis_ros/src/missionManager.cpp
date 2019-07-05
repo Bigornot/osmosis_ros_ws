@@ -108,9 +108,9 @@ void MissionManager::initMission(std::string name)
 	std::cout << "Init mission" << std::endl;
 
 	int i;
-	int taille=mission_.orders.size();
+	int taille=mission_.mission_steps.size();
 	for(i=0;i<taille;i++)
-		mission_.orders.pop_back();
+		mission_.mission_steps.pop_back();
 	
 	std::string filename=ros::package::getPath("osmosis_control");
 	filename.append("/MISSION_" + name + ".miss");
@@ -122,10 +122,10 @@ void MissionManager::initMission(std::string name)
 		this->parse(line);
 	fichier.close();
 
-	for(i=0; i<mission_.orders.size();i++)
+	for(i=0; i<mission_.mission_steps.size();i++)
 	{
-		std::cout<<"x:"<<mission_.orders[i].goal.x << " y:" << mission_.orders[i].goal.y;
-		if(mission_.orders[i].taxi)
+		std::cout<<"x:"<<mission_.mission_steps[i].goal.x << " y:" << mission_.mission_steps[i].goal.y;
+		if(mission_.mission_steps[i].taxi)
 			std::cout << " taxi=true" << std::endl;
 		else
 			std::cout << " taxi=false" << std::endl;
@@ -135,7 +135,7 @@ void MissionManager::initMission(std::string name)
 
 	missionOver_=false;
 	mission_.step=0;
-	state_and_point_cmd_=mission_.orders[mission_.step];
+	state_and_point_cmd_=mission_.mission_steps[mission_.step];
 	goal_pub_.publish(state_and_point_cmd_);
 }
 
@@ -155,7 +155,7 @@ void MissionManager::parse(std::string line)
 				order.goal.y=stof(line.substr(coma+3, coma2-coma-3));
 				order.taxi=stoi(line.substr(coma2+6,1))!=0;
 
-				mission_.orders.push_back(order);
+				mission_.mission_steps.push_back(order);
 			}
 		}
 	}
@@ -185,7 +185,7 @@ bool MissionManager::isMissionOver()
 {
 	bool over=false;;
 
-	if(mission_.step==mission_.orders.size())
+	if(mission_.step==mission_.mission_steps.size())
 		over=true;
 
 	return over;
@@ -194,7 +194,7 @@ bool MissionManager::isMissionOver()
 void MissionManager::sendNextOrder()
 {
 	goal_reached_=false;
-	state_and_point_cmd_=mission_.orders[mission_.step];
+	state_and_point_cmd_=mission_.mission_steps[mission_.step];
 	goal_pub_.publish(state_and_point_cmd_);
 }
 
@@ -226,9 +226,9 @@ MissionManager::MissionManager()
 	//set up the publisher for the goal topic
 	goal_pub_ = nh_.advertise<osmosis_control::State_and_PointMsg>("goal", 1);
 	hmi_done_pub_ = nh_.advertise<osmosis_control::Hmi_DoneMsg>("hmi_done", 1);
-	goal_reached_sub_ = nh_.subscribe("/goal_reached", 1, &MissionManager::MissionManagerCallbackGoalReached, this);
-	emergency_sub_ = nh_.subscribe("/emergency_shutdown", 1, &MissionManager::MissionManagerCallbackEmergencyHit, this);
-	hmi_order_sub_ = nh_.subscribe("/order", 1, &MissionManager::MissionManagerCallbackOrder, this);
+	goal_reached_sub_ = nh_.subscribe("/goal_reached", 1, &MissionManager::CallbackGoalReached, this);
+	emergency_sub_ = nh_.subscribe("/emergency_shutdown", 1, &MissionManager::CallbackEmergencyStop, this);
+	hmi_order_sub_ = nh_.subscribe("/order", 1, &MissionManager::CallbackOrder, this);
 
 	goal_reached_=false;
 	state_=IDLE;
@@ -254,18 +254,18 @@ void MissionManager::run()
 	    }
 }
 
-void MissionManager::MissionManagerCallbackGoalReached(const std_msgs::Bool &goal_reached)
+void MissionManager::CallbackGoalReached(const std_msgs::Bool &goal_reached)
 {
 	goal_reached_=goal_reached.data;
 }
 
-void MissionManager::MissionManagerCallbackEmergencyHit(const std_msgs::Bool &emergency_hit)
+void MissionManager::CallbackEmergencyStop(const std_msgs::Bool &stop)
 {
-	missionAborted_=emergency_hit.data;
-	missionOver_=emergency_hit.data;
+	missionAborted_=stop.data;
+	missionOver_=stop.data;
 }
 
-void MissionManager::MissionManagerCallbackOrder(const osmosis_control::Hmi_OrderMsg &order)
+void MissionManager::CallbackOrder(const osmosis_control::Hmi_OrderMsg &order)
 {
 	if(order.doMission)
 	{

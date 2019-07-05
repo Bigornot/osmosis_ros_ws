@@ -179,8 +179,8 @@ void HMI::CallbackOrderDone(const osmosis_control::Hmi_DoneMsg &done)
 
 void HMI::CallbackEmergencyStop(const std_msgs::Bool &stop)
 {
-	done_missions_=true;
-	done_point_=true;
+	done_mission_=stop.data;
+	done_point_=stop.data;
 }
 
 ////////////////////// MAIN ////////////////////// 

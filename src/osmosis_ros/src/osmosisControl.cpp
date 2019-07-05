@@ -9,7 +9,6 @@ void OsmosisControl::osmosisControlCallbackGoal(const osmosis_control::State_and
 	ROS_INFO("GOAL : x: [%f], y:[%f]",state_and_target_.goal.x,state_and_target_.goal.y);
 }
 
-
 void OsmosisControl::osmosisControlCallbackScan(const sensor_msgs::LaserScan & thescan)
 {
 	scan_=thescan;
@@ -47,22 +46,15 @@ OsmosisControl::OsmosisControl()
 
 bool OsmosisControl::new_goal()
 {
-	//auto g = shell().goal.read();
-	//logger().debug("Current goal {}", g);
 	bool new_goal=false;
-	//if (g.status == runtime::DataStatus::NEW_DATA) {
-	//ROS_INFO("delta goal en x[%f]",fabs(goal.x-old_goal_.x));
 	if (fabs(state_and_target_.goal.x-old_goal_.x)>0.1 || fabs(state_and_target_.goal.y-old_goal_.y)>0.1)
 	{
-		//goal = g.value;
-		//logger().info("Received new goal {}", goal);
 		new_goal = true;
 		old_goal_=state_and_target_.goal;
 	}
 	return new_goal;
 
 }
-
 
 bool OsmosisControl::is_arrived()
 {
@@ -76,9 +68,6 @@ bool OsmosisControl::is_arrived()
 	}
 	return is_arrived;
 }
-
-
-
 
 void OsmosisControl::stop()
 {
@@ -112,7 +101,6 @@ void OsmosisControl::updateMove()
 
 	cmd_=cmd;
 }
-
 
 bool OsmosisControl::obstacleFromScan(const sensor_msgs::LaserScan& scan)
 {
@@ -157,9 +145,6 @@ geometry_msgs::Twist OsmosisControl::PF(double x_p, double y_p,double theta_p, d
 {
 	geometry_msgs::Twist control;
 
-	// double nu = this->nu.get();
-	// double dist_safe = this->safety_distance.get();
-	// double Psi = this->psi.get();
 	double nu = nu;
 	double dist_safe = safety_distance;
 	double Psi = psi;
@@ -180,24 +165,19 @@ geometry_msgs::Twist OsmosisControl::PF(double x_p, double y_p,double theta_p, d
 		theta_p = theta_p - 2*M_PI;
 
 	double dist_g = sqrt(pow(x_p,2)+pow(y_p,2));
-	//  logger().debug("dist_g = {}", dist_g);
-	//  shell().distance_to_goal.write(dist_g);
 
 	double dist = sqrt(pow((x_p-obs_dx),2)+pow((y_p-obs_dy),2));
-	//  logger().debug("dist = {}", dist);
 
 	///////// attractive force
 	if (dist_g <= nu) 
 	{
 		Fatt1 = -2*x_p;
 		Fatt2 = -2*y_p;
-		// logger().debug("vicino Fatt1={} Fatt2={}", Fatt1, Fatt2);
 	}
 	if (dist_g > Psi)
 	{
 		Fatt1 = -x_p/dist_g;
 		Fatt2 = -y_p/dist_g;
-		// logger().debug("lontano Fatt1={}, Fatt2={}", Fatt1, Fatt2);
 	}
 
 	///////// repulsive force
@@ -206,7 +186,6 @@ geometry_msgs::Twist OsmosisControl::PF(double x_p, double y_p,double theta_p, d
 		double value = pow(dist_safe,2) - pow(dist,2);
 		Frep1 = 4 * alpharep*fmax(0,value)*(x_p-obs_dx);
 		Frep2 = 4*alpharep*fmax(0,value)*(y_p-obs_dy);
-		// logger().debug("Frep1={}, Frep2={}", Frep1, Frep2);
 	}
 	///////// composition
 	F1 = Fatt1 +Frep1;
@@ -224,14 +203,11 @@ geometry_msgs::Twist OsmosisControl::PF(double x_p, double y_p,double theta_p, d
 	F2 = Fatt2 + Frep2 - V2;
 
 	double theta_d = atan2(F2,F1);
-	//  logger().debug("theta_d={}", theta_d);
 	double err = theta_d - theta_p;
-	//  logger().debug("err={}", err);
 	if (err < -M_PI)
 		err = err + 2*M_PI;
 	else if (err > M_PI)
 		err = err - 2*M_PI;
-	// logger().debug("dopo err={}", err);
 	int s = sign(err);
 
 	control.angular.z = wmax * sqrt(fabs(err)) * s;
@@ -239,52 +215,47 @@ geometry_msgs::Twist OsmosisControl::PF(double x_p, double y_p,double theta_p, d
 
 	return control;
 }
-
-
 // end paste
-
-
-
 
 void OsmosisControl::osmosisControlFSM()
 {
-	State current_state=state_;
-	switch (current_state)
+	switch(state_)
 	{
 		case wait_goal:
-			//ROS_INFO("WAIT");
+			ROS_INFO("WAIT");
 			stop();
-			if (new_goal()) current_state=move_to_goal;
+			if (new_goal()) 
+				state_=move_to_goal;
 			break;
 
 		case move_to_goal:
 			ROS_INFO("MOVE");
 			ROS_INFO("x: %f  y:%f", robot_pose.x , robot_pose.y );
-			if (new_goal()) current_state=move_to_goal;
-			else if (is_arrived()) current_state=arrived_goal;
-			else updateMove();
+			if (new_goal()) 
+				state_=move_to_goal;
+			else if (is_arrived()) 
+				state_=arrived_goal;
+			else 
+				updateMove();
 			break;
 
 		case arrived_goal:
 			ROS_INFO("ARRIVED");
 			publish_is_arrived();
 			stop();
-			current_state=wait_goal;
+			state_=wait_goal;
 			break;
 
 		default : break;
 
 	}
-	state_=current_state;
 }
-
 
 bool OsmosisControl::run()
 {
 	ros::Rate loop_rate(10); //using 10 makes the robot oscillating trajectories, TBD check with the PF algo
 	while (nh_.ok())
 	{
-		//std::cout <<"HEY";
 		this->osmosisControlFSM();
 		cmd_vel_pub_.publish(cmd_);
 		ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
@@ -293,7 +264,6 @@ bool OsmosisControl::run()
 
 	return true;
 }
-
 
 int main(int argc, char** argv)
 {
