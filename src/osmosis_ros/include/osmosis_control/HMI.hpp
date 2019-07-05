@@ -47,11 +47,12 @@ private:
 	bool done_mission_;
 	bool done_point_;
 
-	bool emergencyStop_;
+	bool emergency_stop_;
 
 	/////////  Methods   ////////
 	void driveHMI();
 
+	void ordersDone();
 	char askMode();
 
 	void goalKeyboard();

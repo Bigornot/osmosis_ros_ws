@@ -3,7 +3,7 @@
 
 void OsmosisControl::osmosisControlFSM()
 {
-	if(emergencyStop_)
+	if(emergency_stop_)
 		state_=EMERGENCY_STOP;
 
 	switch(state_)
@@ -36,11 +36,12 @@ void OsmosisControl::osmosisControlFSM()
 		case EMERGENCY_STOP:
 			ROS_INFO("EMERGENCY STOP\n");
 			stop();
-			if(!emergencyStop_)
+			if(!emergency_stop_)
 				state_=WAIT_GOAL;
 			break;
 
-		default : break;
+		default: 
+			break;
 	}
 }
 
@@ -63,7 +64,7 @@ void OsmosisControl::callbackPose(const geometry_msgs::Pose2D & msg)
 
 void OsmosisControl::callbackEmergencyStop(const std_msgs::Bool &stop)
 {
-	emergencyStop_=stop.data;
+	emergency_stop_=stop.data;
 }
 
 void OsmosisControl::publish_is_arrived()
@@ -88,7 +89,7 @@ OsmosisControl::OsmosisControl()
 	state_and_target_.goal.x = old_goal_.x = state_and_target_.goal.y = old_goal_.y=0;
 	state_=WAIT_GOAL;
 
-	emergencyStop_=false;
+	emergency_stop_=false;
 }
 
 bool OsmosisControl::new_goal()
@@ -262,9 +263,6 @@ geometry_msgs::Twist OsmosisControl::PF(double x_p, double y_p,double theta_p, d
 
 	return control;
 }
-// end paste
-
-
 
 bool OsmosisControl::run()
 {

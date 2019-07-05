@@ -5,7 +5,7 @@ void GraphPlanner::graphPlannerFSM()
 	switch (state_)
 	{
 		case wait_goal:
-			ROS_INFO("WAIT GOAL");
+			ROS_INFO("WAIT GOAL\n");
 			if (new_goal())
 			{
 				compute_plan();
@@ -14,7 +14,7 @@ void GraphPlanner::graphPlannerFSM()
 			break;
 
 		case wait_compute_plan:
-			ROS_INFO("WAIT_COMPUTE PLAN");
+			ROS_INFO("WAIT_COMPUTE PLAN\n");
 			if (plan_computed())
 			{
 				state_=send;
@@ -22,7 +22,7 @@ void GraphPlanner::graphPlannerFSM()
 			break;
 
 		case send:
-			ROS_INFO("SEND");
+			ROS_INFO("SEND\n");
 			target_index ++; // needed to test plan_done()
 			ROS_INFO ("target_index : %d   plan.size(): %u",target_index,(int)plan.size());
 			if (plan_done()==true)
@@ -37,7 +37,7 @@ void GraphPlanner::graphPlannerFSM()
 			break;
 
 		case follow:
-			ROS_INFO("FOLLOW");
+			ROS_INFO("FOLLOW\n");
 			if (is_arrived())
 			{
 				state_=send;
@@ -47,7 +47,7 @@ void GraphPlanner::graphPlannerFSM()
 			break;
 
 		case goal_done:
-			ROS_INFO("DONE");
+			ROS_INFO("DONE\n");
 			done();
 			state_=wait_goal;
 			break;

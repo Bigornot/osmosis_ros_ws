@@ -6,7 +6,7 @@
 
 void HMI::driveHMI()
 {
-	if(emergencyStop_)
+	if(emergency_stop_)
 		state_=EMERGENCY_STOP;
 
 	switch (state_)
@@ -65,10 +65,20 @@ void HMI::driveHMI()
 			break;
 
 		case EMERGENCY_STOP:
-			if(!emergencyStop_)
+			this->ordersDone();
+			if(!emergency_stop_)
 				state_=IDLE;
 			break;
+
+		default:
+			break;
 	}
+}
+
+void HMI::ordersDone()
+{
+	done_mission_=true;;
+	done_point_=true;
 }
 
 char HMI::askMode()
@@ -134,7 +144,7 @@ bool HMI::checkMission(std::string name)
 	bool ok=false;
 	goal_reached_=false;
 
-	std::cout << "Mission ok" << std::endl;
+	std::cout << "Mission in progress" << std::endl;
 
 	std::string filename=ros::package::getPath("osmosis_control");
 	filename.append("/MISSION_" + name + ".miss");
@@ -166,7 +176,7 @@ HMI::HMI()
 	missionState_=ASKMISSION;
 	done_point_=true;
 	done_mission_=true;
-	emergencyStop_=true;
+	emergency_stop_=false;
 }
 
 void HMI::run()
@@ -188,9 +198,7 @@ void HMI::CallbackOrderDone(const osmosis_control::Hmi_DoneMsg &done)
 
 void HMI::CallbackEmergencyStop(const std_msgs::Bool &stop)
 {
-	done_mission_=true;;
-	done_point_=true;
-	emergencyStop_=stop.data;
+	emergency_stop_=stop.data;
 }
 
 ////////////////////// MAIN ////////////////////// 

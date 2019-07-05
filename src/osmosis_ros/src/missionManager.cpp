@@ -1,17 +1,17 @@
 //juil2018 J.Guiochet @ LAAS
 #include <osmosis_control/missionManager.hpp>
 
-
 ////////////////////// PRIVATE ////////////////////// 
 
 void MissionManager::driveMissionManager()
 {
-	if(emergencyStop_)
+	if(emergency_stop_)
 		state_=EMERGENCY_STOP;
 
 	switch (state_)
 	{
 		case IDLE:
+			ROS_INFO("IDLE\n");
 			if(hmi_mission_)
 			{
 				this->resetIdle();
@@ -27,12 +27,14 @@ void MissionManager::driveMissionManager()
 		case POINT:
 			switch (pointState_)
 			{
-				case TARGETPOINT:
+				case TARGETPOINT:				
+					ROS_INFO("POINT TARGETPOINT\n");
 					this->goalKeyboard();
 					pointState_=WAITPOINT;
 					break;
 				
 				case WAITPOINT:
+					ROS_INFO("POINT WAITPOINT\n");
 					if(goal_reached_)
 					{
 						endPoint();
@@ -48,11 +50,13 @@ void MissionManager::driveMissionManager()
 			switch (missionState_)
 			{
 				case INITMISSION:
+					ROS_INFO("MISSION INITMISSION\n");
 					this->initMission(mission_name_);
 					missionState_=EXECUTEMISSION;
 					break;
 
 				case EXECUTEMISSION:
+					ROS_INFO("MISSION EXECUTEMISSION\n");
 					this->doMission();
 					if(missionAborted_)
 					{
@@ -70,6 +74,17 @@ void MissionManager::driveMissionManager()
 					break;
 			}
 			break;
+			
+		case EMERGENCY_STOP:	
+			ROS_INFO("EMERGENCY_STOP\n");
+			if(!emergency_stop_)
+				state_=IDLE;
+			break;
+
+		default:
+			ROS_INFO("defaut\n");
+			break;
+				
         }
 }
 
@@ -230,10 +245,10 @@ MissionManager::MissionManager()
 	goal_pub_ = nh_.advertise<osmosis_control::State_and_PointMsg>("goal", 1);
 	hmi_done_pub_ = nh_.advertise<osmosis_control::Hmi_DoneMsg>("hmi_done", 1);
 	goal_reached_sub_ = nh_.subscribe("/goal_reached", 1, &MissionManager::CallbackGoalReached, this);
-	emergency_sub_ = nh_.subscribe("/do_RM1_EmergencyStop", 1, &MissionManager::CallbackEmergencyStop, this);
+	emergency_stop_sub_ = nh_.subscribe("/do_RM1_EmergencyStop", 1, &MissionManager::CallbackEmergencyStop, this);
 	hmi_order_sub_ = nh_.subscribe("/order", 1, &MissionManager::CallbackOrder, this);
 
-	emergencyStop_=false;
+	emergency_stop_=false;
 	goal_reached_=false;
 	state_=IDLE;
 	missionState_=INITMISSION;
@@ -267,7 +282,7 @@ void MissionManager::CallbackEmergencyStop(const std_msgs::Bool &stop)
 {
 	missionAborted_=true;
 	missionOver_=true;
-	emergencyStop_=stop.data;
+	emergency_stop_=stop.data;
 }
 
 void MissionManager::CallbackOrder(const osmosis_control::Hmi_OrderMsg &order)

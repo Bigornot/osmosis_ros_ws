@@ -17,7 +17,6 @@
 #ifndef OSMOSIS_SAFETYPILOT_HPP
 #define OSMOSIS_SAFETYPILOT_HPP
 
-
 #include <iostream>
 #include <cmath>
 
@@ -25,6 +24,7 @@
 #include <geometry_msgs/Twist.h>
 #include <sensor_msgs/LaserScan.h>
 #include "osmosis_control/TeleopMsg.h"
+#include <std_msgs/Bool.h>
 
 
 const double stop_distance = 0.8;
@@ -32,16 +32,27 @@ const double stop_lateral_distance = 0.3;
 const double  max_linear = 1.0;
 const double max_angular = 0.4;
 
-
-
 class SafetyPilot
 {
 private:
 	ros::NodeHandle nh_;
+
 	ros::Publisher cmd_vel_pub_;
+
 	ros::Subscriber cmd_vel_sub_;
 	ros::Subscriber scan_sub_;
 	ros::Subscriber cmd_vel_teleop_sub_;
+	ros::Subscriber emergency_stop_sub_;
+	ros::Subscriber controlled_stop_sub_;
+	ros::Subscriber switch_to_teleop_sub_;
+
+	enum State{COMPUTE_CMD, EMERGENCY_STOP, CONTROLLED_STOP, SWITCH_TO_TELEOP};
+	State state_;
+
+	bool emergency_stop_;
+	bool controlled_stop_;
+	bool switch_to_teleop_;
+
 	geometry_msgs::Twist base_cmd_ctrl_;
 	geometry_msgs::Twist base_cmd_;
 	osmosis_control::TeleopMsg base_cmd_teleop_;
@@ -54,15 +65,16 @@ public:
 
 	// from MAUVE "priority" ressource: choose between teleop or control
 	void computeCommandCtrlTeleop();
+	void callbackCmdVelCtrl(const geometry_msgs::Twist & cmd_msg);
+	void callbackScan(const sensor_msgs::LaserScan & scan_msg);
+	void callbackTeleop(const osmosis_control::TeleopMsg & teleop_msg);
+	void callbackEmergencyStop(const std_msgs::Bool &stop);
+	void callbackControlledStop(const std_msgs::Bool &stop);
+	void callbackSwitchToTeleop(const std_msgs::Bool &switchToTeleop);
 
-	void safetyPilotCallbackCmdVelCtrl(const geometry_msgs::Twist & cmd_msg);
-
-
-	void safetyPilotCallbackScan(const sensor_msgs::LaserScan & scan_msg);
-
-
-	void safetyPilotCallbackTeleop(const osmosis_control::TeleopMsg & teleop_msg);
-
+	void driveSafetyPilot();
+	
+	void stop();
 
 	//! ROS node topics publishing and subscribing initialization
 	SafetyPilot();

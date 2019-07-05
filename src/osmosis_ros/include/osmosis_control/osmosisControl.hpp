@@ -43,6 +43,11 @@ private:
 	ros::Publisher cmd_vel_pub_;
 	ros::Publisher goal_reach_pub_;
 
+	ros::Subscriber emergency_stop_sub_;
+	ros::Subscriber odom_sub_;
+	ros::Subscriber scan_sub_;
+	ros::Subscriber goal_sub_;
+
 	geometry_msgs::Pose2D robot_pose;
 	geometry_msgs::Point obstacle;
 	osmosis_control::State_and_PointMsg state_and_target_;
@@ -50,17 +55,13 @@ private:
 	geometry_msgs::Point old_goal_;
 	geometry_msgs::Twist cmd_;
 
-	ros::Subscriber scan_sub_;
-	ros::Subscriber emergency_stop_sub_;
 	sensor_msgs::LaserScan scan_;
-	ros::Subscriber odom_sub_;
 	nav_msgs::Odometry odom_;
-	ros::Subscriber goal_sub_;
 
 	enum State {WAIT_GOAL, MOVE_TO_GOAL, ARRIVED_GOAL, EMERGENCY_STOP};
 	State state_;
 
-	bool emergencyStop_;
+	bool emergency_stop_;
 
 public:
 
