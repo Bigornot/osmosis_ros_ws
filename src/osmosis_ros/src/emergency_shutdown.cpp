@@ -31,7 +31,7 @@ EmergencyShutdown::EmergencyShutdown()
 {
 	//set up the publisher for the goal topic
 	emergency_.data=false;
-	emergency_pub_ = nh_.advertise<std_msgs::Bool>("emergency_shutdown", 1);
+	emergency_pub_ = nh_.advertise<std_msgs::Bool>("/do_RM1_EmergencyStop", 1);
 	state_=NOMINAL;
 }
 

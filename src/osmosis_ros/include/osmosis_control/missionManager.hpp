@@ -45,7 +45,7 @@ private:
 	ros::Subscriber emergency_sub_;
 	ros::Subscriber hmi_order_sub_;
 
-	enum StateDriveMission{IDLE,POINT,MISSION};
+	enum StateDriveMission{IDLE,POINT,MISSION, EMERGENCY_STOP};
 	StateDriveMission state_;
 	enum StateMission {INITMISSION,EXECUTEMISSION};
 	StateMission missionState_;
@@ -55,6 +55,7 @@ private:
 	osmosis_control::State_and_PointMsg state_and_point_cmd_;
 	Mission mission_;
 	std::string mission_name_;
+	bool emergencyStop_;
 
 	bool goal_reached_;
 	bool missionOver_;

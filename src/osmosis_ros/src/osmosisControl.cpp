@@ -1,22 +1,69 @@
 //July2017 J.Guiochet @ LAAS with cc/paste from C.Lesire @ ONERA
 #include <osmosis_control/osmosisControl.hpp>
 
+void OsmosisControl::osmosisControlFSM()
+{
+	if(emergencyStop_)
+		state_=EMERGENCY_STOP;
 
-void OsmosisControl::osmosisControlCallbackGoal(const osmosis_control::State_and_PointMsg & thegoal)
+	switch(state_)
+	{
+		case WAIT_GOAL:
+			ROS_INFO("WAIT\n");
+			stop();
+			if(new_goal()) 
+				state_=MOVE_TO_GOAL;
+			break;
+
+		case MOVE_TO_GOAL:
+			ROS_INFO("MOVE\n");
+			ROS_INFO("x: %f  y:%f", robot_pose.x , robot_pose.y );
+			if (new_goal()) 
+				state_=MOVE_TO_GOAL;
+			else if (is_arrived()) 
+				state_=ARRIVED_GOAL;
+			else 
+				updateMove();
+			break;
+
+		case ARRIVED_GOAL:
+			ROS_INFO("ARRIVED\n");
+			publish_is_arrived();
+			stop();
+			state_=WAIT_GOAL;
+			break;
+
+		case EMERGENCY_STOP:
+			ROS_INFO("EMERGENCY STOP\n");
+			stop();
+			if(!emergencyStop_)
+				state_=WAIT_GOAL;
+			break;
+
+		default : break;
+	}
+}
+
+void OsmosisControl::callbackGoal(const osmosis_control::State_and_PointMsg & thegoal)
 {
 	state_and_target_=thegoal;
 	
 	ROS_INFO("GOAL : x: [%f], y:[%f]",state_and_target_.goal.x,state_and_target_.goal.y);
 }
 
-void OsmosisControl::osmosisControlCallbackScan(const sensor_msgs::LaserScan & thescan)
+void OsmosisControl::callbackScan(const sensor_msgs::LaserScan & thescan)
 {
 	scan_=thescan;
 }
 
-void OsmosisControl::osmosisControlCallbackPose(const geometry_msgs::Pose2D & msg)
+void OsmosisControl::callbackPose(const geometry_msgs::Pose2D & msg)
 {
 	robot_pose = msg;
+}
+
+void OsmosisControl::callbackEmergencyStop(const std_msgs::Bool &stop)
+{
+	emergencyStop_=stop.data;
 }
 
 void OsmosisControl::publish_is_arrived()
@@ -29,20 +76,20 @@ void OsmosisControl::publish_is_arrived()
 //! ROS node initialization
 OsmosisControl::OsmosisControl()
 {
-
 	//set up the publishers and subscribers
 	cmd_vel_pub_   = nh_.advertise<geometry_msgs::Twist>("cmd_vel_control", 1);
 	goal_reach_pub_= nh_.advertise<std_msgs::Bool>("target_reached", 10);
-	scan_sub_ = nh_.subscribe("/summit_xl_a/front_laser/scan", 1, &OsmosisControl::osmosisControlCallbackScan, this);
-	goal_sub_ = nh_.subscribe("/target", 1, &OsmosisControl::osmosisControlCallbackGoal, this);
-	odom_sub_ = nh_.subscribe("/pose", 1, &OsmosisControl::osmosisControlCallbackPose, this);
+	scan_sub_ = nh_.subscribe("/summit_xl_a/front_laser/scan", 1, &OsmosisControl::callbackScan, this);
+	goal_sub_ = nh_.subscribe("/target", 1, &OsmosisControl::callbackGoal, this);
+	odom_sub_ = nh_.subscribe("/pose", 1, &OsmosisControl::callbackPose, this);
+	emergency_stop_sub_ = nh_.subscribe("/do_RM1_EmergencyStop", 1, &OsmosisControl::callbackEmergencyStop, this);
 
 	//initialization of attributes
 	state_and_target_.goal.x = old_goal_.x = state_and_target_.goal.y = old_goal_.y=0;
-	state_=wait_goal;
-}
+	state_=WAIT_GOAL;
 
-// paste from MAUVE
+	emergencyStop_=false;
+}
 
 bool OsmosisControl::new_goal()
 {
@@ -217,39 +264,7 @@ geometry_msgs::Twist OsmosisControl::PF(double x_p, double y_p,double theta_p, d
 }
 // end paste
 
-void OsmosisControl::osmosisControlFSM()
-{
-	switch(state_)
-	{
-		case wait_goal:
-			ROS_INFO("WAIT");
-			stop();
-			if (new_goal()) 
-				state_=move_to_goal;
-			break;
 
-		case move_to_goal:
-			ROS_INFO("MOVE");
-			ROS_INFO("x: %f  y:%f", robot_pose.x , robot_pose.y );
-			if (new_goal()) 
-				state_=move_to_goal;
-			else if (is_arrived()) 
-				state_=arrived_goal;
-			else 
-				updateMove();
-			break;
-
-		case arrived_goal:
-			ROS_INFO("ARRIVED");
-			publish_is_arrived();
-			stop();
-			state_=wait_goal;
-			break;
-
-		default : break;
-
-	}
-}
 
 bool OsmosisControl::run()
 {

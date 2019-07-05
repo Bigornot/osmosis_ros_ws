@@ -6,6 +6,9 @@
 
 void HMI::driveHMI()
 {
+	if(emergencyStop_)
+		state_=EMERGENCY_STOP;
+
 	switch (state_)
 	{
 		case IDLE:
@@ -59,6 +62,11 @@ void HMI::driveHMI()
 					}
 					break;
 			}
+			break;
+
+		case EMERGENCY_STOP:
+			if(!emergencyStop_)
+				state_=IDLE;
 			break;
 	}
 }
@@ -152,12 +160,13 @@ HMI::HMI()
 {
 	orders_pub_ = nh_.advertise<osmosis_control::Hmi_OrderMsg>("order", 1);
 	done_sub_ = nh_.subscribe("/hmi_done", 1, &HMI::CallbackOrderDone, this);
-	emergency_stop_sub_ = nh_.subscribe("/emergency_stop", 1, &HMI::CallbackEmergencyStop, this);
+	emergency_stop_sub_ = nh_.subscribe("/do_RM1_EmergencyStop", 1, &HMI::CallbackEmergencyStop, this);
 	state_=IDLE;
 	pointState_=TARGETPOINT;
 	missionState_=ASKMISSION;
 	done_point_=true;
 	done_mission_=true;
+	emergencyStop_=true;
 }
 
 void HMI::run()
@@ -179,8 +188,9 @@ void HMI::CallbackOrderDone(const osmosis_control::Hmi_DoneMsg &done)
 
 void HMI::CallbackEmergencyStop(const std_msgs::Bool &stop)
 {
-	done_mission_=stop.data;
-	done_point_=stop.data;
+	done_mission_=true;;
+	done_point_=true;
+	emergencyStop_=stop.data;
 }
 
 ////////////////////// MAIN ////////////////////// 

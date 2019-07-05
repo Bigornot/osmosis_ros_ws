@@ -30,7 +30,7 @@ private:
 	ros::Publisher emergency_pub_;
 	enum StateDriveEmergency{NOMINAL,EMERGENCYHIT,EMERGENCY};
 	StateDriveEmergency state_;
-  std_msgs::Bool emergency_;
+	std_msgs::Bool emergency_;
 
 public:
 	EmergencyShutdown();

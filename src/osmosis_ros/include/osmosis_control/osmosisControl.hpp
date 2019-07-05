@@ -1,18 +1,18 @@
 /*
- * Copyright 2018 LAAS-CNRS
- *
- * This file is part of the OSMOSIS project.
- *
- * Osmosis is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 3 as
- * published by the Free Software Foundation.
- *
- * Osmosis is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- */
+* Copyright 2018 LAAS-CNRS
+*
+* This file is part of the OSMOSIS project.
+*
+* Osmosis is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License version 3 as
+* published by the Free Software Foundation.
+*
+* Osmosis is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+*/
 
 #ifndef OSMOSIS_CONTROL_HPP
 #define OSMOSIS_CONTROL_HPP
@@ -30,7 +30,6 @@
 #include <std_msgs/Bool.h>
 #include "osmosis_control/State_and_PointMsg.h"
 #include <osmosis_control/common.hpp>
-
 
 const double obstacle_distance=0.9;
 const double safety_distance=0.9;
@@ -52,19 +51,23 @@ private:
 	geometry_msgs::Twist cmd_;
 
 	ros::Subscriber scan_sub_;
+	ros::Subscriber emergency_stop_sub_;
 	sensor_msgs::LaserScan scan_;
 	ros::Subscriber odom_sub_;
 	nav_msgs::Odometry odom_;
 	ros::Subscriber goal_sub_;
 
-	enum State {wait_goal,move_to_goal,arrived_goal};
+	enum State {WAIT_GOAL, MOVE_TO_GOAL, ARRIVED_GOAL, EMERGENCY_STOP};
 	State state_;
+
+	bool emergencyStop_;
 
 public:
 
-	void osmosisControlCallbackGoal(const osmosis_control::State_and_PointMsg & thegoal);
-	void osmosisControlCallbackScan(const sensor_msgs::LaserScan & thescan);
-	void osmosisControlCallbackPose(const geometry_msgs::Pose2D & msg);
+	void callbackGoal(const osmosis_control::State_and_PointMsg & thegoal);
+	void callbackScan(const sensor_msgs::LaserScan & thescan);
+	void callbackPose(const geometry_msgs::Pose2D & msg);
+	void callbackEmergencyStop(const std_msgs::Bool &stop);
 	void publish_is_arrived();
 
 	//! ROS node initialization

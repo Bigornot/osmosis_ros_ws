@@ -36,7 +36,7 @@ private:
 	ros::Subscriber emergency_stop_sub_;
 	ros::Subscriber done_sub_;
 
-	enum StateDriveHMI{IDLE,POINT,MISSION};
+	enum StateDriveHMI{IDLE,POINT,MISSION, EMERGENCY_STOP};
 	StateDriveHMI state_;
 	enum StateMission {ASKMISSION,WAITMISSION};
 	StateMission missionState_;
@@ -46,6 +46,8 @@ private:
 	bool goal_reached_;
 	bool done_mission_;
 	bool done_point_;
+
+	bool emergencyStop_;
 
 	/////////  Methods   ////////
 	void driveHMI();
