@@ -1,25 +1,23 @@
-#include <osmosis_control/DetectionModules/DM5_NodeCrash.hpp>
+#include <osmosis_control/DetectionModules/DM4_NodeCrash.hpp>
 
 //! ROS node topics publishing and subscribing initialization
-DM5_NodeCrash::DM5_NodeCrash() : DetectionModule()
+DM4_NodeCrash::DM4_NodeCrash() : DetectionModule()
 {
 	nodesToCheck_.push_back("/DM1_ProhibitedArea_node");
 	nodesToCheck_.push_back("/DM2_CmdNotUpdated_node");
 	nodesToCheck_.push_back("/DM3_WrongCommand_node");
-	nodesToCheck_.push_back("/HMI_node");
+	nodesToCheck_.push_back("/DM5_NodeCrashControl_node");
+	nodesToCheck_.push_back("/FTM_Manager_node");
 	nodesToCheck_.push_back("/teleop_node");
 	nodesToCheck_.push_back("/emergency_shutdown_node");
-	nodesToCheck_.push_back("/graph_planner_node");
 	nodesToCheck_.push_back("/joy_node");
 	nodesToCheck_.push_back("/joy_teleop_node");
 	nodesToCheck_.push_back("/localization_node");
-	nodesToCheck_.push_back("/mission_manager_node");
-	nodesToCheck_.push_back("/osmosis_control_node");
 	nodesToCheck_.push_back("/safety_pilot_node");
 	nodesToCheck_.push_back("/teleop_node");
 }
 
-bool DM5_NodeCrash::detect()
+bool DM4_NodeCrash::detect()
 {
 	int i,j;
 	bool found=true;

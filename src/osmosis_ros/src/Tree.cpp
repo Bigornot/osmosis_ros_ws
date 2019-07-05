@@ -18,7 +18,9 @@ Tree::Tree()
 	DM1_prohibited_area_ = new DM1_ProhibitedArea();	
 	DM2_cmd_not_updated_ = new DM2_CmdNotUpdated();
 	DM3_wrong_command_ = new DM3_WrongCommand();
-	DM5_node_crash_ = new DM5_NodeCrash();
+	DM4_node_crash_ = new DM4_NodeCrash();
+	DM5_node_crash_control_ = new DM5_NodeCrashControl();
+	DM6_loc_not_updated_ = new DM6_LocNotUpdated();
 
 	// Declarations of the rules (linking of detection modules and recovery modules)
 	// The FMT tree the built here

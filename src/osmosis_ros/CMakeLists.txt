@@ -168,7 +168,9 @@ src/DetectionModules/DetectionModule.cpp
 src/DetectionModules/DM1_ProhibitedArea.cpp 
 src/DetectionModules/DM2_CmdNotUpdated.cpp 
 src/DetectionModules/DM3_WrongCommand.cpp 
-src/DetectionModules/DM5_NodeCrash.cpp
+src/DetectionModules/DM4_NodeCrash.cpp
+src/DetectionModules/DM5_NodeCrashControl.cpp
+src/DetectionModules/DM6_LocNotUpdated.cpp
 
 src/RecoveryModules/RecoveryModule.cpp 
 src/RecoveryModules/RM1_EmergencyStop.cpp 
