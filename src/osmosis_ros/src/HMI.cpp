@@ -77,11 +77,14 @@ char HMI::askMode()
 
 void HMI::goalKeyboard()
 {
-	orders_cmd_.doMission=false;
-	this->resetDone();
-	
 	geometry_msgs::Point thegoal;
+	osmosis_control::Hmi_OrderMsg order_cmd;
+	osmosis_control::State_and_PointMsg state_and_point_cmd;
 	int n=0;
+
+	order_cmd.doMission=false;
+	done_point_=false;
+	
 	std::cout << "Enter a new goal (x,y)" << std::endl;
 	std::cout << "x= ";
 	std::cin >> thegoal.x;
@@ -89,17 +92,18 @@ void HMI::goalKeyboard()
 	std::cin >> thegoal.y;	
 	std::cout << "taxi (0,1)= ";
 	std::cin >> n;
-	state_and_point_cmd_.taxi = n!=0;
+	state_and_point_cmd.taxi = n!=0;
 
-	state_and_point_cmd_.goal=thegoal;
-	orders_cmd_.state_and_point=state_and_point_cmd_;
-	orders_pub_.publish(orders_cmd_);
+	state_and_point_cmd.goal=thegoal;
+	order_cmd.state_and_point=state_and_point_cmd;
+	orders_pub_.publish(order_cmd);
 }
 
 bool HMI::askMission()
 {
-	orders_cmd_.doMission=true;
-	this->resetDone();
+	osmosis_control::Hmi_OrderMsg order_cmd;
+	order_cmd.doMission=true;
+	done_mission_=false;
 
 	bool ok=false;
 
@@ -111,8 +115,8 @@ bool HMI::askMission()
 	{
 		ok=true;
 		done_mission_=false;
-		orders_cmd_.state_and_point=state_and_point_cmd_;
-		orders_pub_.publish(orders_cmd_);
+		order_cmd.mission_name=name;
+		orders_pub_.publish(order_cmd);
 	}
 	return ok;
 }
@@ -121,7 +125,6 @@ bool HMI::checkMission(std::string name)
 {
 	bool ok=false;
 	goal_reached_=false;
-	orders_cmd_.mission_name=name;
 
 	std::cout << "Mission ok" << std::endl;
 
@@ -142,24 +145,19 @@ bool HMI::checkMission(std::string name)
 	return ok;
 }
 
-void HMI::resetDone()
-{
-	done_point_=false;
-	done_mission_=false;
-}
-
 
 ////////////////////// PUBLIC ////////////////////// 
 
-//! ROS node initialization
 HMI::HMI()
 {
 	orders_pub_ = nh_.advertise<osmosis_control::Hmi_OrderMsg>("order", 1);
-	done_sub_ = nh_.subscribe("/hmi_done", 1, &HMI::HMICallbackHmiOrder, this);
+	done_sub_ = nh_.subscribe("/hmi_done", 1, &HMI::CallbackOrderDone, this);
+	emergency_stop_sub_ = nh_.subscribe("/emergency_stop", 1, &HMI::CallbackEmergencyStop, this);
 	state_=IDLE;
 	pointState_=TARGETPOINT;
 	missionState_=ASKMISSION;
-	this->resetDone();
+	done_point_=true;
+	done_mission_=true;
 }
 
 void HMI::run()
@@ -173,12 +171,17 @@ void HMI::run()
 	}
 }
 
-void HMI::HMICallbackHmiOrder(const osmosis_control::Hmi_DoneMsg &done)
+void HMI::CallbackOrderDone(const osmosis_control::Hmi_DoneMsg &done)
 {
 	done_point_=done.point;
 	done_mission_=done.mission;
 }
 
+void HMI::CallbackEmergencyStop(const std_msgs::Bool &stop)
+{
+	done_missions_=true;
+	done_point_=true;
+}
 
 ////////////////////// MAIN ////////////////////// 
 

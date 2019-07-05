@@ -10,6 +10,7 @@
 	<param name="deadzone" type="double" value="0.13" />
 </node>
 <node name="mission_manager_node" type="mission_manager_node" pkg="osmosis_control" output="screen" launch-prefix="xterm -e"/>
+<node name="HMI_node" type="HMI_node" pkg="osmosis_control" output="screen" launch-prefix="xterm -e"/>
 <node name="emergency_shutdown_node" type="emergency_shutdown_node" pkg="osmosis_control" output="screen" launch-prefix="xterm -e"/>
 
 <node name="FTM_Manager_node" type="FTM_Manager_node" pkg="osmosis_control" output="screen" launch-prefix="xterm -e"/>

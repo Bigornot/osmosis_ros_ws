@@ -21,10 +21,7 @@
 #include <iostream>
 #include <ros/ros.h>
 #include <fstream>
-#include <vector>
 #include <string>
-#include <geometry_msgs/Twist.h>
-#include <geometry_msgs/Point.h>
 #include <ros/package.h>
 #include "std_msgs/Bool.h"
 #include "osmosis_control/State_and_PointMsg.h"
@@ -37,6 +34,7 @@ private:
 	///////// Attributes /////////
 	ros::NodeHandle nh_;
 	ros::Publisher orders_pub_;
+	ros::Subscriber emergency_stop_sub_;
 	ros::Subscriber done_sub_;
 
 	enum StateDriveHMI{IDLE,POINT,MISSION};
@@ -45,9 +43,6 @@ private:
 	StateMission missionState_;
 	enum StatePoint {TARGETPOINT,WAITPOINT};
 	StatePoint pointState_;
-
-	osmosis_control::State_and_PointMsg state_and_point_cmd_;
-	osmosis_control::Hmi_OrderMsg orders_cmd_;
 
 	bool goal_reached_;
 	bool done_mission_;
@@ -63,13 +58,12 @@ private:
 	bool askMission();
 	bool checkMission(std::string name);
 
-	void resetDone();
-
 public:
 	HMI();
 	void run();
 
-	void HMICallbackHmiOrder(const osmosis_control::Hmi_DoneMsg &done);
+	void CallbackOrderDone(const osmosis_control::Hmi_DoneMsg &done);
+	void CallbackEmergencyStop(const std_msgs::Bool &stop);
 
 }; // end of class
 
