@@ -1,7 +1,5 @@
 #include <osmosis_control/RecoveryModules/RecoveryModule.hpp>
 
-using namespace std;
-
 RecoveryModule::RecoveryModule(int id, int predecessor, vector<int> successors)
 {
 	driveState_=IDLE;

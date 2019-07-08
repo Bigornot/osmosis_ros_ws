@@ -87,7 +87,7 @@ void GraphPlanner::callbackGoal(const osmosis_control::State_and_PointMsg & theg
 	ROS_INFO("NEW GOAL : x: [%f], y:[%f]",state_and_goal_.goal.x,state_and_goal_.goal.y);
 }
 
-/*void GraphPlanner::callbackGoalId(const std::string & thegoal_id)
+/*void GraphPlanner::callbackGoalId(const string & thegoal_id)
 {
 	this->goal_id=thegoal_id;
 	_new_goal=true;
@@ -215,17 +215,17 @@ void GraphPlanner::execute_plan()
 }
 
 // this method should be placed somewhere else... where ???
-void GraphPlanner::initGraph(const std::string& filename)
+void GraphPlanner::initGraph(const string& filename)
 {
 	Graph g;
-	std::string s;
+	string s;
 	s= ros::package::getPath("osmosis_control");
 	s=s.append("/").append(filename);
 	g=parse(s); // grapIO.hpp method
 	graph=g;
 
 	// to check
-	//std::cout<<"HEY : "<<g.getNode("N49")->point.x<<std::endl;
+	//cout<<"HEY : "<<g.getNode("N49")->point.x<<endl;
 }
 
 
@@ -234,7 +234,7 @@ void GraphPlanner::run()
 	ros::Rate loop_rate(freq_); //using 10 makes the robot oscillating trajectories, TBD check with the PF algo ?
 	while (nh_.ok())
 	{
-		//std::cout <<"HEY";
+		//cout <<"HEY";
 		//this->goalKeyboard();
 		this->graphPlannerFSM();
 

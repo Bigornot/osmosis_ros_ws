@@ -30,6 +30,8 @@
 #include <osmosis_control/graph.hpp>
 #include <osmosis_control/graphIO.hpp>
 
+using namespace std;
+
 class GraphPlanner 
 {
 public:

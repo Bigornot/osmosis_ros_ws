@@ -14,8 +14,8 @@ Node::Node(double x, double y)
 	point.y = y;
 }
 
-bool compare_astar (std::string first, std::string second,
-std::map<std::string,double>& f, std::map<std::string,double>& g)
+bool compare_astar (string first, string second,
+map<string,double>& f, map<string,double>& g)
 {
 	if ( f[first] < f[second] ) return true;
 	else if ( f[first] == f[second] ) return ( g[first] > g[second] );
@@ -31,16 +31,16 @@ double Graph::distance(const Node* a, const Node* b)
 
 double Graph::distance(const geometry_msgs::Point p, const geometry_msgs::Point q)
 {
-	return sqrt( std::pow(p.x - q.x, 2) + std::pow(p.y - q.y, 2) );
+	return sqrt( pow(p.x - q.x, 2) + pow(p.y - q.y, 2) );
 }
 
-void Graph::addNode(const std::string& name, Node* n)
+void Graph::addNode(const string& name, Node* n)
 {
 	nodes[name]= n;
 	n->name = name;
 }
 
-void Graph::addEdge(const std::string& a, const std::string& b, double weight)
+void Graph::addEdge(const string& a, const string& b, double weight)
 {
 	auto n = nodes[a];
 	auto m = nodes[b];
@@ -48,7 +48,7 @@ void Graph::addEdge(const std::string& a, const std::string& b, double weight)
 	m->neighbors.push_back({n, weight});
 }
 
-Node* Graph::getNode(const std::string& i)
+Node* Graph::getNode(const string& i)
 {
 	return nodes[i];
 }
@@ -67,7 +67,7 @@ Node* Graph::getNode(const geometry_msgs::Point& p)
 Node* Graph::getClosestNode(const geometry_msgs::Point& p)
 {
 	Node* N;
-	double D = std::numeric_limits<double>::max();
+	double D = numeric_limits<double>::max();
 	for (auto& kv: nodes)
 	{
 		auto n = kv.second;
@@ -81,16 +81,16 @@ Node* Graph::getClosestNode(const geometry_msgs::Point& p)
 	return N;
 }
 
-std::vector<Node*> Graph::compute_plan(const Node* start, const Node* goal)
+vector<Node*> Graph::compute_plan(const Node* start, const Node* goal)
 {
-	using namespace std::placeholders;
+	using namespace placeholders;
 
-	std::map<std::string, double> g;
-	std::map<std::string, double> f;
-	std::map<std::string, std::string> parent;
+	map<string, double> g;
+	map<string, double> f;
+	map<string, string> parent;
 	
-	std::string sn = start->name;
-	std::string fn = goal->name;
+	string sn = start->name;
+	string fn = goal->name;
 	
 	// Init grid
 	for (auto i : nodes)
@@ -103,20 +103,20 @@ std::vector<Node*> Graph::compute_plan(const Node* start, const Node* goal)
 		}
 		else
 		{
-			g[i.first] = std::numeric_limits<double>::max();
+			g[i.first] = numeric_limits<double>::max();
 			f[i.first] = g[i.first];
 		}
 	}
 
-	std::vector<Node*> plan;
+	vector<Node*> plan;
 
-	std::list<std::string> openset;
+	list<string> openset;
 	openset.push_back(sn);
 
 	while (!openset.empty())
 	{
-		std::string k = *openset.begin();
-		//std::cout << "k: " << k << std::endl;
+		string k = *openset.begin();
+		//cout << "k: " << k << endl;
 		openset.pop_front();
 		if (k == fn)
 		{
@@ -132,9 +132,9 @@ std::vector<Node*> Graph::compute_plan(const Node* start, const Node* goal)
 		}
 		for (auto& e: getNode(k)->neighbors)
 		{
-			//std::cout << "k': " << *(e.target) << std::endl;
+			//cout << "k': " << *(e.target) << endl;
 			double g_ = g[k] + e.weight;
-			std::string t = e.target->name;
+			string t = e.target->name;
 			if (g_ < g[t])
 			{
 				g[t] = g_;
@@ -143,7 +143,7 @@ std::vector<Node*> Graph::compute_plan(const Node* start, const Node* goal)
 				openset.push_back(t);
 			}
 		}
-		auto sort = std::bind(&compare_astar, _1, _2, f, g);
+		auto sort = bind(&compare_astar, _1, _2, f, g);
 		openset.sort(sort);
 	}
 

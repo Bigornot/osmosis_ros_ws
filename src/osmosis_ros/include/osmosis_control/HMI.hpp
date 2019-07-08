@@ -27,6 +27,8 @@
 #include "osmosis_control/Hmi_OrderMsg.h"
 #include "osmosis_control/Hmi_DoneMsg.h"
 
+using namespace std;
+
 class HMI
 {
 private:

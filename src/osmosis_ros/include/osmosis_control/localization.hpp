@@ -28,6 +28,8 @@
 #include <tf/transform_broadcaster.h>
 #include <osmosis_control/common.hpp>
 
+using namespace std;
+
 class Localization
 {
 private:

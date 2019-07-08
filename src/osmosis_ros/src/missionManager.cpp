@@ -102,11 +102,11 @@ bool MissionManager::isGoalReached()
 void MissionManager::goalKeyboard()
 {
 	goal_reached_=false;
-	std::cout<<"x= " << state_and_point_cmd_.goal.x << " y= " << state_and_point_cmd_.goal.y << " taxi=";
+	cout<<"x= " << state_and_point_cmd_.goal.x << " y= " << state_and_point_cmd_.goal.y << " taxi=";
 	if(state_and_point_cmd_.taxi)
-		std::cout << "true" << std::endl;
+		cout << "true" << endl;
 	else
-		std::cout << "false" << std::endl;
+		cout << "false" << endl;
 
 	goal_pub_.publish(state_and_point_cmd_);
 }
@@ -119,22 +119,22 @@ void MissionManager::endPoint()
 	hmi_done_pub_.publish(done);
 }
 
-void MissionManager::initMission(std::string name)
+void MissionManager::initMission(string name)
 {
 	goal_reached_=false;
 
-	std::cout << "Init mission" << std::endl;
+	cout << "Init mission" << endl;
 
 	int i;
 	int taille=mission_.mission_steps.size();
 	for(i=0;i<taille;i++)
 		mission_.mission_steps.pop_back();
 	
-	std::string filename=ros::package::getPath("osmosis_control");
+	string filename=ros::package::getPath("osmosis_control");
 	filename.append("/MISSION_" + name + ".miss");
 
-	std::ifstream fichier(filename, std::ios::in);
-	std::string line;
+	ifstream fichier(filename, ios::in);
+	string line;
 
 	while(getline(fichier, line))
 		this->parse(line);
@@ -142,11 +142,11 @@ void MissionManager::initMission(std::string name)
 
 	for(i=0; i<mission_.mission_steps.size();i++)
 	{
-		std::cout<<"x:"<<mission_.mission_steps[i].goal.x << " y:" << mission_.mission_steps[i].goal.y;
+		cout<<"x:"<<mission_.mission_steps[i].goal.x << " y:" << mission_.mission_steps[i].goal.y;
 		if(mission_.mission_steps[i].taxi)
-			std::cout << " taxi=true" << std::endl;
+			cout << " taxi=true" << endl;
 		else
-			std::cout << " taxi=false" << std::endl;
+			cout << " taxi=false" << endl;
 	}
 
 	timeStartMission_=ros::Time::now();
@@ -157,7 +157,7 @@ void MissionManager::initMission(std::string name)
 	goal_pub_.publish(state_and_point_cmd_);
 }
 
-void MissionManager::parse(std::string line)
+void MissionManager::parse(string line)
 {
 	osmosis_control::State_and_PointMsg order;
 

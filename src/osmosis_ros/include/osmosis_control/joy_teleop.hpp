@@ -24,6 +24,8 @@
 #include <sensor_msgs/Joy.h>
 #include <vector>
 
+using namespace std;
+
 class Joy_teleop
 {
 private:

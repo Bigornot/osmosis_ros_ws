@@ -22,6 +22,8 @@
 #include <geometry_msgs/Twist.h>
 #include "osmosis_control/TeleopMsg.h"
 
+using namespace std;
+
 class Teleop
 {
 private:

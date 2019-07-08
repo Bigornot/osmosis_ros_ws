@@ -1,7 +1,5 @@
 #include <osmosis_control/FTM_Rule.hpp>
 
-using namespace std;
-
 FTM_Rule::FTM_Rule(int id, int predecessor, vector<int> successors, DetectionModule* DM, RecoveryModule* RM)
 {
 	id_=id;

@@ -143,7 +143,7 @@ void OsmosisControl::updateMove()
 		double obsG_x = (xPos) + obs_dist*cos(wPos + obstacle_lw);
 		double obsG_y = (yPos) + obs_dist*sin(wPos + obstacle_lw);
 
-		std::cout << "Ob_X:" << obsG_x << " Ob_Y" << obsG_y << std::endl;
+		cout << "Ob_X:" << obsG_x << " Ob_Y" << obsG_y << endl;
 
 		cmd = PF(xPos,yPos,wPos,obsG_x,obsG_y);
 	}
@@ -155,10 +155,10 @@ bool OsmosisControl::obstacleFromScan(const sensor_msgs::LaserScan& scan)
 {
 	bool obs=false;
 
-	double xmin = std::numeric_limits<double>::max();
-	double xmax = std::numeric_limits<double>::min();
-	double ymin = std::numeric_limits<double>::max();
-	double ymax = std::numeric_limits<double>::min();
+	double xmin = numeric_limits<double>::max();
+	double xmax = numeric_limits<double>::min();
+	double ymin = numeric_limits<double>::max();
+	double ymax = numeric_limits<double>::min();
 
 	double far = obstacle_distance;
 

@@ -6,14 +6,14 @@ void Teleop::driveKeyboard()
 {
 	geometry_msgs::Twist base_cmd;
 	char cmd[50];
-	std::cin.getline(cmd, 50);
+	cin.getline(cmd, 50);
 
 	switch (state_)
 	{
 		case DESACTIVATED:
 			if(cmd[0]!='1' && cmd[0]!='+' && cmd[0]!='l' && cmd[0]!='r' && cmd[0]!='.')
 			{
-				std::cout << "unknown command:" << cmd << "\n";
+				cout << "unknown command:" << cmd << "\n";
 				//continue;
 			}
 			else if (cmd[0]=='1')
@@ -69,14 +69,14 @@ Teleop::Teleop()
 
 void Teleop::run()
 {
-	std::cout << "Type a command and then press enter.  "
+	cout << "Type a command and then press enter.  "
 	"Use '1' to activate the telecommand then'+' to move forward, 'l' to turn left, "
 	"'r' to turn right, '.' to exit.\n";
 
 	ros::Rate loop_rate(freq_);
 	while (nh_.ok())
 	{
-		std::cout <<".";
+		cout <<".";
 		this->driveKeyboard();
 		cmd_teleop_pub_.publish(teleop_cmd_);
 		//ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages

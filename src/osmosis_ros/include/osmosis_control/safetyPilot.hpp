@@ -26,6 +26,7 @@
 #include "osmosis_control/TeleopMsg.h"
 #include <std_msgs/Bool.h>
 
+using namespace std;
 
 const double stop_distance = 0.8;
 const double stop_lateral_distance = 0.3;

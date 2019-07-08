@@ -31,6 +31,8 @@
 #include "osmosis_control/State_and_PointMsg.h"
 #include <osmosis_control/common.hpp>
 
+using namespace std;
+
 const double obstacle_distance=0.9;
 const double safety_distance=0.9;
 const double nu=0.1;

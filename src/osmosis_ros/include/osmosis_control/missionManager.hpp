@@ -27,11 +27,13 @@
 #include "osmosis_control/Hmi_OrderMsg.h"
 #include "osmosis_control/Hmi_DoneMsg.h"
 
+using namespace std;
+
 struct Mission
 {
-	std::string name;
+	string name;
 	int step;
-	std::vector<osmosis_control::State_and_PointMsg> mission_steps;
+	vector<osmosis_control::State_and_PointMsg> mission_steps;
 };
 
 class MissionManager
@@ -54,7 +56,7 @@ private:
 
 	osmosis_control::State_and_PointMsg state_and_point_cmd_;
 	Mission mission_;
-	std::string mission_name_;
+	string mission_name_;
 	bool emergency_stop_;
 
 	bool goal_reached_;
@@ -75,8 +77,8 @@ private:
 	void goalKeyboard();
 	void endPoint();
 
-        void initMission(std::string name);
-	void parse(std::string line);
+        void initMission(string name);
+	void parse(string line);
 	void doMission();
 	bool isMissionOver();
 	void sendNextOrder();

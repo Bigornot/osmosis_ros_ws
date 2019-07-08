@@ -1,7 +1,5 @@
 #include <osmosis_control/FTM_Manager.hpp>
 
-using namespace std;
-
 FTM_Manager::FTM_Manager()
 {
 	freq_=10;

@@ -3,12 +3,12 @@
 
 void EmergencyShutdown::driveEmergencyShutdown()
 {
-	std::string emergency_hit;
+	string emergency_hit;
 	switch (state_)
 	{
 		case NOMINAL:
-			std::cout << "Press Return for emergency stop :";
-			std::cin >> emergency_hit;
+			cout << "Press Return for emergency stop :";
+			cin >> emergency_hit;
 			state_=EMERGENCYHIT;
 		break;
 
@@ -20,7 +20,7 @@ void EmergencyShutdown::driveEmergencyShutdown()
 
 		case EMERGENCY:
 			ROS_ERROR("\nEMERGENCY STOP !\n");
-			std::cin >> emergency_hit;
+			cin >> emergency_hit;
 			state_=NOMINAL;
 		break;
   }

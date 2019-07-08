@@ -28,14 +28,14 @@ void Joy_teleop::joy_on()
 	joy_teleop_cmd_.is_active=true;
 	button_pressed_=false;
 	pub_on_=true;
-	std::cout << "Activation de la manette" << std::endl;
+	cout << "Activation de la manette" << endl;
 }
 
 void Joy_teleop::joy_off()
 {
 	joy_teleop_cmd_.is_active=false;
 	button_pressed_=false;
-	std::cout << "Desactivation de la manette" << std::endl;
+	cout << "Desactivation de la manette" << endl;
 }
 
 void Joy_teleop::teleopCallbackJoy(const sensor_msgs::Joy & joy_msg)
@@ -74,8 +74,8 @@ Joy_teleop::Joy_teleop()
 	cmd_joy_teleop_pub_ = nh_.advertise<osmosis_control::TeleopMsg>("/cmd_vel_teleop", 1);
 	cmd_joystick_sub_= nh_.subscribe("/joy", 1, &Joy_teleop::teleopCallbackJoy, this);
 
-	std::vector<int> buttons(11,0);
-	std::vector<float> axes(8,0);
+	vector<int> buttons(11,0);
+	vector<float> axes(8,0);
 	sensor_msgs::Joy msg;
 	msg.buttons=buttons;
 	msg.axes=axes;
@@ -92,7 +92,7 @@ Joy_teleop::Joy_teleop()
 
 void Joy_teleop::run()
 {
-	std::cout << "Si tout se passe bien on peut desormais activer la manette\n";
+	cout << "Si tout se passe bien on peut desormais activer la manette\n";
 
 	ros::Rate loop_rate(freq_);
 	while (nh_.ok())
@@ -115,7 +115,7 @@ int main(int argc, char** argv)
 {
 	//init the ROS node
 	ros::init(argc, argv, "joy_teleop_node");
-	std::cout << "JOY" << std::endl;
+	cout << "JOY" << endl;
 
 	Joy_teleop myJoyTeleop;
 	myJoyTeleop.run();

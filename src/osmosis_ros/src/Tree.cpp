@@ -1,7 +1,5 @@
 #include <osmosis_control/Tree.hpp>
 
-using namespace std;
-
 Tree::Tree()
 {
 	// Declarations of the recovery modules 

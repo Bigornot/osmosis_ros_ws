@@ -48,8 +48,8 @@ void SafetyPilot::stop()
 // from MAUVE safetyPilot update operation
 geometry_msgs::Twist SafetyPilot::updateCmdWithLaserScan(geometry_msgs::Twist cmd,sensor_msgs::LaserScan s)
 {
-	double obs_dist = std::numeric_limits<double>::max();
-	double obs_lat = std::numeric_limits<double>::max();
+	double obs_dist = numeric_limits<double>::max();
+	double obs_lat = numeric_limits<double>::max();
 
 	for (int i = 0; i < s.ranges.size(); i++)
 	{
@@ -60,8 +60,8 @@ geometry_msgs::Twist SafetyPilot::updateCmdWithLaserScan(geometry_msgs::Twist cm
 			double dy = fabs( r * sin(a) );
 			if (dy <= stop_lateral_distance)
 			{
-				obs_dist = std::min(obs_dist, r);
-				obs_lat = std::min(obs_lat, dy);
+				obs_dist = min(obs_dist, r);
+				obs_lat = min(obs_lat, dy);
 			}
 		}
 	}
@@ -70,8 +70,8 @@ geometry_msgs::Twist SafetyPilot::updateCmdWithLaserScan(geometry_msgs::Twist cm
 	{
 		ROS_INFO("Obstacle too close: robot is not allowed to go forward\n");
 		{
-			cmd.linear.x = std::min(0.0, cmd.linear.x);
-			cmd.linear.y = std::min(0.0, cmd.linear.y);
+			cmd.linear.x = min(0.0, cmd.linear.x);
+			cmd.linear.y = min(0.0, cmd.linear.y);
 		}
 	}
 	else 
