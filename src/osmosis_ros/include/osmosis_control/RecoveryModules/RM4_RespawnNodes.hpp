@@ -13,21 +13,21 @@
 *
 */
 
-#ifndef RM3_HPP
-#define RM3_HPP
+#ifndef RM4_HPP
+#define RM4_HPP
 
 #include <iostream>
 #include <ros/ros.h>
 #include <std_msgs/Bool.h>
 #include <osmosis_control/RecoveryModules/RecoveryModule.hpp>
 
-class RM3_test3 : public RecoveryModule
+class RM4_RespawnNodes : public RecoveryModule
 {
 private:
-	ros::Publisher pub_;
+	ros::V_string nodesToCheck_;
 
 public:
-	RM3_test3(int id, int predecessor, vector<int> successors);
+	RM4_RespawnNodes(int id, int predecessor, vector<int> successors);
 	void doRecovery();
 };
 

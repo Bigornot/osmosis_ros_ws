@@ -5,7 +5,7 @@ DM2_CmdNotUpdated::DM2_CmdNotUpdated() : DetectionModule()
 {
 	cmd_vel_sub_  = nh_.subscribe("summit_xl_a/robotnik_base_control/cmd_vel", 1, &DM2_CmdNotUpdated::DM2_CmdNotUpdatedCallback, this);
 
-	ros::Duration(1).sleep();
+	//ros::Duration(1).sleep();
 
 	lastUpdate_=ros::Time::now();
 	timeOut_ = ros::Duration(1);

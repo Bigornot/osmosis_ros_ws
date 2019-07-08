@@ -175,8 +175,8 @@ src/DetectionModules/DM6_LocNotUpdated.cpp
 src/RecoveryModules/RecoveryModule.cpp 
 src/RecoveryModules/RM1_EmergencyStop.cpp 
 src/RecoveryModules/RM2_ControlledStop.cpp 
-src/RecoveryModules/RM3_test3.cpp 
-src/RecoveryModules/RM4_test4.cpp 
+src/RecoveryModules/RM3_RespawnControlNodes.cpp 
+src/RecoveryModules/RM4_RespawnNodes.cpp 
 src/RecoveryModules/RM5_SwitchToTeleop.cpp)
 
 

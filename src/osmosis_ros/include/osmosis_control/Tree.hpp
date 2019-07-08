@@ -29,8 +29,8 @@
 
 #include <osmosis_control/RecoveryModules/RM1_EmergencyStop.hpp>
 #include <osmosis_control/RecoveryModules/RM2_ControlledStop.hpp>
-#include <osmosis_control/RecoveryModules/RM3_test3.hpp>
-#include <osmosis_control/RecoveryModules/RM4_test4.hpp>
+#include <osmosis_control/RecoveryModules/RM3_RespawnControlNodes.hpp>
+#include <osmosis_control/RecoveryModules/RM4_RespawnNodes.hpp>
 #include <osmosis_control/RecoveryModules/RM5_SwitchToTeleop.hpp>
 
 using namespace std;
@@ -49,8 +49,8 @@ private :
 
 	RM1_EmergencyStop* RM1_emergency_stop_;
 	RM2_ControlledStop* RM2_controlled_stop_;
-	RM3_test3* RM3_;
-	RM4_test4* RM4_;
+	RM3_RespawnControlNodes* RM3_respawn_control_nodes_;
+	RM4_RespawnNodes* RM4_respawn_nodes_;
 	RM5_SwitchToTeleop* RM5_switch_to_teleop_;
 
 	//we have access to:
