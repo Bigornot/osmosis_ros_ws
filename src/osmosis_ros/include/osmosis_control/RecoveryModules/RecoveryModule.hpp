@@ -11,19 +11,22 @@ using namespace std;
 class RecoveryModule
 {
 private:
-	enum driveState{IDLE, RECOVERY};
+	enum driveState{IDLE, RECOVERY, WAIT_STOP, STOP};
 	driveState driveState_;
 
 	int id_;
 	int predecessor_;
 	vector<int> successors_;
+	
+	ros::Time activation_time_;
+	ros::Duration next_activation_delay_;
 
 protected:
 	ros::NodeHandle nh_;
 	bool state_;
 
 public:
-	RecoveryModule(int id, int predecessor, vector<int> successors);
+	RecoveryModule(int id, int predecessor, vector<int> successors, ros::Duration delay);
 	bool getState();
 	void run();
 	void start();

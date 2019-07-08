@@ -27,7 +27,7 @@ private:
 	ros::Publisher pub_;
 
 public:
-	RM5_SwitchToTeleop(int id, int predecessor, vector<int> successors);
+	RM5_SwitchToTeleop(int id, int predecessor, vector<int> successors, ros::Duration delay);
 	void doRecovery();
 };
 

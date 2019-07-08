@@ -1,6 +1,6 @@
 #include <osmosis_control/RecoveryModules/RM3_RespawnControlNodes.hpp>
 
-RM3_RespawnControlNodes::RM3_RespawnControlNodes(int id, int predecessor, vector<int> successors) : RecoveryModule(id, predecessor, successors) 
+RM3_RespawnControlNodes::RM3_RespawnControlNodes(int id, int predecessor, vector<int> successors, ros::Duration delay) : RecoveryModule(id, predecessor, successors, delay) 
 {
 
 	nodesToCheck_.push_back("/HMI_node");

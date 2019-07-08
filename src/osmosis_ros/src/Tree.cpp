@@ -5,11 +5,11 @@ Tree::Tree()
 	// Declarations of the recovery modules 
 	// The recovery tree is built here
 	// RMx_ = new RM_type(id, predecessor, {successors})
-	RM1_emergency_stop_ = new RM1_EmergencyStop(1, 0, {2});
-	RM2_controlled_stop_ = new RM2_ControlledStop(2, 1, {3,4,5});
-	RM3_respawn_control_nodes_ = new RM3_RespawnControlNodes(3, 2, {});
-	RM4_respawn_nodes_ = new RM4_RespawnNodes(4, 2, {});
-	RM5_switch_to_teleop_ = new RM5_SwitchToTeleop(5, 2, {});
+	RM1_emergency_stop_ = new RM1_EmergencyStop(1, 0, {2}, ros::Duration(1));
+	RM2_controlled_stop_ = new RM2_ControlledStop(2, 1, {3,4,5}, ros::Duration(1));
+	RM3_respawn_control_nodes_ = new RM3_RespawnControlNodes(3, 2, {}, ros::Duration(1));
+	RM4_respawn_nodes_ = new RM4_RespawnNodes(4, 2, {}, ros::Duration(1));
+	RM5_switch_to_teleop_ = new RM5_SwitchToTeleop(5, 2, {}, ros::Duration(1));
 
 	// Declarations of the detection modules 
 	// DMx_ = new DM_type()
@@ -214,14 +214,27 @@ bool Tree::findRule(vector<FTM_Rule*> rules, FTM_Rule* rule)
 	return found;
 }
 
-void Tree::doRecovery(vector<FTM_Rule*> Triggered_FTM)
+void Tree::doRecovery(vector<FTM_Rule*> activated_rules)
 {
-	for (int i=0; i<Triggered_FTM.size(); i++)
-	{
-		Triggered_FTM[i]->startRM();
-	}
+	this->stopFinishedRMs(activated_rules);
+
+	for(int i=0; i<activated_rules.size(); i++)
+		activated_rules[i]->startRM();
 
 	this->runRMs();
+}
+
+void Tree::stopFinishedRMs(vector<FTM_Rule*> activated_rules)
+{
+	static vector<FTM_Rule*> last_activated_rules;
+
+	for(int i=0; i<last_activated_rules.size(); i++)
+	{
+		if(!this->findRule(activated_rules, last_activated_rules[i]))
+			last_activated_rules[i]->stopRM();
+	}
+
+	last_activated_rules=activated_rules;
 }
 
 vector<FTM_Rule*> Tree::checkSameRM(vector<FTM_Rule*> Rules)

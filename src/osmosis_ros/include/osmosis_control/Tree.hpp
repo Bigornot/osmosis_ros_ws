@@ -53,9 +53,8 @@ private :
 	RM4_RespawnNodes* RM4_respawn_nodes_;
 	RM5_SwitchToTeleop* RM5_switch_to_teleop_;
 
-	//we have access to:
 	vector<FTM_Rule*> Triggered_rules_;
-	vector<FTM_Rule*> recursiveDominant;
+	vector<FTM_Rule*> recursiveDominant; // Set in static
 	
 	void runDMs();
 	void runRMs();
@@ -66,16 +65,17 @@ private :
 	void recursiveLowestCommonDominant();
 	bool findRM(vector<FTM_Rule*> rules, FTM_Rule* rule);
 	bool findRule(vector<FTM_Rule*> rules, FTM_Rule* rule);
+	void stopFinishedRMs(vector<FTM_Rule*> activated_rules);
 	vector<FTM_Rule*> checkSameRM(vector<FTM_Rule*> Rules);
 
 public :
 	Tree();
 	vector<FTM_Rule*> getTriggeredFTM();
-	void doRecovery(vector<FTM_Rule*> Triggered_FTM);
+	void doRecovery(vector<FTM_Rule*> activated_rules);
 	vector<FTM_Rule*> findDominantFTM();
 	vector<FTM_Rule*> findDominantRecovery(vector<FTM_Rule*> Rules);
 	FTM_Rule* findLowestCommonDominant(vector<FTM_Rule*> dominant);
+
 	void debugDisplayFTMid(vector<FTM_Rule*> Vector);
 	void debugDisplayRMid(vector<FTM_Rule*> Vector);
-
 };
