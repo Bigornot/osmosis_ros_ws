@@ -23,6 +23,8 @@
 #include <ros/package.h>
 #include "std_msgs/Bool.h"
 
+using namespace std;
+
 class EmergencyShutdown
 {
 private:

@@ -1,8 +1,3 @@
-#include <list>
-#include <functional>
-#include <limits>
-#include <cmath>
-#include <algorithm>
 
 #include <osmosis_control/graph.hpp>
 
