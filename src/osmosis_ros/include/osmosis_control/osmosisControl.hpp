@@ -40,6 +40,7 @@ class OsmosisControl
 {
 private:
 	ros::NodeHandle nh_;
+	double freq_;
 	ros::Publisher cmd_vel_pub_;
 	ros::Publisher goal_reach_pub_;
 

@@ -142,6 +142,7 @@ void SafetyPilot::callbackSwitchToTeleop(const std_msgs::Bool &switchToTeleop)
 //! ROS node topics publishing and subscribing initialization
 SafetyPilot::SafetyPilot()
 {
+	freq_=10;
 	//set up the publisher for the cmd_vel topic
 	cmd_vel_pub_ = nh_.advertise<geometry_msgs::Twist>("/summit_xl_a/robotnik_base_control/cmd_vel", 1);
 	cmd_vel_sub_  = nh_.subscribe("cmd_vel_control", 1, &SafetyPilot::callbackCmdVelCtrl, this);
@@ -158,7 +159,7 @@ SafetyPilot::SafetyPilot()
 
 bool SafetyPilot::run()
 {
-	ros::Rate loop_rate(10);
+	ros::Rate loop_rate(freq_);
 	while (nh_.ok())
 	{
 		//this->computeCommandCtrlTeleop();

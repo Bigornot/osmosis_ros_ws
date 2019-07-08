@@ -28,6 +28,7 @@ class FTM_Manager
 {
 private:
 	ros::NodeHandle nh_;
+	double freq_;
 
 	enum Strategies{SAFETY_FIRST};
 	Strategies strategy_;

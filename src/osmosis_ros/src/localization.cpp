@@ -21,13 +21,14 @@ void Localization::localizationCallbackOdom(const nav_msgs::Odometry::ConstPtr& 
 //! ROS node initialization
 Localization::Localization()
 {
+	freq_=10;
 	pose_pub_ = nh_.advertise<geometry_msgs::Pose2D>("/pose", 1);
 	odom_sub_=nh_.subscribe("/summit_xl_a/ground_truth/state", 1, &Localization::localizationCallbackOdom, this);
 }
 
 bool Localization::run()
 {
-	ros::Rate loop_rate(10);
+	ros::Rate loop_rate(freq_);
 	while (nh_.ok())
 	{
 		pose_pub_.publish(robot_pose);

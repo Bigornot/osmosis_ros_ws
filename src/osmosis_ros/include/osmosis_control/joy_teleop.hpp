@@ -28,9 +28,12 @@ class Joy_teleop
 {
 private:
 	ros::NodeHandle nh_;
+	double freq_;
+
 	ros::Publisher cmd_joy_teleop_pub_;
-	osmosis_control::TeleopMsg joy_teleop_cmd_;
 	ros::Subscriber cmd_joystick_sub_;
+
+	osmosis_control::TeleopMsg joy_teleop_cmd_;
 	sensor_msgs::Joy joy_msg_;
 	enum StateTeleop {DESACTIVATED, ACTIVATED};
 	StateTeleop state_;
@@ -39,10 +42,10 @@ private:
 	
 	void joy_on();
 	void joy_off();
+	void driveJoy();
 
 public:
 
-	void driveJoy();
 	Joy_teleop();
 	void teleopCallbackJoy(const sensor_msgs::Joy & joy_msg);
 	void run();

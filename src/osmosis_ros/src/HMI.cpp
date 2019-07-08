@@ -168,6 +168,7 @@ bool HMI::checkMission(std::string name)
 
 HMI::HMI()
 {
+	freq_=10;
 	orders_pub_ = nh_.advertise<osmosis_control::Hmi_OrderMsg>("order", 1);
 	done_sub_ = nh_.subscribe("/hmi_done", 1, &HMI::CallbackOrderDone, this);
 	emergency_stop_sub_ = nh_.subscribe("/do_RM1_EmergencyStop", 1, &HMI::CallbackEmergencyStop, this);
@@ -181,7 +182,7 @@ HMI::HMI()
 
 void HMI::run()
 {
-	ros::Rate loop_rate(10); //using 10 makes the robot oscillating trajectories, TBD check with the PF algo ?
+	ros::Rate loop_rate(freq_); //using 10 makes the robot oscillating trajectories, TBD check with the PF algo ?
 	while (nh_.ok())
 	{
 		this->driveHMI();

@@ -56,6 +56,7 @@ public:
 
 private:
 	ros::NodeHandle nh_;
+	double freq_;
 	ros::Publisher target_pub_;
 	ros::Publisher goal_reached_pub_;
 	ros::Subscriber goal_sub_;

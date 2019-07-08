@@ -57,6 +57,7 @@ void Teleop::driveKeyboard()
 //! ROS node topics publishing and subscribing initialization
 Teleop::Teleop()
 {
+	freq_=10;
 	cmd_teleop_pub_ = nh_.advertise<osmosis_control::TeleopMsg>("/cmd_vel_teleop", 1);
 	//  cmd_joystick_sub_= nh_.subscribe("xxxxjoy", 1, &Teleopxxx::teleopCallbackJoystick, this);
 
@@ -72,7 +73,7 @@ void Teleop::run()
 	"Use '1' to activate the telecommand then'+' to move forward, 'l' to turn left, "
 	"'r' to turn right, '.' to exit.\n";
 
-	ros::Rate loop_rate(10);
+	ros::Rate loop_rate(freq_);
 	while (nh_.ok())
 	{
 		std::cout <<".";

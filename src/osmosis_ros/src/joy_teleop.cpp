@@ -69,6 +69,8 @@ void Joy_teleop::teleopCallbackJoy(const sensor_msgs::Joy & joy_msg)
 //! ROS node topics publishing and subscribing initialization
 Joy_teleop::Joy_teleop()
 {
+	freq_=10;
+
 	cmd_joy_teleop_pub_ = nh_.advertise<osmosis_control::TeleopMsg>("/cmd_vel_teleop", 1);
 	cmd_joystick_sub_= nh_.subscribe("/joy", 1, &Joy_teleop::teleopCallbackJoy, this);
 
@@ -92,7 +94,7 @@ void Joy_teleop::run()
 {
 	std::cout << "Si tout se passe bien on peut desormais activer la manette\n";
 
-	ros::Rate loop_rate(10);
+	ros::Rate loop_rate(freq_);
 	while (nh_.ok())
 	{
 		this->driveJoy();

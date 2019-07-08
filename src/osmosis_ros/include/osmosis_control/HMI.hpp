@@ -32,6 +32,7 @@ class HMI
 private:
 	///////// Attributes /////////
 	ros::NodeHandle nh_;
+	double freq_;
 	ros::Publisher orders_pub_;
 	ros::Subscriber emergency_stop_sub_;
 	ros::Subscriber done_sub_;

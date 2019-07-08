@@ -77,6 +77,7 @@ void OsmosisControl::publish_is_arrived()
 //! ROS node initialization
 OsmosisControl::OsmosisControl()
 {
+	freq_=10;
 	//set up the publishers and subscribers
 	cmd_vel_pub_   = nh_.advertise<geometry_msgs::Twist>("cmd_vel_control", 1);
 	goal_reach_pub_= nh_.advertise<std_msgs::Bool>("target_reached", 10);
@@ -266,7 +267,7 @@ geometry_msgs::Twist OsmosisControl::PF(double x_p, double y_p,double theta_p, d
 
 bool OsmosisControl::run()
 {
-	ros::Rate loop_rate(10); //using 10 makes the robot oscillating trajectories, TBD check with the PF algo
+	ros::Rate loop_rate(freq_); //using 10 makes the robot oscillating trajectories, TBD check with the PF algo
 	while (nh_.ok())
 	{
 		this->osmosisControlFSM();

@@ -26,6 +26,7 @@ class Teleop
 {
 private:
 	ros::NodeHandle nh_;
+	double freq_;
 	ros::Publisher cmd_teleop_pub_;
 	osmosis_control::TeleopMsg teleop_cmd_;
 	//ros::Subscriber cmd_joystick_sub_;

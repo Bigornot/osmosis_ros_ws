@@ -36,6 +36,7 @@ class SafetyPilot
 {
 private:
 	ros::NodeHandle nh_;
+	double freq_;
 
 	ros::Publisher cmd_vel_pub_;
 

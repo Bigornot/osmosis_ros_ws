@@ -4,12 +4,13 @@ using namespace std;
 
 FTM_Manager::FTM_Manager()
 {
+	freq_=10;
 	strategy_=SAFETY_FIRST;
 }
 
 bool FTM_Manager::run()
 {
-	ros::Rate loop_rate(10);
+	ros::Rate loop_rate(freq_);
 	while (nh_.ok())
 	{
 		Triggered_FTM = FTM_Tree_.getTriggeredFTM();

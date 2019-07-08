@@ -61,6 +61,7 @@ void GraphPlanner::graphPlannerFSM()
 //! ROS node initialization
 GraphPlanner::GraphPlanner()
 {
+	freq_=10;
 	//set up the publisher for the goal topic
 	target_pub_ = nh_.advertise<osmosis_control::State_and_PointMsg>("target", 1);
 	goal_reached_pub_ = nh_.advertise<std_msgs::Bool>("goal_reached", 1);
@@ -230,7 +231,7 @@ void GraphPlanner::initGraph(const std::string& filename)
 
 void GraphPlanner::run()
 {
-	ros::Rate loop_rate(10); //using 10 makes the robot oscillating trajectories, TBD check with the PF algo ?
+	ros::Rate loop_rate(freq_); //using 10 makes the robot oscillating trajectories, TBD check with the PF algo ?
 	while (nh_.ok())
 	{
 		//std::cout <<"HEY";
