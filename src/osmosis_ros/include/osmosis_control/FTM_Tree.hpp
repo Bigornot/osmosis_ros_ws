@@ -35,10 +35,10 @@
 
 using namespace std;
 
-class Tree
+class FTM_Tree
 {
 private :
-	vector<FTM_Rule*> FTM_;
+	vector<FTM_Rule*> FTM_rules_;
 
 	DM1_ProhibitedArea* DM1_prohibited_area_;
 	DM2_CmdNotUpdated* DM2_cmd_not_updated_;
@@ -55,8 +55,6 @@ private :
 
 	vector<FTM_Rule*> Triggered_rules_;
 	
-
-	vector<FTM_Rule*> findDominant(vector<FTM_Rule*> Rules);
 	vector<FTM_Rule*> findDominated(FTM_Rule* Dominant_rule, vector<FTM_Rule*>* dominated);
 	vector<FTM_Rule*> findDominatedRecovery(FTM_Rule* Dominant_rule, vector<FTM_Rule*>* dominated);
 	vector<FTM_Rule*> recursiveLowestCommonDominant(vector<FTM_Rule*> recursiveDominant);
@@ -66,10 +64,10 @@ private :
 	vector<FTM_Rule*> checkSameRM(vector<FTM_Rule*> Rules);
 
 public :
-	Tree();
+	FTM_Tree();
 	vector<FTM_Rule*> getTriggeredFTM();
 	void doRecovery(vector<FTM_Rule*> activated_rules);
-	vector<FTM_Rule*> findDominantFTM();
+	vector<FTM_Rule*> findDominant(vector<FTM_Rule*> Rules);
 	vector<FTM_Rule*> findDominantRecovery(vector<FTM_Rule*> Rules);
 	FTM_Rule* findLowestCommonDominant(vector<FTM_Rule*> dominant);
 

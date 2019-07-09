@@ -16,59 +16,59 @@ bool FTM_Manager::run()
 		switch(strategy_)
 		{
 			case SAFETY_FIRST:
-				Triggered_FTM = FTM_Tree_.getTriggeredFTM();
-				cout << "------------------------------" << endl;
-				cout<<"Triggered FTM : ";
-				FTM_Tree_.debugDisplayFTMid(Triggered_FTM);
+				triggered_rules_ = FTM_tree_.getTriggeredFTM();
+				cout<<"------------------------------" << endl;
+				cout<<"Triggered rules : ";
+				FTM_tree_.debugDisplayFTMid(triggered_rules_);
 
-				if(Triggered_FTM.size()==1)
+				if(triggered_rules_.size()==1)
 				{
-					cout<< "Only one FTM triggered, so we just activate the recovery : ";
-					FTM_Tree_.debugDisplayRMid(Triggered_FTM);
-					FTM_Tree_.doRecovery(Triggered_FTM);
+					cout<<"Only one triggered rule, so we just activate its recovery : ";
+					FTM_tree_.debugDisplayRMid(triggered_rules_);
+					FTM_tree_.doRecovery(triggered_rules_);
 				}
-				else if(Triggered_FTM.size()>1)
+				else if(triggered_rules_.size()>1)
 				{
-					cout<<"There are more than one triggered FTM, maybe one dominates the others..."<<endl;
-					dominant=FTM_Tree_.findDominantFTM();
-					cout<<"Dominant FTM : ";
-					FTM_Tree_.debugDisplayFTMid(dominant);
+					cout<<"There are more than one triggered rule, maybe one dominates the others..."<<endl;
+					dominant_=FTM_tree_.findDominant(triggered_rules_);
+					cout<<"Dominant rules : ";
+					FTM_tree_.debugDisplayFTMid(dominant_);
 
-					if(dominant.size()==1)
+					if(dominant_.size()==1)
 					{
-						cout<<"Yes, one FTM dominates the others, let's activate its recovery :";
-						FTM_Tree_.debugDisplayRMid(dominant);
-						FTM_Tree_.doRecovery(dominant);
+						cout<<"Yes, one rule dominates the others, let's activate its recovery :";
+						FTM_tree_.debugDisplayRMid(dominant_);
+						FTM_tree_.doRecovery(dominant_);
 					}
 				
 					else
 					{
-						cout<< "No, there are no unique dominant FTM. Maybe one of their recovery dominates the others..."<<endl;
-						dominant_recov=FTM_Tree_.findDominantRecovery(dominant);
-						cout<< "Dominant Recovery :";
-						FTM_Tree_.debugDisplayRMid(dominant_recov);
+						cout<<"No, there are no unique dominant rule. Maybe one of their recovery dominates the others..."<<endl;
+						dominant_recov_=FTM_tree_.findDominantRecovery(dominant_);
+						cout<<"Dominant Recovery :";
+						FTM_tree_.debugDisplayRMid(dominant_recov_);
 			
-						if(dominant_recov.size()==1)
+						if(dominant_recov_.size()==1)
 						{
 							cout<<"Yes, one RM dominates the others, let's activate it : ";
-							FTM_Tree_.debugDisplayRMid(dominant_recov);
-							FTM_Tree_.doRecovery(dominant_recov);
+							FTM_tree_.debugDisplayRMid(dominant_recov_);
+							FTM_tree_.doRecovery(dominant_recov_);
 						}
 						
 						else
 						{
-							cout<< "No, there are no unique dominant RM. Let's activate the Lowest Common FTM"<<endl;
-							commonDominant=FTM_Tree_.findLowestCommonDominant(dominant); 
+							cout<<"No, there are no unique dominant RM. Let's activate the Lowest Common Dominant"<<endl;
+							commonDominant_=FTM_tree_.findLowestCommonDominant(dominant_); 
 							cout<<"The common dominant is :";
-							FTM_Tree_.debugDisplayFTMid({commonDominant});
+							FTM_tree_.debugDisplayFTMid({commonDominant_});
 							cout<<"so we activate its recovery : ";
-							FTM_Tree_.debugDisplayRMid({commonDominant});
-							FTM_Tree_.doRecovery({commonDominant});
+							FTM_tree_.debugDisplayRMid({commonDominant_});
+							FTM_tree_.doRecovery({commonDominant_});
 							break;
 						}
 					}
 				}
-				FTM_Tree_.runRMs();
+				FTM_tree_.runRMs();
 				cout<<endl<<endl<<endl<<endl<<endl<<endl;
 				break;
 

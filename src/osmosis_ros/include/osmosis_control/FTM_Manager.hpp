@@ -20,7 +20,7 @@
 #include <iostream>
 #include <ros/ros.h>
 #include <vector>
-#include <osmosis_control/Tree.hpp>
+#include <osmosis_control/FTM_Tree.hpp>
 
 using namespace std;
 
@@ -33,14 +33,13 @@ private:
 	enum Strategies{SAFETY_FIRST};
 	Strategies strategy_;
 
-	vector<FTM_Rule*> Triggered_FTM;
-	vector<FTM_Rule*> dominant;
-	vector<FTM_Rule*> dominant_recov;
+	vector<FTM_Rule*> triggered_rules_;
+	vector<FTM_Rule*> dominant_;
+	vector<FTM_Rule*> dominant_recov_;
+	FTM_Rule* commonDominant_;
 
-	FTM_Rule* commonDominant;
+	FTM_Tree FTM_tree_;
 
-
-	Tree FTM_Tree_;
 public:
 	FTM_Manager();
 	bool run();
