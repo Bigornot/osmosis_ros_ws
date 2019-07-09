@@ -2,15 +2,6 @@
 
 Tree::Tree()
 {
-	// Declarations of the recovery modules 
-	// The recovery tree is built here
-	// RMx_ = new RM_type(id, predecessor, {successors})
-	RM1_emergency_stop_ = new RM1_EmergencyStop(1, 0, {2}, ros::Duration(1));
-	RM2_controlled_stop_ = new RM2_ControlledStop(2, 1, {3,4,5}, ros::Duration(1));
-	RM3_respawn_control_nodes_ = new RM3_RespawnControlNodes(3, 2, {}, ros::Duration(1));
-	RM4_respawn_nodes_ = new RM4_RespawnNodes(4, 2, {}, ros::Duration(1));
-	RM5_switch_to_teleop_ = new RM5_SwitchToTeleop(5, 2, {}, ros::Duration(1));
-
 	// Declarations of the detection modules 
 	// DMx_ = new DM_type()
 	DM1_prohibited_area_ = new DM1_ProhibitedArea();	
@@ -19,16 +10,25 @@ Tree::Tree()
 	DM4_node_crash_ = new DM4_NodeCrash();
 	DM5_node_crash_control_ = new DM5_NodeCrashControl();
 	DM6_loc_not_updated_ = new DM6_LocNotUpdated();
+
+	// Declarations of the recovery modules 
+	// The recovery tree is built here
+	// RMx_ = new RM_type(id, predecessor, {successors})
+	RM1_emergency_stop_ = new RM1_EmergencyStop(1, 0, {2}, ros::Duration(1));
+	RM2_controlled_stop_ = new RM2_ControlledStop(2, 1, {3,4,5}, ros::Duration(1));
+	RM3_respawn_control_nodes_ = new RM3_RespawnControlNodes(3, 2, {}, ros::Duration(1));
+	RM4_respawn_nodes_ = new RM4_RespawnNodes(4, 2, {}, ros::Duration(1));
+	RM5_switch_to_teleop_ = new RM5_SwitchToTeleop(5, 2, {}, ros::Duration(1));
 	
 	// Declarations of the rules (linking of detection modules and recovery modules)
 	// The FMT tree the built here
 	// FTM_.push_back(new FTM_Rule(id, predecessor, {successors}, DMx_, RMx_))
-	FTM_.push_back(new FTM_Rule(1, 0, {2, 3}, DM1_prohibited_area_, RM1_emergency_stop_));
-	FTM_.push_back(new FTM_Rule(2, 1, {4}, DM1_prohibited_area_, RM2_controlled_stop_));
-	FTM_.push_back(new FTM_Rule(3, 1, {5,6}, DM1_prohibited_area_, RM3_respawn_control_nodes_));
-	FTM_.push_back(new FTM_Rule(4, 2, {}, DM1_prohibited_area_, RM4_respawn_nodes_));
-	FTM_.push_back(new FTM_Rule(5, 3, {}, DM1_prohibited_area_, RM5_switch_to_teleop_));
-	FTM_.push_back(new FTM_Rule(6, 3, {}, DM1_prohibited_area_, RM4_respawn_nodes_));
+	FTM_.push_back(new FTM_Rule(1, 0, {2, 3, 6}, DM1_prohibited_area_, RM1_emergency_stop_));
+	FTM_.push_back(new FTM_Rule(2, 1, {5}, DM2_cmd_not_updated_, RM2_controlled_stop_));
+	FTM_.push_back(new FTM_Rule(3, 1, {4}, DM3_wrong_command_, RM2_controlled_stop_));
+	FTM_.push_back(new FTM_Rule(4, 3, {}, DM4_node_crash_, RM4_respawn_nodes_));
+	FTM_.push_back(new FTM_Rule(5, 2, {}, DM5_node_crash_control_, RM3_respawn_control_nodes_));
+	FTM_.push_back(new FTM_Rule(6, 1, {}, DM6_loc_not_updated_, RM5_switch_to_teleop_));
 }
 
 void Tree::runDMs()
@@ -228,17 +228,13 @@ vector<FTM_Rule*> Tree::getTriggeredFTM()
 {
 	Triggered_rules_.clear();
 
-	/*this->runDMs();
-
+	this->runDMs();
 
 	for(int i=0; i<FTM_.size(); i++)
 	{
 		if(FTM_[i]->getStateDM())
-			Triggered_rules_.push_back(*FTM_[i]);
-	}*/
-
-	Triggered_rules_.push_back(FTM_[3]);
-	Triggered_rules_.push_back(FTM_[2]);
+			Triggered_rules_.push_back(FTM_[i]);
+	}
 
 	return Triggered_rules_;
 }
