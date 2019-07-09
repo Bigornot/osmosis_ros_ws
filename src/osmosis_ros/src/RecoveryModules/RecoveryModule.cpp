@@ -68,7 +68,7 @@ int RecoveryModule::getId()
 	return id_;
 }
 
-vector<int> RecoveryModule::getSuc()
+vector<int> RecoveryModule::getSuccessorsId()
 {
 	return successors_;
 }

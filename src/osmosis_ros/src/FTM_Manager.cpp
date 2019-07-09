@@ -58,12 +58,12 @@ bool FTM_Manager::run()
 						else
 						{
 							cout<<"No, there are no unique dominant RM. Let's activate the Lowest Common Dominant"<<endl;
-							commonDominant_=FTM_tree_.findLowestCommonDominant(dominant_); 
+							common_dominant_=FTM_tree_.findLowestCommonDominant(dominant_); 
 							cout<<"The common dominant is :";
-							FTM_tree_.debugDisplayFTMid({commonDominant_});
+							FTM_tree_.debugDisplayFTMid({common_dominant_});
 							cout<<"so we activate its recovery : ";
-							FTM_tree_.debugDisplayRMid({commonDominant_});
-							FTM_tree_.doRecovery({commonDominant_});
+							FTM_tree_.debugDisplayRMid({common_dominant_});
+							FTM_tree_.doRecovery({common_dominant_});
 							break;
 						}
 					}

@@ -36,7 +36,7 @@ private:
 	vector<FTM_Rule*> triggered_rules_;
 	vector<FTM_Rule*> dominant_;
 	vector<FTM_Rule*> dominant_recov_;
-	FTM_Rule* commonDominant_;
+	FTM_Rule* common_dominant_;
 
 	FTM_Tree FTM_tree_;
 

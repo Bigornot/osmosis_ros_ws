@@ -43,8 +43,8 @@ public:
 	FTM_Rule(int id, int predecessor, vector<int> successor, DetectionModule* DM, RecoveryModule* RM);
 
 	int getId();
-	int getPredecessor();
-	vector<int> getSuc();
+	int getPredecessorId();
+	vector<int> getSuccessorsId();
 
 	void runDM();
 	bool getStateDM();

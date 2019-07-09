@@ -13,7 +13,7 @@ FTM_Tree::FTM_Tree()
 
 	// Declarations of the recovery modules 
 	// The recovery tree is built here
-	// RMx_ = new RM_type(id, predecessor, {successors})
+	// RMx_ = new RM_type(id, predecessor, {successors}, next_activation_delay)
 	RM1_emergency_stop_ = new RM1_EmergencyStop(1, 0, {2}, ros::Duration(1));
 	RM2_controlled_stop_ = new RM2_ControlledStop(2, 1, {3,4,5}, ros::Duration(1));
 	RM3_respawn_control_nodes_ = new RM3_RespawnControlNodes(3, 2, {}, ros::Duration(1));
@@ -68,7 +68,7 @@ vector<FTM_Rule*> FTM_Tree::findDominant(vector<FTM_Rule*> Rules)
 
 vector<FTM_Rule*> FTM_Tree::findDominated(FTM_Rule* Dominant_rule, vector<FTM_Rule*>* dominated)
 {
-	vector<int> successorsId = Dominant_rule->getSuc();
+	vector<int> successorsId = Dominant_rule->getSuccessorsId();
 	for (int i=0; i<successorsId.size(); i++)
 	{
 		for(int j=0; j<FTM_rules_.size(); j++)
@@ -108,7 +108,7 @@ vector<FTM_Rule*> FTM_Tree::findDominantRecovery(vector<FTM_Rule*> Rules)
 
 vector<FTM_Rule*>  FTM_Tree::findDominatedRecovery(FTM_Rule* Dominant_rule, vector<FTM_Rule*>* dominated)
 {
-	vector<int> successorsId = Dominant_rule->getSuc();
+	vector<int> successorsId = Dominant_rule->getSuccessorsId();
 	for (int i=0; i<successorsId.size(); i++)
 	{
 		for(int j=0; j<FTM_rules_.size(); j++)
@@ -141,7 +141,7 @@ vector<FTM_Rule*> FTM_Tree::recursiveLowestCommonDominant(vector<FTM_Rule*> recu
 	{
 		for (int j=0; j<FTM_rules_.size(); j++)
 		{
-			if (recursiveDominant[i]->getPredecessor()==FTM_rules_[j]->getId() && !findRule(tempRecursiveDominant, FTM_rules_[j]))
+			if (recursiveDominant[i]->getPredecessorId()==FTM_rules_[j]->getId() && !findRule(tempRecursiveDominant, FTM_rules_[j]))
 			{
 				tempRecursiveDominant.push_back(FTM_rules_[j]);
 			}

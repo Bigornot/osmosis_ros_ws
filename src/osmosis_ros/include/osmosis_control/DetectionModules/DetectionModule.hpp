@@ -15,7 +15,6 @@ private :
 	driveState driveState_;
 
 protected:
-	string debug_msg;
 	ros::NodeHandle nh_;
 	bool state_;
 

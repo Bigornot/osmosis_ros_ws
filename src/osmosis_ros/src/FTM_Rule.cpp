@@ -9,12 +9,12 @@ FTM_Rule::FTM_Rule(int id, int predecessor, vector<int> successors, DetectionMod
 	RM_ = RM;
 }
 
-int FTM_Rule::getPredecessor()
+int FTM_Rule::getPredecessorId()
 {
 	return predecessor_;
 }
 
-vector<int> FTM_Rule::getSuc()
+vector<int> FTM_Rule::getSuccessorsId()
 {
 	return successors_;
 }
@@ -61,6 +61,6 @@ int FTM_Rule::getRMId()
 
 vector<int> FTM_Rule::getRMSuc()
 {
-	return RM_->getSuc();
+	return RM_->getSuccessorsId();
 }
 

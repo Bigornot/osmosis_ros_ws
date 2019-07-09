@@ -33,7 +33,7 @@ public:
 	void stop();
 	void driveRecoveryModule();
 	int getId();
-	vector<int> getSuc();
+	vector<int> getSuccessorsId();
 	virtual void doRecovery()=0;
 };
 
