@@ -54,7 +54,6 @@ private :
 	RM5_SwitchToTeleop* RM5_switch_to_teleop_;
 
 	vector<FTM_Rule*> Triggered_rules_;
-	vector<FTM_Rule*> recursiveDominant; // Set in static
 	
 	void runDMs();
 	void runRMs();
@@ -62,7 +61,7 @@ private :
 	vector<FTM_Rule*> findDominant(vector<FTM_Rule*> Rules);
 	vector<FTM_Rule*> findDominated(FTM_Rule* Dominant_rule, vector<FTM_Rule*>* dominated);
 	vector<FTM_Rule*> findDominatedRecovery(FTM_Rule* Dominant_rule, vector<FTM_Rule*>* dominated);
-	void recursiveLowestCommonDominant();
+	vector<FTM_Rule*> recursiveLowestCommonDominant(vector<FTM_Rule*> recursiveDominant);
 	bool findRM(vector<FTM_Rule*> rules, FTM_Rule* rule);
 	bool findRule(vector<FTM_Rule*> rules, FTM_Rule* rule);
 	void stopFinishedRMs(vector<FTM_Rule*> activated_rules);

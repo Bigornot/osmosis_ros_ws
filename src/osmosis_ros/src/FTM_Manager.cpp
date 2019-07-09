@@ -17,6 +17,7 @@ bool FTM_Manager::run()
 		{
 			case SAFETY_FIRST:
 				Triggered_FTM = FTM_Tree_.getTriggeredFTM();
+				cout << "------------------------------" << endl;
 				cout<<"Triggered FTM : ";
 				FTM_Tree_.debugDisplayFTMid(Triggered_FTM);
 
@@ -28,7 +29,7 @@ bool FTM_Manager::run()
 				}
 				else if(Triggered_FTM.size()>1)
 				{
-					cout<<"There are more than one FTM activated, maybe one dominates the others..."<<endl;
+					cout<<"There are more than one triggered FTM, maybe one dominates the others..."<<endl;
 					dominant=FTM_Tree_.findDominantFTM();
 					cout<<"Dominant FTM : ";
 					FTM_Tree_.debugDisplayFTMid(dominant);
@@ -68,14 +69,14 @@ bool FTM_Manager::run()
 					}
 				}
 				cout<<endl<<endl<<endl<<endl<<endl<<endl;
-				ros::spinOnce();
-				loop_rate.sleep();
-
 				break;
 
 			default:
 				break;
 		}
+
+		ros::spinOnce();
+		loop_rate.sleep();
 	}
 	
 	return true;
