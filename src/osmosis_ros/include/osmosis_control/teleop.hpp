@@ -31,14 +31,11 @@ private:
 	double freq_;
 	ros::Publisher cmd_teleop_pub_;
 	osmosis_control::TeleopMsg teleop_cmd_;
-	//ros::Subscriber cmd_joystick_sub_;
-	//teleop_msgs base_cmd_teleop_;
 	enum StateTeleop {DESACTIVATED, ACTIVATED};
 	StateTeleop state_;
 
 
 public:
-
 	void driveKeyboard();
 	Teleop();
 	void run();

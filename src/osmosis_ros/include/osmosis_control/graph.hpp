@@ -42,7 +42,8 @@ struct Node {
 	Node(double x, double y);
 };
 
-struct Graph {
+class Graph {
+public:
 	friend ostream& operator<< (ostream&, const Graph& g);
 
 	void addNode(const string& name, Node* n);
