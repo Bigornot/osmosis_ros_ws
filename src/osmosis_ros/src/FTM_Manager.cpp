@@ -68,6 +68,7 @@ bool FTM_Manager::run()
 						}
 					}
 				}
+				FTM_Tree_.runRMs();
 				cout<<endl<<endl<<endl<<endl<<endl<<endl;
 				break;
 
