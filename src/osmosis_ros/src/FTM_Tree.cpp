@@ -14,11 +14,11 @@ FTM_Tree::FTM_Tree()
 	// Declarations of the recovery modules 
 	// The recovery tree is built here
 	// RMx_ = new RM_type(id, predecessor, {successors}, next_activation_delay)
-	RM1_emergency_stop_ = new RM1_EmergencyStop(1, 0, {2}, ros::Duration(1));
-	RM2_controlled_stop_ = new RM2_ControlledStop(2, 1, {3,4,5}, ros::Duration(1));
-	RM3_respawn_control_nodes_ = new RM3_RespawnControlNodes(3, 2, {}, ros::Duration(1));
-	RM4_respawn_nodes_ = new RM4_RespawnNodes(4, 2, {}, ros::Duration(1));
-	RM5_switch_to_teleop_ = new RM5_SwitchToTeleop(5, 2, {}, ros::Duration(1));
+	RM1_emergency_stop_ = new RM1_EmergencyStop(1, {2}, ros::Duration(1));
+	RM2_controlled_stop_ = new RM2_ControlledStop(2, {3,4,5}, ros::Duration(1));
+	RM3_respawn_control_nodes_ = new RM3_RespawnControlNodes(3, {}, ros::Duration(1));
+	RM4_respawn_nodes_ = new RM4_RespawnNodes(4, {}, ros::Duration(1));
+	RM5_switch_to_teleop_ = new RM5_SwitchToTeleop(5, {}, ros::Duration(1));
 	
 	// Declarations of the rules (linking of detection modules and recovery modules)
 	// The FMT tree the built here
@@ -29,6 +29,7 @@ FTM_Tree::FTM_Tree()
 	FTM_rules_.push_back(new FTM_Rule(4, 3, {}, DM4_node_crash_, RM4_respawn_nodes_));
 	FTM_rules_.push_back(new FTM_Rule(5, 2, {}, DM5_node_crash_control_, RM3_respawn_control_nodes_));
 	FTM_rules_.push_back(new FTM_Rule(6, 1, {}, DM6_loc_not_updated_, RM5_switch_to_teleop_));
+
 }
 
 void FTM_Tree::runDMs()
@@ -90,7 +91,7 @@ vector<FTM_Rule*> FTM_Tree::findDominantRecovery(vector<FTM_Rule*> Rules)
 
 	for (int i=0; i<Rules.size(); i++)//for each rules
 	{
-		dominated=findDominated(Rules[i],&dominated);
+		dominated=findDominatedRecovery(Rules[i],&dominated);
 	}
 
 	cout << "Dominated RM :";
@@ -108,7 +109,7 @@ vector<FTM_Rule*> FTM_Tree::findDominantRecovery(vector<FTM_Rule*> Rules)
 
 vector<FTM_Rule*>  FTM_Tree::findDominatedRecovery(FTM_Rule* Dominant_rule, vector<FTM_Rule*>* dominated)
 {
-	vector<int> successorsId = Dominant_rule->getSuccessorsId();
+	vector<int> successorsId = Dominant_rule->getRMSuc();
 	for (int i=0; i<successorsId.size(); i++)
 	{
 		for(int j=0; j<FTM_rules_.size(); j++)
