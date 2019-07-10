@@ -24,7 +24,7 @@ void HMI::driveHMI()
 		case POINT:
 			switch (pointState_)
 			{
-				case TARGETPOINT:
+				case ASKPOINT:
 					goalKeyboard();
 					pointState_=WAITPOINT;
 					break;
@@ -33,7 +33,7 @@ void HMI::driveHMI()
 					if (done_point_)
 					{
 						state_=IDLE;
-						pointState_=TARGETPOINT;
+						pointState_=ASKPOINT;
 					}
 					break;
 			}
@@ -172,7 +172,7 @@ HMI::HMI()
 	done_sub_ = nh_.subscribe("/hmi_done", 1, &HMI::CallbackOrderDone, this);
 	emergency_stop_sub_ = nh_.subscribe("/do_RM1_EmergencyStop", 1, &HMI::CallbackEmergencyStop, this);
 	state_=IDLE;
-	pointState_=TARGETPOINT;
+	pointState_=ASKPOINT;
 	missionState_=ASKMISSION;
 	done_point_=true;
 	done_mission_=true;

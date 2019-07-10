@@ -43,7 +43,7 @@ private:
 	StateDriveHMI state_;
 	enum StateMission {ASKMISSION,WAITMISSION};
 	StateMission missionState_;
-	enum StatePoint {TARGETPOINT,WAITPOINT};
+	enum StatePoint {ASKPOINT,WAITPOINT};
 	StatePoint pointState_;
 
 	bool goal_reached_;
