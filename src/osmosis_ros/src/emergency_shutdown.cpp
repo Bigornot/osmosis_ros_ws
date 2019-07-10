@@ -6,7 +6,7 @@ void EmergencyShutdown::driveEmergencyShutdown()
 	string emergency_hit;
 	switch (state_)
 	{
-		case NOMINAL:
+		case IDLE:
 			cout << "Press Return for emergency stop :";
 			cin >> emergency_hit;
 			state_=EMERGENCYHIT;
@@ -20,8 +20,10 @@ void EmergencyShutdown::driveEmergencyShutdown()
 
 		case EMERGENCY:
 			ROS_ERROR("\nEMERGENCY STOP !\n");
-			cin >> emergency_hit;
-			state_=NOMINAL;
+			cin.get();	
+			emergency_.data=false;
+			emergency_pub_.publish(emergency_);
+			state_=IDLE;
 		break;
   }
 }
@@ -32,7 +34,7 @@ EmergencyShutdown::EmergencyShutdown()
 	//set up the publisher for the goal topic
 	emergency_.data=false;
 	emergency_pub_ = nh_.advertise<std_msgs::Bool>("/do_RM1_EmergencyStop", 1);
-	state_=NOMINAL;
+	state_=IDLE;
 }
 
 void EmergencyShutdown::run()

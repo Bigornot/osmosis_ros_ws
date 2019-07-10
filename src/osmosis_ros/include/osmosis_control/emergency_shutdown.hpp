@@ -30,7 +30,7 @@ class EmergencyShutdown
 private:
 	ros::NodeHandle nh_;
 	ros::Publisher emergency_pub_;
-	enum StateDriveEmergency{NOMINAL,EMERGENCYHIT,EMERGENCY};
+	enum StateDriveEmergency{IDLE,EMERGENCYHIT,EMERGENCY};
 	StateDriveEmergency state_;
 	std_msgs::Bool emergency_;
 
