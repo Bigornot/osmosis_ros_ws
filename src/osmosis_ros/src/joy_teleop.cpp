@@ -1,7 +1,7 @@
 #include <osmosis_control/joy_teleop.hpp>
 
 //compute drive commands based on keyboard input
-void Joy_teleop::driveJoy()
+void JoyTeleop::driveJoy()
 {
 	switch (state_)
 	{
@@ -23,7 +23,7 @@ void Joy_teleop::driveJoy()
 	}
 }
 
-void Joy_teleop::joy_on()
+void JoyTeleop::joy_on()
 {
 	joy_teleop_cmd_.is_active=true;
 	button_pressed_=false;
@@ -31,14 +31,14 @@ void Joy_teleop::joy_on()
 	cout << "Activation de la manette" << endl;
 }
 
-void Joy_teleop::joy_off()
+void JoyTeleop::joy_off()
 {
 	joy_teleop_cmd_.is_active=false;
 	button_pressed_=false;
 	cout << "Desactivation de la manette" << endl;
 }
 
-void Joy_teleop::teleopCallbackJoy(const sensor_msgs::Joy & joy_msg)
+void JoyTeleop::teleopCallbackJoy(const sensor_msgs::Joy & joy_msg)
 {
 	// detection du front montant
 	if(joy_msg_.buttons[7]==0 && joy_msg.buttons[7]==1)
@@ -67,12 +67,12 @@ void Joy_teleop::teleopCallbackJoy(const sensor_msgs::Joy & joy_msg)
 
 
 //! ROS node topics publishing and subscribing initialization
-Joy_teleop::Joy_teleop()
+JoyTeleop::JoyTeleop()
 {
 	freq_=10;
 
 	cmd_joy_teleop_pub_ = nh_.advertise<osmosis_control::TeleopMsg>("/cmd_vel_teleop", 1);
-	cmd_joystick_sub_= nh_.subscribe("/joy", 1, &Joy_teleop::teleopCallbackJoy, this);
+	cmd_joystick_sub_= nh_.subscribe("/joy", 1, &JoyTeleop::teleopCallbackJoy, this);
 
 	vector<int> buttons(11,0);
 	vector<float> axes(8,0);
@@ -90,7 +90,7 @@ Joy_teleop::Joy_teleop()
 }
 
 
-void Joy_teleop::run()
+void JoyTeleop::run()
 {
 	cout << "Si tout se passe bien on peut desormais activer la manette\n";
 
@@ -117,6 +117,6 @@ int main(int argc, char** argv)
 	ros::init(argc, argv, "joy_teleop_node");
 	cout << "JOY" << endl;
 
-	Joy_teleop myJoyTeleop;
+	JoyTeleop myJoyTeleop;
 	myJoyTeleop.run();
 }

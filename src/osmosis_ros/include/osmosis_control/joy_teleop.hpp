@@ -26,7 +26,7 @@
 
 using namespace std;
 
-class Joy_teleop
+class JoyTeleop
 {
 private:
 	ros::NodeHandle nh_;
@@ -48,7 +48,7 @@ private:
 
 public:
 
-	Joy_teleop();
+	JoyTeleop();
 	void teleopCallbackJoy(const sensor_msgs::Joy & joy_msg);
 	void run();
 
