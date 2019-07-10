@@ -27,7 +27,7 @@ private:
 	ros::V_string nodesToCheck_;
 
 public:
-	RM4_RespawnNodes(int id, int predecessor, vector<int> successors, ros::Duration delay);
+	RM4_RespawnNodes(int id, vector<int> successors, ros::Duration delay);
 	void doRecovery();
 };
 

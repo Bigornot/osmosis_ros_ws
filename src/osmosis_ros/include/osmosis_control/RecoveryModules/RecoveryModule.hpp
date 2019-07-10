@@ -15,7 +15,6 @@ private:
 	driveState driveState_;
 
 	int id_;
-	int predecessor_;
 	vector<int> successors_;
 	
 	ros::Time activation_time_;
@@ -26,7 +25,7 @@ protected:
 	bool state_;
 
 public:
-	RecoveryModule(int id, int predecessor, vector<int> successors, ros::Duration delay);
+	RecoveryModule(int id, vector<int> successors, ros::Duration delay);
 	bool getState();
 	void run();
 	void start();

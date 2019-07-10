@@ -1,12 +1,11 @@
 #include <osmosis_control/RecoveryModules/RecoveryModule.hpp>
 
-RecoveryModule::RecoveryModule(int id, int predecessor, vector<int> successors, ros::Duration delay)
+RecoveryModule::RecoveryModule(int id, vector<int> successors, ros::Duration delay)
 {
 	activation_time_=ros::Time::now()-next_activation_delay_; 
 	next_activation_delay_=delay;
 	driveState_=IDLE;
 	id_=id;
-	predecessor_=predecessor;
 	successors_=successors;
 	state_=false;
 }

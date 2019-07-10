@@ -1,6 +1,6 @@
 #include <osmosis_control/RecoveryModules/RM2_ControlledStop.hpp>
 
-RM2_ControlledStop::RM2_ControlledStop(int id, int predecessor, vector<int> successors, ros::Duration delay) : RecoveryModule(id, predecessor, successors, delay) 
+RM2_ControlledStop::RM2_ControlledStop(int id, vector<int> successors, ros::Duration delay) : RecoveryModule(id, successors, delay) 
 {
 	pub_=nh_.advertise<std_msgs::Bool>("/do_RM2_ControlledStop", 1);
 }
