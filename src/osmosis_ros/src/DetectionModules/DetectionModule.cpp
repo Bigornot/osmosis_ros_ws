@@ -2,31 +2,28 @@
 
 DetectionModule::DetectionModule ()
 {
-	driveState_=DETECTION_MODE;
+	driveState_=IDLE;
 }
 
 void DetectionModule::driveDetectionModule()
 {
-	switch (driveState_)
+	switch(driveState_)
 	{
-		case DETECTION_MODE:
-			state_=this->detect();
-			if (state_)
-				driveState_=START_RECOVERY;
+		case IDLE:
+			if(state_)
+				driveState_=TRIGGERED;
 			break;
 
-		case START_RECOVERY:
-			driveState_=ERROR_DETECTED;
-			break;
-
-		case ERROR_DETECTED:
-			driveState_=DETECTION_MODE;
+		case TRIGGERED:
+			if(!state_)
+				driveState_=IDLE;
 			break;
 	}
 }
 
 void DetectionModule::run()
 {
+	this->detect();
 	this->driveDetectionModule();
 	ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 }

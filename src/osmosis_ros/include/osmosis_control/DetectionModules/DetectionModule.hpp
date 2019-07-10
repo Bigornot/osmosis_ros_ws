@@ -11,7 +11,7 @@ using namespace std;
 class DetectionModule
 {
 private :
-	enum driveState{DETECTION_MODE,START_RECOVERY,ERROR_DETECTED};
+	enum driveState{IDLE, TRIGGERED};
 	driveState driveState_;
 
 protected:
