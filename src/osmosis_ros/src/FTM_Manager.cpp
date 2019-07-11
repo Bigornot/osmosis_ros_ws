@@ -14,11 +14,11 @@ FTM_Manager::FTM_Manager()
 	// Declarations of the recovery modules
 	// The recovery tree is built here
 	// RMx_ = new RM_type(id, predecessor, {successors}, next_activation_delay)
-	RM1_emergency_stop_ = new RM1_EmergencyStop(1, {2}, ros::Duration(1));
-	RM2_controlled_stop_ = new RM2_ControlledStop(2, {3,4,5}, ros::Duration(1));
-	RM3_respawn_control_nodes_ = new RM3_RespawnControlNodes(3, {}, ros::Duration(1));
-	RM4_respawn_nodes_ = new RM4_RespawnNodes(4, {}, ros::Duration(1));
-	RM5_switch_to_teleop_ = new RM5_SwitchToTeleop(5, {}, ros::Duration(1));
+	RM1_emergency_stop_ = new RM1_EmergencyStop(1, {2});
+	RM2_controlled_stop_ = new RM2_ControlledStop(2, {3,4,5});
+	RM3_respawn_control_nodes_ = new RM3_RespawnControlNodes(3, {});
+	RM4_respawn_nodes_ = new RM4_RespawnNodes(4, {});
+	RM5_switch_to_teleop_ = new RM5_SwitchToTeleop(5, {});
 
 	// Declarations of the rules (linking of detection modules and recovery modules)
 	// The FMT tree the built here
