@@ -162,21 +162,23 @@ add_executable(mission_manager_node src/missionManager.cpp)
 add_executable(joy_teleop_node src/joy_teleop.cpp)
 add_executable(emergency_shutdown_node src/emergency_shutdown.cpp)
 add_executable(HMI_node src/HMI.cpp)
-add_executable(FTM_Manager_node src/FTM_Manager.cpp src/FTM_Tree.cpp src/FTM_Rule.cpp 
+add_executable(FTM_Manager_node src/FTM_Manager.cpp src/FTM_Rule.cpp
 
-src/DetectionModules/DetectionModule.cpp 
-src/DetectionModules/DM1_ProhibitedArea.cpp 
-src/DetectionModules/DM2_CmdNotUpdated.cpp 
-src/DetectionModules/DM3_WrongCommand.cpp 
+src/Strategies/FTM_SafetyFirst.cpp
+
+src/DetectionModules/DetectionModule.cpp
+src/DetectionModules/DM1_ProhibitedArea.cpp
+src/DetectionModules/DM2_CmdNotUpdated.cpp
+src/DetectionModules/DM3_WrongCommand.cpp
 src/DetectionModules/DM4_NodeCrash.cpp
 src/DetectionModules/DM5_NodeCrashControl.cpp
 src/DetectionModules/DM6_LocNotUpdated.cpp
 
-src/RecoveryModules/RecoveryModule.cpp 
-src/RecoveryModules/RM1_EmergencyStop.cpp 
-src/RecoveryModules/RM2_ControlledStop.cpp 
-src/RecoveryModules/RM3_RespawnControlNodes.cpp 
-src/RecoveryModules/RM4_RespawnNodes.cpp 
+src/RecoveryModules/RecoveryModule.cpp
+src/RecoveryModules/RM1_EmergencyStop.cpp
+src/RecoveryModules/RM2_ControlledStop.cpp
+src/RecoveryModules/RM3_RespawnControlNodes.cpp
+src/RecoveryModules/RM4_RespawnNodes.cpp
 src/RecoveryModules/RM5_SwitchToTeleop.cpp)
 
 

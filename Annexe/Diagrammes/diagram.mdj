@@ -379,7 +379,7 @@
 											"top": 367,
 											"width": 218.5498046875,
 											"height": 13,
-											"text": "FTM_Tree"
+											"text": "FTM_Manager"
 										},
 										{
 											"_type": "LabelView",
@@ -4330,7 +4330,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFr1sqW3mqHFbM="
 					},
-					"name": "FTM_Tree",
+					"name": "FTM_Manager",
 					"ownedElements": [
 						{
 							"_type": "UMLAssociation",
