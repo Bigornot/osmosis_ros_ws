@@ -53,6 +53,24 @@ private :
 	RM4_RespawnNodes* RM4_respawn_nodes_;
 	RM5_SwitchToTeleop* RM5_switch_to_teleop_;
 
+	DM4_NodeCrash* DM1_;
+	DM4_NodeCrash* DM2_;
+	DM4_NodeCrash* DM3_;
+	DM4_NodeCrash* DM4_;
+	DM4_NodeCrash* DM5_;
+	DM4_NodeCrash* DM6_;
+	DM4_NodeCrash* DM7_;
+	DM4_NodeCrash* DM8_;
+	DM4_NodeCrash* DM9_;
+
+	RM4_RespawnNodes* RM1_;
+	RM4_RespawnNodes* RM2_;
+	RM4_RespawnNodes* RM3_;
+	RM4_RespawnNodes* RM4_;
+	RM4_RespawnNodes* RM5_;
+	RM4_RespawnNodes* RM6_;
+	RM4_RespawnNodes* RM7_;
+
 	vector<FTM_Rule*> Triggered_rules_;
 	
 	vector<FTM_Rule*> findDominated(FTM_Rule* Dominant_rule, vector<FTM_Rule*>* dominated);

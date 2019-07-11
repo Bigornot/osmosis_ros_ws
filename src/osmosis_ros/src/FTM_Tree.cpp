@@ -2,7 +2,7 @@
 
 FTM_Tree::FTM_Tree()
 {
-	// Declarations of the detection modules 
+	/*// Declarations of the detection modules 
 	// DMx_ = new DM_type()
 	DM1_prohibited_area_ = new DM1_ProhibitedArea();	
 	DM2_cmd_not_updated_ = new DM2_CmdNotUpdated();
@@ -28,8 +28,35 @@ FTM_Tree::FTM_Tree()
 	FTM_rules_.push_back(new FTM_Rule(3, 1, {4}, DM3_wrong_command_, RM2_controlled_stop_));
 	FTM_rules_.push_back(new FTM_Rule(4, 3, {}, DM4_node_crash_, RM4_respawn_nodes_));
 	FTM_rules_.push_back(new FTM_Rule(5, 2, {}, DM5_node_crash_control_, RM3_respawn_control_nodes_));
-	FTM_rules_.push_back(new FTM_Rule(6, 1, {}, DM6_loc_not_updated_, RM5_switch_to_teleop_));
+	FTM_rules_.push_back(new FTM_Rule(6, 1, {}, DM6_loc_not_updated_, RM5_switch_to_teleop_));*/
 
+	DM1_ = new DM4_NodeCrash();
+	DM2_ = new DM4_NodeCrash();
+	DM3_ = new DM4_NodeCrash();
+	DM4_ = new DM4_NodeCrash();
+	DM5_ = new DM4_NodeCrash();
+	DM6_ = new DM4_NodeCrash();
+	DM7_ = new DM4_NodeCrash();
+	DM8_ = new DM4_NodeCrash();
+	DM9_ = new DM4_NodeCrash();
+
+	RM1_ = new RM4_RespawnNodes(1,{2,3},ros::Duration(1));
+	RM2_ = new RM4_RespawnNodes(2,{4,5},ros::Duration(1));
+	RM3_ = new RM4_RespawnNodes(3,{6},ros::Duration(1));
+	RM4_ = new RM4_RespawnNodes(4,{7},ros::Duration(1));
+	RM5_ = new RM4_RespawnNodes(5,{7,6},ros::Duration(1));
+	RM6_ = new RM4_RespawnNodes(6,{},ros::Duration(1));
+	RM7_ = new RM4_RespawnNodes(7,{},ros::Duration(1));
+
+	FTM_rules_.push_back(new FTM_Rule(1,0,{2,3,4},DM1_,RM1_));
+	FTM_rules_.push_back(new FTM_Rule(2,1,{5,6},DM2_,RM2_));
+	FTM_rules_.push_back(new FTM_Rule(3,1,{7},DM3_,RM2_));
+	FTM_rules_.push_back(new FTM_Rule(4,1,{},DM4_,RM3_));
+	FTM_rules_.push_back(new FTM_Rule(5,2,{},DM5_,RM4_));
+	FTM_rules_.push_back(new FTM_Rule(6,2,{},DM6_,RM5_));
+	FTM_rules_.push_back(new FTM_Rule(7,3,{8,9},DM7_,RM5_));
+	FTM_rules_.push_back(new FTM_Rule(8,7,{},DM8_,RM6_));
+	FTM_rules_.push_back(new FTM_Rule(9,7,{},DM9_,RM7_));
 }
 
 void FTM_Tree::runDMs()
@@ -54,7 +81,7 @@ vector<FTM_Rule*> FTM_Tree::findDominant(vector<FTM_Rule*> Rules)
 		dominated=findDominated(Rules[i],&dominated);
 	}
 
-	cout << "Dominated FTM :";
+	cout << "Dominated rules :";
 	for(int i=0; i<dominated.size(); i++)
 		cout << " " << dominated[i]->getId();
 	cout << endl;
@@ -88,15 +115,25 @@ vector<FTM_Rule*> FTM_Tree::findDominantRecovery(vector<FTM_Rule*> Rules)
 {	
 	vector<FTM_Rule*> dominated;
 	vector<FTM_Rule*> dominant;
+	vector<FTM_Rule*> checked;
 
-	for (int i=0; i<Rules.size(); i++)//for each rules
-	{
-		dominated=findDominatedRecovery(Rules[i],&dominated);
-	}
+	cout << "RM :";
+	for(int i=0; i<Rules.size(); i++)
+		cout << " " << Rules[i]->getRMId();
+	cout << endl;
+
+	checked=checkSameRM(Rules);
+	cout << "Rule Id after same RM removed :";
+	for(int i=0; i<checked.size(); i++)
+		cout << " " << checked[i]->getId();
+	cout << endl;
+
+	for (int i=0; i<checked.size(); i++)//for each rules
+		dominated=findDominatedRecovery(checked[i],&dominated);
 
 	cout << "Dominated RM :";
 	for(int i=0; i<dominated.size(); i++)
-		cout << " " << dominated[i]->getId();
+		cout << " " << dominated[i]->getRMId();
 	cout << endl;
 
 	for (int i=0; i<Rules.size(); i++)//for each rules
@@ -126,34 +163,37 @@ vector<FTM_Rule*>  FTM_Tree::findDominatedRecovery(FTM_Rule* Dominant_rule, vect
 
 FTM_Rule* FTM_Tree::findLowestCommonDominant(vector<FTM_Rule*> dominant)
 {
-	vector<FTM_Rule*> checked=checkSameRM(dominant);
-	cout << "Checked RM :";
-	for(int i=0; i<checked.size(); i++)
-		cout << " " << checked[i]->getId();
-	cout << endl;
-	return recursiveLowestCommonDominant(checkSameRM(dominant))[0];
+	return recursiveLowestCommonDominant(dominant)[0];
 }
 
 vector<FTM_Rule*> FTM_Tree::recursiveLowestCommonDominant(vector<FTM_Rule*> recursiveDominant)
 {
-	vector<FTM_Rule*> tempRecursiveDominant;
+	if(recursiveDominant.size()==1)
+		return recursiveDominant;
 
-	for (int i=0; i<recursiveDominant.size(); i++)
+	else
 	{
-		for (int j=0; j<FTM_rules_.size(); j++)
+		vector<FTM_Rule*> tempRecursiveDominant;
+
+		for (int i=0; i<recursiveDominant.size(); i++)
 		{
-			if (recursiveDominant[i]->getPredecessorId()==FTM_rules_[j]->getId() && !findRule(tempRecursiveDominant, FTM_rules_[j]))
+			for (int j=0; j<FTM_rules_.size(); j++)
 			{
-				tempRecursiveDominant.push_back(FTM_rules_[j]);
+				if (recursiveDominant[i]->getPredecessorId()==FTM_rules_[j]->getId() && !findRule(tempRecursiveDominant, FTM_rules_[j]))
+				{
+					tempRecursiveDominant.push_back(FTM_rules_[j]);
+				}
 			}
 		}
+
+		recursiveDominant=findDominant(tempRecursiveDominant);
+		cout << "Dominant :";
+		for(int i=0; i<recursiveDominant.size(); i++)
+			cout << " " << recursiveDominant[i]->getId();
+		cout << endl;
+
+		return recursiveLowestCommonDominant(recursiveDominant);
 	}
-	recursiveDominant=findDominant(tempRecursiveDominant);
-
-	if (recursiveDominant.size()!=1)
-		recursiveLowestCommonDominant(recursiveDominant);
-
-	return recursiveDominant;
 }
 
 bool FTM_Tree::findRM(vector<FTM_Rule*> rules, FTM_Rule* rule)
@@ -198,7 +238,7 @@ void FTM_Tree::stopFinishedRMs(vector<FTM_Rule*> activated_rules)
 
 	for(int i=0; i<last_activated_rules.size(); i++)
 	{
-		if(!this->findRule(activated_rules, last_activated_rules[i]))
+		if(!this->findRM(activated_rules, last_activated_rules[i]))
 			last_activated_rules[i]->stopRM();
 	}
 
@@ -222,13 +262,18 @@ vector<FTM_Rule*> FTM_Tree::getTriggeredFTM()
 {
 	Triggered_rules_.clear();
 
-	this->runDMs();
+	Triggered_rules_.push_back(FTM_rules_[8]);
+	Triggered_rules_.push_back(FTM_rules_[5]);
+	Triggered_rules_.push_back(FTM_rules_[2]);
+	Triggered_rules_.push_back(FTM_rules_[3]);
+
+	/*this->runDMs();
 
 	for(int i=0; i<FTM_rules_.size(); i++)
 	{
 		if(FTM_rules_[i]->getStateDM())
 			Triggered_rules_.push_back(FTM_rules_[i]);
-	}
+	}*/
 
 	return Triggered_rules_;
 }

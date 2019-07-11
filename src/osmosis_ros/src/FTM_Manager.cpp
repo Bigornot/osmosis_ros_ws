@@ -2,7 +2,7 @@
 
 FTM_Manager::FTM_Manager()
 {
-	freq_=10;
+	freq_=1;
 	strategy_=SAFETY_FIRST;
 }
 
@@ -25,7 +25,7 @@ bool FTM_Manager::run()
 				{
 					cout<<"Only one triggered rule, so we just activate its recovery : ";
 					FTM_tree_.debugDisplayRMid(triggered_rules_);
-					FTM_tree_.doRecovery(triggered_rules_);
+					//FTM_tree_.doRecovery(triggered_rules_);
 				}
 				else if(triggered_rules_.size()>1)
 				{
@@ -38,7 +38,7 @@ bool FTM_Manager::run()
 					{
 						cout<<"Yes, one rule dominates the others, let's activate its recovery :";
 						FTM_tree_.debugDisplayRMid(dominant_);
-						FTM_tree_.doRecovery(dominant_);
+						//FTM_tree_.doRecovery(dominant_);
 					}
 				
 					else
@@ -52,7 +52,7 @@ bool FTM_Manager::run()
 						{
 							cout<<"Yes, one RM dominates the others, let's activate it : ";
 							FTM_tree_.debugDisplayRMid(dominant_recov_);
-							FTM_tree_.doRecovery(dominant_recov_);
+							//FTM_tree_.doRecovery(dominant_recov_);
 						}
 						
 						else
@@ -63,7 +63,7 @@ bool FTM_Manager::run()
 							FTM_tree_.debugDisplayFTMid({common_dominant_});
 							cout<<"so we activate its recovery : ";
 							FTM_tree_.debugDisplayRMid({common_dominant_});
-							FTM_tree_.doRecovery({common_dominant_});
+							//FTM_tree_.doRecovery({common_dominant_});
 							break;
 						}
 					}
