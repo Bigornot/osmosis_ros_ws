@@ -31,6 +31,7 @@ FTM_Manager::FTM_Manager()
 	FTM_rules_.push_back(new FTM_Rule(6, 1, {}, DM6_loc_not_updated_, RM5_switch_to_teleop_));
 
 	strategy_=new FTM_SafetyFirst();
+	freq_=10;
 }
 
 void FTM_Manager::runDMs()
@@ -89,6 +90,9 @@ vector<FTM_Rule*> FTM_Manager::findDominantRecovery(vector<FTM_Rule*> Rules)
 {
 	vector<FTM_Rule*> dominated;
 	vector<FTM_Rule*> dominant;
+	vector<FTM_Rule*> checked;
+
+	checked=checkSameRM(Rules);
 
 	for (int i=0; i<Rules.size(); i++)//for each rules
 	{
@@ -97,7 +101,7 @@ vector<FTM_Rule*> FTM_Manager::findDominantRecovery(vector<FTM_Rule*> Rules)
 
 	cout << "Dominated RM :";
 	for(int i=0; i<dominated.size(); i++)
-		cout << " " << dominated[i]->getId();
+		cout << " " << dominated[i]->getRMId();
 	cout << endl;
 
 	for (int i=0; i<Rules.size(); i++)//for each rules
@@ -127,34 +131,30 @@ vector<FTM_Rule*>  FTM_Manager::findDominatedRecovery(FTM_Rule* Dominant_rule, v
 
 FTM_Rule* FTM_Manager::findLowestCommonDominant(vector<FTM_Rule*> dominant)
 {
-	vector<FTM_Rule*> checked=checkSameRM(dominant);
-	cout << "Checked RM :";
-	for(int i=0; i<checked.size(); i++)
-		cout << " " << checked[i]->getId();
-	cout << endl;
-	return recursiveLowestCommonDominant(checkSameRM(dominant))[0];
+	return recursiveLowestCommonDominant(dominant)[0];
 }
 
 vector<FTM_Rule*> FTM_Manager::recursiveLowestCommonDominant(vector<FTM_Rule*> recursiveDominant)
 {
-	vector<FTM_Rule*> tempRecursiveDominant;
+	if (recursiveDominant.size()==1)
+		return recursiveDominant;
 
-	for (int i=0; i<recursiveDominant.size(); i++)
+	else
 	{
-		for (int j=0; j<FTM_rules_.size(); j++)
+		vector<FTM_Rule*> tempRecursiveDominant;
+		for (int i=0; i<recursiveDominant.size(); i++)
 		{
-			if (recursiveDominant[i]->getPredecessorId()==FTM_rules_[j]->getId() && !findRule(tempRecursiveDominant, FTM_rules_[j]))
+			for (int j=0; j<FTM_rules_.size(); j++)
 			{
-				tempRecursiveDominant.push_back(FTM_rules_[j]);
+				if (recursiveDominant[i]->getPredecessorId()==FTM_rules_[j]->getId() && !findRule(tempRecursiveDominant, FTM_rules_[j]))
+				{
+					tempRecursiveDominant.push_back(FTM_rules_[j]);
+				}
 			}
 		}
-	}
-	recursiveDominant=findDominant(tempRecursiveDominant);
-
-	if (recursiveDominant.size()!=1)
+		recursiveDominant=findDominant(tempRecursiveDominant);
 		return recursiveLowestCommonDominant(recursiveDominant);
-
-	return recursiveDominant;
+	}
 }
 
 bool FTM_Manager::findRM(vector<FTM_Rule*> rules, FTM_Rule* rule)
@@ -199,7 +199,7 @@ void FTM_Manager::stopFinishedRMs(vector<FTM_Rule*> activated_rules)
 
 	for(int i=0; i<last_activated_rules.size(); i++)
 	{
-		if(!this->findRule(activated_rules, last_activated_rules[i]))
+		if(!this->findRM(activated_rules, last_activated_rules[i]))
 			last_activated_rules[i]->stopRM();
 	}
 

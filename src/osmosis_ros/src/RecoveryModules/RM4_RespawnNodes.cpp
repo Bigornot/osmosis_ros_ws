@@ -1,8 +1,7 @@
 #include <osmosis_control/RecoveryModules/RM4_RespawnNodes.hpp>
 
-RM4_RespawnNodes::RM4_RespawnNodes(int id, vector<int> successors, ros::Duration delay) : RecoveryModule(id, successors, delay) 
+RM4_RespawnNodes::RM4_RespawnNodes(int id, vector<int> successors) : RecoveryModule(id, successors) 
 {
-
 	nodesToCheck_.push_back("/teleop_node");
 	nodesToCheck_.push_back("/safety_pilot_node");
 	nodesToCheck_.push_back("/localization_node");
@@ -41,3 +40,8 @@ void RM4_RespawnNodes::doRecovery()
 		system(command.c_str());
 	}
 }
+
+void RM4_RespawnNodes::stopRecovery()
+{
+}
+
