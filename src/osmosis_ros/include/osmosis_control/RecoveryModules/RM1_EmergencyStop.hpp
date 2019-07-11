@@ -26,8 +26,9 @@ private:
 	ros::Publisher pub_;
 
 public:
-	RM1_EmergencyStop(int id, vector<int> successors, ros::Duration delay);
+	RM1_EmergencyStop(int id, vector<int> successors);
 	void doRecovery();
+	void stopRecovery();
 };
 
 #endif 

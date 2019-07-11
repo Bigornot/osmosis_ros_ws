@@ -29,8 +29,9 @@ private:
 	ros::V_string nodesToCheck_;
 
 public:
-	RM3_RespawnControlNodes(int id, vector<int> successors, ros::Duration delay);
+	RM3_RespawnControlNodes(int id, vector<int> successors);
 	void doRecovery();
+	void stopRecovery();
 };
 
 #endif 

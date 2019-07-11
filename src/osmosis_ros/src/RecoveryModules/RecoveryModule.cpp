@@ -1,9 +1,7 @@
 #include <osmosis_control/RecoveryModules/RecoveryModule.hpp>
 
-RecoveryModule::RecoveryModule(int id, vector<int> successors, ros::Duration delay)
+RecoveryModule::RecoveryModule(int id, vector<int> successors)
 {
-	activation_time_=ros::Time::now()-next_activation_delay_; 
-	next_activation_delay_=delay;
 	driveState_=IDLE;
 	id_=id;
 	successors_=successors;
@@ -15,24 +13,19 @@ void RecoveryModule::driveRecoveryModule()
 	switch(driveState_)
 	{
 		case IDLE:
-			if(state_ && ros::Time::now()-activation_time_>next_activation_delay_)
+			if(driveState_)
 			{
-				activation_time_=ros::Time::now();
-				driveState_=RECOVERY;
+				this->doRecovery();
+				driveState_=ACTIVE;
 			}
 			break;
-		case RECOVERY:
-			this->doRecovery();
-			state_=WAIT_STOP;
-			break;
 
-		case WAIT_STOP:
-			if(!state_)
-				driveState_=STOP;
-			break;
-
-		case STOP:
-			state_=IDLE;
+		case ACTIVE:
+			if(!driveState_)
+			{
+				this->stopRecovery();
+				driveState_=IDLE;
+			}
 			break;
 
 		default:

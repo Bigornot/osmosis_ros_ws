@@ -13,12 +13,12 @@ FTM_Tree::FTM_Tree()
 
 	// Declarations of the recovery modules 
 	// The recovery tree is built here
-	// RMx_ = new RM_type(id, predecessor, {successors}, next_activation_delay)
-	RM1_emergency_stop_ = new RM1_EmergencyStop(1, {2}, ros::Duration(1));
-	RM2_controlled_stop_ = new RM2_ControlledStop(2, {3,4,5}, ros::Duration(1));
-	RM3_respawn_control_nodes_ = new RM3_RespawnControlNodes(3, {}, ros::Duration(1));
-	RM4_respawn_nodes_ = new RM4_RespawnNodes(4, {}, ros::Duration(1));
-	RM5_switch_to_teleop_ = new RM5_SwitchToTeleop(5, {}, ros::Duration(1));
+	// RMx_ = new RM_type(id, predecessor, {successors})
+	RM1_emergency_stop_ = new RM1_EmergencyStop(1, {2});
+	RM2_controlled_stop_ = new RM2_ControlledStop(2, {3,4,5});
+	RM3_respawn_control_nodes_ = new RM3_RespawnControlNodes(3, {});
+	RM4_respawn_nodes_ = new RM4_RespawnNodes(4, {});
+	RM5_switch_to_teleop_ = new RM5_SwitchToTeleop(5, {});
 	
 	// Declarations of the rules (linking of detection modules and recovery modules)
 	// The FMT tree the built here
@@ -40,13 +40,13 @@ FTM_Tree::FTM_Tree()
 	DM8_ = new DM4_NodeCrash();
 	DM9_ = new DM4_NodeCrash();
 
-	RM1_ = new RM4_RespawnNodes(1,{2,3},ros::Duration(1));
-	RM2_ = new RM4_RespawnNodes(2,{4,5},ros::Duration(1));
-	RM3_ = new RM4_RespawnNodes(3,{6},ros::Duration(1));
-	RM4_ = new RM4_RespawnNodes(4,{7},ros::Duration(1));
-	RM5_ = new RM4_RespawnNodes(5,{7,6},ros::Duration(1));
-	RM6_ = new RM4_RespawnNodes(6,{},ros::Duration(1));
-	RM7_ = new RM4_RespawnNodes(7,{},ros::Duration(1));
+	RM1_ = new RM4_RespawnNodes(1,{2,3});
+	RM2_ = new RM4_RespawnNodes(2,{4,5});
+	RM3_ = new RM4_RespawnNodes(3,{6});
+	RM4_ = new RM4_RespawnNodes(4,{7});
+	RM5_ = new RM4_RespawnNodes(5,{7,6});
+	RM6_ = new RM4_RespawnNodes(6,{});
+	RM7_ = new RM4_RespawnNodes(7,{});
 
 	FTM_rules_.push_back(new FTM_Rule(1,0,{2,3,4},DM1_,RM1_));
 	FTM_rules_.push_back(new FTM_Rule(2,1,{5,6},DM2_,RM2_));

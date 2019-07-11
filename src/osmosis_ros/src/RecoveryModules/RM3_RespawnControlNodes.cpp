@@ -1,6 +1,6 @@
 #include <osmosis_control/RecoveryModules/RM3_RespawnControlNodes.hpp>
 
-RM3_RespawnControlNodes::RM3_RespawnControlNodes(int id, vector<int> successors, ros::Duration delay) : RecoveryModule(id, successors, delay) 
+RM3_RespawnControlNodes::RM3_RespawnControlNodes(int id, vector<int> successors) : RecoveryModule(id, successors) 
 {
 
 	nodesToCheck_.push_back("/HMI_node");
@@ -38,4 +38,8 @@ void RM3_RespawnControlNodes::doRecovery()
 		command="xterm -e \"rosrun osmosis_control " + nodesToRespawn[i] + "\" &";
 		system(command.c_str());
 	}
+}
+
+void RM3_RespawnControlNodes::stopRecovery()
+{
 }

@@ -27,8 +27,9 @@ private:
 	ros::Publisher pub_;
 
 public:
-	RM2_ControlledStop(int id, vector<int> successors, ros::Duration delay);
+	RM2_ControlledStop(int id, vector<int> successors);
 	void doRecovery();
+	void stopRecovery();
 };
 
 #endif 
