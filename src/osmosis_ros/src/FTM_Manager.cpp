@@ -2,7 +2,7 @@
 
 FTM_Manager::FTM_Manager()
 {
-	// Declarations of the detection modules
+	/*// Declarations of the detection modules
 	// DMx_ = new DM_type()
 	DM1_prohibited_area_ = new DM1_ProhibitedArea();
 	DM2_cmd_not_updated_ = new DM2_CmdNotUpdated();
@@ -28,10 +28,39 @@ FTM_Manager::FTM_Manager()
 	FTM_rules_.push_back(new FTM_Rule(3, 1, {4}, DM3_wrong_command_, RM2_controlled_stop_));
 	FTM_rules_.push_back(new FTM_Rule(4, 3, {}, DM4_node_crash_, RM4_respawn_nodes_));
 	FTM_rules_.push_back(new FTM_Rule(5, 2, {}, DM5_node_crash_control_, RM3_respawn_control_nodes_));
-	FTM_rules_.push_back(new FTM_Rule(6, 1, {}, DM6_loc_not_updated_, RM5_switch_to_teleop_));
+	FTM_rules_.push_back(new FTM_Rule(6, 1, {}, DM6_loc_not_updated_, RM5_switch_to_teleop_));*/
+
+	DM1_ = new DM4_NodeCrash();
+	DM2_ = new DM4_NodeCrash();
+	DM3_ = new DM4_NodeCrash();
+	DM4_ = new DM4_NodeCrash();
+	DM5_ = new DM4_NodeCrash();
+	DM6_ = new DM4_NodeCrash();
+	DM7_ = new DM4_NodeCrash();
+	DM8_ = new DM4_NodeCrash();
+	DM9_ = new DM4_NodeCrash();
+
+	RM1_ = new RM4_RespawnNodes(1,{2,3});
+	RM2_ = new RM4_RespawnNodes(2,{4,5});
+	RM3_ = new RM4_RespawnNodes(3,{6});
+	RM4_ = new RM4_RespawnNodes(4,{7});
+	RM5_ = new RM4_RespawnNodes(5,{7,6});
+	RM6_ = new RM4_RespawnNodes(6,{});
+	RM7_ = new RM4_RespawnNodes(7,{});
+
+	FTM_rules_.push_back(new FTM_Rule(1,0,{2,3,4},DM1_,RM1_));
+	FTM_rules_.push_back(new FTM_Rule(2,1,{5,6},DM2_,RM2_));
+	FTM_rules_.push_back(new FTM_Rule(3,1,{7},DM3_,RM2_));
+	FTM_rules_.push_back(new FTM_Rule(4,1,{},DM4_,RM3_));
+	FTM_rules_.push_back(new FTM_Rule(5,2,{},DM5_,RM4_));
+	FTM_rules_.push_back(new FTM_Rule(6,2,{},DM6_,RM5_));
+	FTM_rules_.push_back(new FTM_Rule(7,3,{8,9},DM7_,RM5_));
+	FTM_rules_.push_back(new FTM_Rule(8,7,{},DM8_,RM6_));
+	FTM_rules_.push_back(new FTM_Rule(9,7,{},DM9_,RM7_));
 
 	strategy_=new FTM_SafetyFirst();
-	freq_=10;
+
+	freq_=1;
 }
 
 void FTM_Manager::runDMs()
@@ -200,7 +229,10 @@ void FTM_Manager::stopFinishedRMs(vector<FTM_Rule*> activated_rules)
 	for(int i=0; i<last_activated_rules.size(); i++)
 	{
 		if(!this->findRM(activated_rules, last_activated_rules[i]))
+		{
 			last_activated_rules[i]->stopRM();
+			cout << "Stopped RM : " << last_activated_rules[i] << endl;
+		}
 	}
 
 	last_activated_rules=activated_rules;
@@ -213,7 +245,7 @@ vector<FTM_Rule*> FTM_Manager::checkSameRM(vector<FTM_Rule*> Rules)
 
 	for(int i=0; i<back_Rules.size(); i++)
 	{
-		if(!findRM(Rules, back_Rules[i]))
+		if(!findRM(Rules, back_Rules[i]) && !this->findRule(Rules,back_Rules[i]))
 			Rules.push_back(back_Rules[i]);
 	}
 	return Rules;
@@ -223,13 +255,18 @@ vector<FTM_Rule*> FTM_Manager::getTriggeredFTM()
 {
 	Triggered_rules_.clear();
 
-	this->runDMs();
+	Triggered_rules_.push_back(FTM_rules_[8]);
+	Triggered_rules_.push_back(FTM_rules_[5]);
+	Triggered_rules_.push_back(FTM_rules_[2]);
+	Triggered_rules_.push_back(FTM_rules_[3]);
+
+	/*this->runDMs();
 
 	for(int i=0; i<FTM_rules_.size(); i++)
 	{
-		if(FTM_rules_[i]->getStateDM())
+		if(FTM_rules_[i]->getStateDM() && !this->findRule(Triggered_rules_, FTM_rules_[i]))
 			Triggered_rules_.push_back(FTM_rules_[i]);
-	}
+	}*/
 
 	return Triggered_rules_;
 }
@@ -265,8 +302,6 @@ void FTM_Manager::run()
 		loop_rate.sleep();
 	}
 }
-
-
 
 ////////////////////// MAIN //////////////////////
 
