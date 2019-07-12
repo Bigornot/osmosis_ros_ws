@@ -2,7 +2,7 @@
 
 FTM_Manager::FTM_Manager()
 {
-	/*// Declarations of the detection modules
+	// Declarations of the detection modules
 	// DMx_ = new DM_type()
 	DM1_prohibited_area_ = new DM1_ProhibitedArea();
 	DM2_cmd_not_updated_ = new DM2_CmdNotUpdated();
@@ -13,50 +13,22 @@ FTM_Manager::FTM_Manager()
 
 	// Declarations of the recovery modules
 	// The recovery tree is built here
-	// RMx_ = new RM_type(id, predecessor, {successors}, next_activation_delay)
-	RM1_emergency_stop_ = new RM1_EmergencyStop(1, {2});
-	RM2_controlled_stop_ = new RM2_ControlledStop(2, {3,4,5});
+	// RMx_ = new RM_type(id, predecessor, {successors})
+	RM1_emergency_stop_ = new RM1_EmergencyStop(1, {2,5});
+	RM2_controlled_stop_ = new RM2_ControlledStop(2, {3,4});
 	RM3_respawn_control_nodes_ = new RM3_RespawnControlNodes(3, {});
 	RM4_respawn_nodes_ = new RM4_RespawnNodes(4, {});
-	RM5_switch_to_teleop_ = new RM5_SwitchToTeleop(5, {});
+	RM5_switch_to_teleop_ = new RM5_SwitchToTeleop(5, {3,4});
 
 	// Declarations of the rules (linking of detection modules and recovery modules)
 	// The FMT tree the built here
 	// FTM_rules_.push_back(new FTM_Rule(id, predecessor, {successors}, DMx_, RMx_))
 	FTM_rules_.push_back(new FTM_Rule(1, 0, {2, 3, 6}, DM1_prohibited_area_, RM1_emergency_stop_));
-	FTM_rules_.push_back(new FTM_Rule(2, 1, {5}, DM2_cmd_not_updated_, RM2_controlled_stop_));
-	FTM_rules_.push_back(new FTM_Rule(3, 1, {4}, DM3_wrong_command_, RM2_controlled_stop_));
+	FTM_rules_.push_back(new FTM_Rule(2, 1, {4,5}, DM2_cmd_not_updated_, RM2_controlled_stop_));
+	FTM_rules_.push_back(new FTM_Rule(3, 1, {}, DM3_wrong_command_, RM2_controlled_stop_));
 	FTM_rules_.push_back(new FTM_Rule(4, 3, {}, DM4_node_crash_, RM4_respawn_nodes_));
 	FTM_rules_.push_back(new FTM_Rule(5, 2, {}, DM5_node_crash_control_, RM3_respawn_control_nodes_));
-	FTM_rules_.push_back(new FTM_Rule(6, 1, {}, DM6_loc_not_updated_, RM5_switch_to_teleop_));*/
-
-	DM1_ = new DM4_NodeCrash();
-	DM2_ = new DM4_NodeCrash();
-	DM3_ = new DM4_NodeCrash();
-	DM4_ = new DM4_NodeCrash();
-	DM5_ = new DM4_NodeCrash();
-	DM6_ = new DM4_NodeCrash();
-	DM7_ = new DM4_NodeCrash();
-	DM8_ = new DM4_NodeCrash();
-	DM9_ = new DM4_NodeCrash();
-
-	RM1_ = new RM4_RespawnNodes(1,{2,3});
-	RM2_ = new RM4_RespawnNodes(2,{4,5});
-	RM3_ = new RM4_RespawnNodes(3,{6});
-	RM4_ = new RM4_RespawnNodes(4,{7});
-	RM5_ = new RM4_RespawnNodes(5,{7,6});
-	RM6_ = new RM4_RespawnNodes(6,{});
-	RM7_ = new RM4_RespawnNodes(7,{});
-
-	FTM_rules_.push_back(new FTM_Rule(1,0,{2,3,4},DM1_,RM1_));
-	FTM_rules_.push_back(new FTM_Rule(2,1,{5,6},DM2_,RM2_));
-	FTM_rules_.push_back(new FTM_Rule(3,1,{7},DM3_,RM2_));
-	FTM_rules_.push_back(new FTM_Rule(4,1,{},DM4_,RM3_));
-	FTM_rules_.push_back(new FTM_Rule(5,2,{},DM5_,RM4_));
-	FTM_rules_.push_back(new FTM_Rule(6,2,{},DM6_,RM5_));
-	FTM_rules_.push_back(new FTM_Rule(7,3,{8,9},DM7_,RM5_));
-	FTM_rules_.push_back(new FTM_Rule(8,7,{},DM8_,RM6_));
-	FTM_rules_.push_back(new FTM_Rule(9,7,{},DM9_,RM7_));
+	FTM_rules_.push_back(new FTM_Rule(6, 1, {}, DM6_loc_not_updated_, RM5_switch_to_teleop_));
 
 	strategy_=new FTM_SafetyFirst();
 
@@ -255,18 +227,16 @@ vector<FTM_Rule*> FTM_Manager::getTriggeredFTM()
 {
 	Triggered_rules_.clear();
 
-	Triggered_rules_.push_back(FTM_rules_[8]);
-	Triggered_rules_.push_back(FTM_rules_[5]);
-	Triggered_rules_.push_back(FTM_rules_[2]);
-	Triggered_rules_.push_back(FTM_rules_[3]);
-
-	/*this->runDMs();
+	this->runDMs();
 
 	for(int i=0; i<FTM_rules_.size(); i++)
 	{
 		if(FTM_rules_[i]->getStateDM() && !this->findRule(Triggered_rules_, FTM_rules_[i]))
+		{
 			Triggered_rules_.push_back(FTM_rules_[i]);
-	}*/
+		}
+	}
+	cout << endl;
 
 	return Triggered_rules_;
 }
