@@ -11,7 +11,7 @@ using namespace std;
 class RecoveryModule
 {
 private:
-	enum driveState{IDLE, ACTIVE};
+	enum driveState{IDLE, ACTIVATED};
 	driveState driveState_;
 
 	int id_;
@@ -31,6 +31,7 @@ public:
 	int getId();
 	vector<int> getSuccessorsId();
 	virtual void doRecovery()=0;
+	virtual void startRecovery()=0;
 	virtual void stopRecovery()=0;
 };
 

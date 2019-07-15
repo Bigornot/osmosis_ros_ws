@@ -19,15 +19,19 @@
 #include <iostream>
 #include <ros/ros.h>
 #include <std_msgs/Bool.h>
+#include <geometry_msgs/Twist.h>
 #include <osmosis_control/RecoveryModules/RecoveryModule.hpp>
 
 class RM2_ControlledStop : public RecoveryModule
 {
 private:
-	ros::Publisher pub_;
+	ros::Publisher pub_order_;
+	ros::Publisher pub_cmd_;
+	double pollRate_;
 
 public:
 	RM2_ControlledStop(int id, vector<int> successors);
+	void startRecovery();
 	void doRecovery();
 	void stopRecovery();
 };

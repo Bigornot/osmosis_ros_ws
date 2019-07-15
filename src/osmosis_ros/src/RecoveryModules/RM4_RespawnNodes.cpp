@@ -10,7 +10,7 @@ RM4_RespawnNodes::RM4_RespawnNodes(int id, vector<int> successors) : RecoveryMod
 	nodesToCheck_.push_back("/checkProhibitedArea_node");
 }
 
-void RM4_RespawnNodes::doRecovery()
+void RM4_RespawnNodes::startRecovery()
 {
 	bool found=false;
 	string command;
@@ -39,6 +39,10 @@ void RM4_RespawnNodes::doRecovery()
 		command="xterm -e \"rosrun osmosis_control " + nodesToRespawn[i] + "\" &";
 		system(command.c_str());
 	}
+}
+
+void RM4_RespawnNodes::doRecovery()
+{
 }
 
 void RM4_RespawnNodes::stopRecovery()

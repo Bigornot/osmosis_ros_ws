@@ -2,14 +2,13 @@
 
 RM3_RespawnControlNodes::RM3_RespawnControlNodes(int id, vector<int> successors) : RecoveryModule(id, successors) 
 {
-
 	nodesToCheck_.push_back("/HMI_node");
 	nodesToCheck_.push_back("/graph_planner_node");
 	nodesToCheck_.push_back("/osmosis_control_node");
 	nodesToCheck_.push_back("/mission_manager_node");
 }
 
-void RM3_RespawnControlNodes::doRecovery()
+void RM3_RespawnControlNodes::startRecovery()
 {
 	bool found=false;
 	string command;
@@ -38,6 +37,10 @@ void RM3_RespawnControlNodes::doRecovery()
 		command="xterm -e \"rosrun osmosis_control " + nodesToRespawn[i] + "\" &";
 		system(command.c_str());
 	}
+}
+
+void RM3_RespawnControlNodes::doRecovery()
+{
 }
 
 void RM3_RespawnControlNodes::stopRecovery()

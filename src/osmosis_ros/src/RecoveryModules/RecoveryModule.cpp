@@ -13,19 +13,21 @@ void RecoveryModule::driveRecoveryModule()
 	switch(driveState_)
 	{
 		case IDLE:
-			if(driveState_)
+			if(state_)
 			{
-				this->doRecovery();
-				driveState_=ACTIVE;
+				this->startRecovery();
+				driveState_=ACTIVATED;
 			}
 			break;
 
-		case ACTIVE:
-			if(!driveState_)
+		case ACTIVATED:
+			if(!state_)
 			{
 				this->stopRecovery();
 				driveState_=IDLE;
 			}
+			else
+				this->doRecovery();
 			break;
 
 		default:
@@ -52,7 +54,7 @@ void RecoveryModule::stop()
 void RecoveryModule::run()
 {
 	this->driveRecoveryModule();
-	ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
+	//ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 }
 
 int RecoveryModule::getId()

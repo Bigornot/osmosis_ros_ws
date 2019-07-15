@@ -30,6 +30,7 @@ private:
 
 public:
 	RM3_RespawnControlNodes(int id, vector<int> successors);
+	void startRecovery();
 	void doRecovery();
 	void stopRecovery();
 };

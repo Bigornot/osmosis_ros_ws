@@ -26,7 +26,7 @@ FTM_Manager::FTM_Manager()
 	FTM_rules_.push_back(new FTM_Rule(1, 0, {2, 3, 6}, DM1_prohibited_area_, RM1_emergency_stop_));
 	FTM_rules_.push_back(new FTM_Rule(2, 1, {4,5}, DM2_cmd_not_updated_, RM2_controlled_stop_));
 	FTM_rules_.push_back(new FTM_Rule(3, 1, {}, DM3_wrong_command_, RM2_controlled_stop_));
-	FTM_rules_.push_back(new FTM_Rule(4, 3, {}, DM4_node_crash_, RM4_respawn_nodes_));
+	FTM_rules_.push_back(new FTM_Rule(4, 2, {}, DM4_node_crash_, RM4_respawn_nodes_));
 	FTM_rules_.push_back(new FTM_Rule(5, 2, {}, DM5_node_crash_control_, RM3_respawn_control_nodes_));
 	FTM_rules_.push_back(new FTM_Rule(6, 1, {}, DM6_loc_not_updated_, RM5_switch_to_teleop_));
 
@@ -43,8 +43,10 @@ void FTM_Manager::runDMs()
 
 void FTM_Manager::runRMs()
 {
-	for(int i=0; i<FTM_rules_.size(); i++)
-		FTM_rules_[i]->runRM();
+	vector<FTM_Rule*> RMs = checkSameRM(FTM_rules_);
+
+	for(int i=0; i<RMs.size(); i++)
+		RMs[i]->runRM();
 }
 
 vector<FTM_Rule*> FTM_Manager::findDominant(vector<FTM_Rule*> Rules)

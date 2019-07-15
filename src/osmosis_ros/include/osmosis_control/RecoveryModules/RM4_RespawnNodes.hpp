@@ -28,6 +28,7 @@ private:
 
 public:
 	RM4_RespawnNodes(int id, vector<int> successors);
+	void startRecovery();
 	void doRecovery();
 	void stopRecovery();
 };

@@ -25,9 +25,11 @@ class RM5_SwitchToTeleop : public RecoveryModule
 {
 private:
 	ros::Publisher pub_;
+	double pollRate_;
 
 public:
 	RM5_SwitchToTeleop(int id, vector<int> successors);
+	void startRecovery();
 	void doRecovery();
 	void stopRecovery();
 };

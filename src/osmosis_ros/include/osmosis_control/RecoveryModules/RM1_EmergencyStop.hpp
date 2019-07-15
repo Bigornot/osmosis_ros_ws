@@ -18,15 +18,19 @@
 
 #include <iostream>
 #include <ros/ros.h>
+#include <geometry_msgs/Twist.h>
 #include <osmosis_control/RecoveryModules/RecoveryModule.hpp>
 
 class RM1_EmergencyStop : public RecoveryModule
 {
 private:
 	ros::Publisher pub_;
+	ros::Publisher pub_cmd_;
+	double pollRate_;
 
 public:
 	RM1_EmergencyStop(int id, vector<int> successors);
+	void startRecovery();
 	void doRecovery();
 	void stopRecovery();
 };
