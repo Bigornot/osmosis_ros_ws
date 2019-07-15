@@ -66,7 +66,7 @@ vector<FTM_Rule*> FTM_Manager::findDominant(vector<FTM_Rule*> Rules)
 
 	for (int i=0; i<Rules.size(); i++)//for each rules
 	{
-		if(!this->findRule(dominated, Rules[i]) && !this->findRule(dominant, Rules[i]))
+		if(!findRule(dominated, Rules[i]) && !findRule(dominant, Rules[i]))
 			dominant.push_back(Rules[i]);
 	}
 	return dominant;
@@ -79,7 +79,7 @@ vector<FTM_Rule*> FTM_Manager::findDominated(FTM_Rule* Dominant_rule, vector<FTM
 	{
 		for(int j=0; j<FTM_rules_.size(); j++)
 		{
-			if(successorsId[i]==FTM_rules_[j]->getId() && !this->findRule(*dominated, FTM_rules_[j]))
+			if(successorsId[i]==FTM_rules_[j]->getId() && !findRule(*dominated, FTM_rules_[j]))
 			{
 				dominated->push_back(FTM_rules_[j]);
 				findDominated(FTM_rules_[j], dominated);
@@ -109,7 +109,7 @@ vector<FTM_Rule*> FTM_Manager::findDominantRecovery(vector<FTM_Rule*> Rules)
 
 	for (int i=0; i<Rules.size(); i++)//for each rules
 	{
-		if(!this->findRule(dominated, Rules[i]) && !this->findRule(dominant, Rules[i]))
+		if(!findRule(dominated, Rules[i]) && !findRule(dominant, Rules[i]))
 			dominant.push_back(Rules[i]);
 	}
 	return dominant;
@@ -122,7 +122,7 @@ vector<FTM_Rule*>  FTM_Manager::findDominatedRecovery(FTM_Rule* Dominant_rule, v
 	{
 		for(int j=0; j<FTM_rules_.size(); j++)
 		{
-			if(successorsId[i]==FTM_rules_[j]->getRMId() && !this->findRM(*dominated, FTM_rules_[j]))
+			if(successorsId[i]==FTM_rules_[j]->getRMId() && !findRM(*dominated, FTM_rules_[j]))
 			{
 				dominated->push_back(FTM_rules_[j]);
 				findDominatedRecovery(FTM_rules_[j], dominated);
@@ -188,12 +188,12 @@ bool FTM_Manager::findRule(vector<FTM_Rule*> rules, FTM_Rule* rule)
 
 void FTM_Manager::doRecovery(vector<FTM_Rule*> activated_rules)
 {
-	this->stopFinishedRMs(activated_rules);
+	stopFinishedRMs(activated_rules);
 
 	for(int i=0; i<activated_rules.size(); i++)
 		activated_rules[i]->startRM();
 
-	this->runRMs();
+	runRMs();
 }
 
 void FTM_Manager::stopFinishedRMs(vector<FTM_Rule*> activated_rules)
@@ -202,7 +202,7 @@ void FTM_Manager::stopFinishedRMs(vector<FTM_Rule*> activated_rules)
 
 	for(int i=0; i<last_activated_rules.size(); i++)
 	{
-		if(!this->findRM(activated_rules, last_activated_rules[i]))
+		if(!findRM(activated_rules, last_activated_rules[i]))
 		{
 			last_activated_rules[i]->stopRM();
 			cout << "Stopped RM : " << last_activated_rules[i] << endl;
@@ -219,7 +219,7 @@ vector<FTM_Rule*> FTM_Manager::checkSameRM(vector<FTM_Rule*> Rules)
 
 	for(int i=0; i<back_Rules.size(); i++)
 	{
-		if(!findRM(Rules, back_Rules[i]) && !this->findRule(Rules,back_Rules[i]))
+		if(!findRM(Rules, back_Rules[i]) && !findRule(Rules,back_Rules[i]))
 			Rules.push_back(back_Rules[i]);
 	}
 	return Rules;
@@ -229,16 +229,18 @@ vector<FTM_Rule*> FTM_Manager::getTriggeredFTM()
 {
 	Triggered_rules_.clear();
 
-	this->runDMs();
+	/*runDMs();
 
 	for(int i=0; i<FTM_rules_.size(); i++)
 	{
-		if(FTM_rules_[i]->getStateDM() && !this->findRule(Triggered_rules_, FTM_rules_[i]))
+		if(FTM_rules_[i]->getStateDM() && !findRule(Triggered_rules_, FTM_rules_[i]))
 		{
 			Triggered_rules_.push_back(FTM_rules_[i]);
 		}
 	}
-	cout << endl;
+	cout << endl;*/
+
+	Triggered_rules_.push_back(FTM_rules_[5]);
 
 	return Triggered_rules_;
 }

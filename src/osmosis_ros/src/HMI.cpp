@@ -64,7 +64,7 @@ void HMI::driveHMI()
 			break;
 
 		case EMERGENCY_STOP:
-			this->ordersDone();
+			ordersDone();
 			if(!emergency_stop_)
 				state_=IDLE;
 			break;
@@ -184,7 +184,7 @@ void HMI::run()
 	ros::Rate loop_rate(freq_); //using 10 makes the robot oscillating trajectories, TBD check with the PF algo ?
 	while (nh_.ok())
 	{
-		this->driveHMI();
+		driveHMI();
 	 	ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate
 	}

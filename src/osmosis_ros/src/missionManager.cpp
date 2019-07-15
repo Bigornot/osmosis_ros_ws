@@ -14,12 +14,12 @@ void MissionManager::driveMissionManager()
 			ROS_INFO("IDLE\n");
 			if(hmi_mission_)
 			{
-				this->resetIdle();
+				resetIdle();
 				state_=MISSION;
 			}
 			else if(hmi_point_)
 			{
-				this->resetIdle();
+				resetIdle();
 				state_=POINT;	
 			}
 			break;
@@ -29,7 +29,7 @@ void MissionManager::driveMissionManager()
 			{
 				case TARGETPOINT:				
 					ROS_INFO("POINT TARGETPOINT\n");
-					this->goalKeyboard();
+					goalKeyboard();
 					pointState_=WAITPOINT;
 					break;
 				
@@ -51,23 +51,23 @@ void MissionManager::driveMissionManager()
 			{
 				case INITMISSION:
 					ROS_INFO("MISSION INITMISSION\n");
-					this->initMission(mission_name_);
+					initMission(mission_name_);
 					missionState_=EXECUTEMISSION;
 					break;
 
 				case EXECUTEMISSION:
 					ROS_INFO("MISSION EXECUTEMISSION\n");
-					this->doMission();
+					doMission();
 					if(missionAborted_)
 					{
-						this->abortMission();
+						abortMission();
 						missionState_=INITMISSION;
 						state_=IDLE;
 					}
 
 					else if(missionOver_)
 					{
-						this->endMission();
+						endMission();
 						missionState_=INITMISSION;
 						state_=IDLE;
 					}
@@ -137,7 +137,7 @@ void MissionManager::initMission(string name)
 	string line;
 
 	while(getline(fichier, line))
-		this->parse(line);
+		parse(line);
 	fichier.close();
 
 	for(i=0; i<mission_.mission_steps.size();i++)
@@ -190,12 +190,12 @@ void MissionManager::doMission()
 	else if(goal_reached_)
 	{
 		mission_.step++;
-		if(this->isMissionOver())
+		if(isMissionOver())
 		{
 			missionOver_=true;
 		}
 		else
-			this->sendNextOrder();
+			sendNextOrder();
 	}
 }
 
@@ -267,7 +267,7 @@ void MissionManager::run()
 	ros::Rate loop_rate(10); //using 10 makes the robot oscillating trajectories, TBD check with the PF algo ?
 	while (nh_.ok())
 	    {
-		this->driveMissionManager();
+		driveMissionManager();
 	 	ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate
 	    }

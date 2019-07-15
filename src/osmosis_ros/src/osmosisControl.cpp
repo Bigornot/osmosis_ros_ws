@@ -270,7 +270,7 @@ bool OsmosisControl::run()
 	ros::Rate loop_rate(freq_); //using 10 makes the robot oscillating trajectories, TBD check with the PF algo
 	while (nh_.ok())
 	{
-		this->osmosisControlFSM();
+		osmosisControlFSM();
 		cmd_vel_pub_.publish(cmd_);
 		ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate

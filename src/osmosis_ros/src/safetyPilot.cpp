@@ -13,17 +13,17 @@ void SafetyPilot::driveSafetyPilot()
 	{
 		case COMPUTE_CMD:
 			ROS_INFO("COMPUTE_CMD\n");
-			this->computeCommandCtrlTeleop();
+			computeCommandCtrlTeleop();
 			break;
 		case  EMERGENCY_STOP:
 			ROS_INFO("EMERGENCY_STOP\n");
-			this->stop();
+			stop();
 			if(!emergency_stop_)
 				state_=COMPUTE_CMD;
 			break;
 		case CONTROLLED_STOP:
 			ROS_INFO("CONTROLLED_STOP\n");
-			this->stop();
+			stop();
 			if(!controlled_stop_)
 				state_=COMPUTE_CMD;
 			break;
@@ -162,8 +162,8 @@ bool SafetyPilot::run()
 	ros::Rate loop_rate(freq_);
 	while (nh_.ok())
 	{
-		//this->computeCommandCtrlTeleop();
-		this->driveSafetyPilot();
+		//computeCommandCtrlTeleop();
+		driveSafetyPilot();
 		cmd_vel_pub_.publish(base_cmd_);
 		ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate

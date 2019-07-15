@@ -89,7 +89,7 @@ void GraphPlanner::callbackGoal(const osmosis_control::State_and_PointMsg & theg
 
 /*void GraphPlanner::callbackGoalId(const string & thegoal_id)
 {
-	this->goal_id=thegoal_id;
+	goal_id=thegoal_id;
 	_new_goal=true;
 	ROS_INFO("NEW GOAL : [%s]",thegoal_id);
 }*/
@@ -98,7 +98,7 @@ void GraphPlanner::callbackPose(const geometry_msgs::Pose2D & msg)
 {
 	current.x = msg.x;
 	current.y = msg.y;
-	//ROS_INFO("NEW POS : x: [%f], y:[%f]",this->current.x,this->current.y);
+	//ROS_INFO("NEW POS : x: [%f], y:[%f]",current.x,current.y);
 }
 
 //from MAUVE
@@ -112,12 +112,12 @@ void GraphPlanner::callbackPose(const geometry_msgs::Pose2D & msg)
 		graph = shell().map.read();
 		auto p = shell().pose.read();
 		current = p.location;
-		this->logger().info("current location {}", current);
+		logger().info("current location {}", current);
 		if (in_id.status == runtime::DataStatus::NEW_DATA)
 			goal = graph.getNode(in_id.value)->point;
 		else
 			goal = in_goal.value;
-		this->logger().info("received new goal {}", goal);
+		logger().info("received new goal {}", goal);
 		_has_goal = true;
 	}
 }*/
@@ -141,21 +141,21 @@ bool GraphPlanner::new_goal()
 void GraphPlanner::compute_plan() 
 {
 	auto s = graph.getClosestNode(current);
-	//  this->logger().info("start node {} {}", s->name, s->point);
+	//  logger().info("start node {} {}", s->name, s->point);
 	ROS_INFO("start node %s %f %f", s->name.c_str(), s->point.x,s->point.y);
 	auto g = graph.getClosestNode(state_and_goal_.goal);
-	//  this->logger().info("goal node {} {}", g->name, g->point);
+	//  logger().info("goal node {} {}", g->name, g->point);
 	ROS_INFO("goal node %s %f %f", g->name.c_str(), g->point.x,g->point.y);
 	auto p = graph.compute_plan(s, g);
 	plan.clear();
 	plan.push_back(s->point);
 	for (int i = 0; i < p.size(); i++)
 		plan.push_back(p[i]->point);
-	//  plan.push_back(this->goal);
+	//  plan.push_back(goal);
 
-	//  this->logger().info("plan computed, length: {}", plan.size());
+	//  logger().info("plan computed, length: {}", plan.size());
 	//  for (int i = 0; i < plan.size(); i++)
-	//    this->logger().info("{}: {}", i, plan[i]);
+	//    logger().info("{}: {}", i, plan[i]);
 
 	target_index = 0;
 	ROS_INFO("Plan computed, size = %d",(int)plan.size());
@@ -189,7 +189,7 @@ void GraphPlanner::send_target()
 	//ROS_INFO ("target_index < plan.size() : %d < %u",target_index,plan.size());
 	//  if (target_index < plan.size())
 	//  {
-	//this->shell().target.write(plan[target_index]);
+	//shell().target.write(plan[target_index]);
 	ROS_INFO("SEND target x: %f y:%f", plan[target_index].x, plan[target_index].y);
 	state_and_target_.goal=plan[target_index];
 
@@ -206,9 +206,9 @@ bool GraphPlanner::is_arrived()
 
 void GraphPlanner::execute_plan()
 {
-	//this->current = this->shell().pose.read().location;
-	//double d = Graph::distance(this->current, plan[target_index]);
-	//this->logger().debug("distance to current target {}", d);
+	//current = shell().pose.read().location;
+	//double d = Graph::distance(current, plan[target_index]);
+	//logger().debug("distance to current target {}", d);
 	ROS_INFO("POSE x: %f  y:%f", current.x , current.y );
 	ROS_INFO("PLAN x: %f  y:%f", plan[target_index].x , plan[target_index].y );
 	ROS_INFO("dist to target = %f", Graph::distance(current, plan[target_index]));
@@ -235,8 +235,8 @@ void GraphPlanner::run()
 	while (nh_.ok())
 	{
 		//cout <<"HEY";
-		//this->goalKeyboard();
-		this->graphPlannerFSM();
+		//goalKeyboard();
+		graphPlannerFSM();
 
 		ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate

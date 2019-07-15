@@ -23,8 +23,8 @@ void DetectionModule::driveDetectionModule()
 
 void DetectionModule::run()
 {
-	this->detect();
-	this->driveDetectionModule();
+	detect();
+	driveDetectionModule();
 	ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 }
 

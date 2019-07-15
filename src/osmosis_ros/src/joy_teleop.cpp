@@ -97,7 +97,7 @@ void JoyTeleop::run()
 	ros::Rate loop_rate(freq_);
 	while (nh_.ok())
 	{
-		this->driveJoy();
+		driveJoy();
 		if(pub_on_)
 		{
 			cmd_joy_teleop_pub_.publish(joy_teleop_cmd_);

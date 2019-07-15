@@ -20,7 +20,7 @@ void RM2_ControlledStop::startRecovery()
 
 	pub_order_.publish(data);
 
-	this->doRecovery();
+	doRecovery();
 
 	cout << "order sent" << endl;
 }

@@ -56,17 +56,17 @@ public:
 	vector<Node*> compute_plan(const Node* start, const Node* goal);
 	static double distance(const Node* a, const Node* b);
 	static double distance(const geometry_msgs::Point a, const geometry_msgs::Point b);
-	inline void clear() { this->nodes.clear(); };
+	inline void clear() { nodes.clear(); };
 
 	Graph& operator=(const Graph& g) {
-	this->copy(g);
+	copy(g);
 	return *this;
 	};
 
 	Graph() {};
 
 	Graph(const Graph& g) {
-	this->copy(g);
+	copy(g);
 	};
 
 private:
