@@ -68,6 +68,8 @@ private :
 	vector<FTM_Rule*> checkSameRM(vector<FTM_Rule*> Rules);
 
 	FTM_Strategy* strategy_;
+	double delayBeforeDM_;
+	ros::Time timeStart_;
 
 public :
 	FTM_Manager();

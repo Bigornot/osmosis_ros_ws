@@ -8,12 +8,9 @@ DM1_ProhibitedArea::DM1_ProhibitedArea() : DetectionModule()
 }
 
 //compute detection out of zone
-bool DM1_ProhibitedArea::detect()
+void DM1_ProhibitedArea::detect()
 {
-	if (state_)
-		return true;
-	else
-		return false;
+	// Done in a separate node
 }
 
 //Topic callback

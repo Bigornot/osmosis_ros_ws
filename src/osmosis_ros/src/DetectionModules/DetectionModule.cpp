@@ -2,6 +2,7 @@
 
 DetectionModule::DetectionModule ()
 {
+	state_=false;
 	driveState_=IDLE;
 }
 
@@ -11,10 +12,10 @@ void DetectionModule::driveDetectionModule()
 	{
 		case IDLE:
 			if(state_)
-				driveState_=TRIGGERED;
+				driveState_=ACTIVE;
 			break;
 
-		case TRIGGERED:
+		case ACTIVE:
 			if(!state_)
 				driveState_=IDLE;
 			break;

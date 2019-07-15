@@ -29,7 +29,7 @@ private:
 
 public:
 	DM4_NodeCrash();
-	bool detect();
+	void detect();
 };
 
 #endif //OSMOSIS_DM4_NodeCrash_HPP

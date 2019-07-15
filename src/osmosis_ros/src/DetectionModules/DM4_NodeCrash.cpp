@@ -3,10 +3,6 @@
 //! ROS node topics publishing and subscribing initialization
 DM4_NodeCrash::DM4_NodeCrash() : DetectionModule()
 {
-	nodesToCheck_.push_back("/DM1_ProhibitedArea_node");
-	nodesToCheck_.push_back("/DM2_CmdNotUpdated_node");
-	nodesToCheck_.push_back("/DM3_WrongCommand_node");
-	nodesToCheck_.push_back("/DM5_NodeCrashControl_node");
 	nodesToCheck_.push_back("/FTM_Manager_node");
 	nodesToCheck_.push_back("/teleop_node");
 	nodesToCheck_.push_back("/emergency_shutdown_node");
@@ -17,7 +13,7 @@ DM4_NodeCrash::DM4_NodeCrash() : DetectionModule()
 	nodesToCheck_.push_back("/teleop_node");
 }
 
-bool DM4_NodeCrash::detect()
+void DM4_NodeCrash::detect()
 {
 	int i,j;
 	bool found=true;
@@ -35,10 +31,8 @@ bool DM4_NodeCrash::detect()
 	aliveNodes_.clear();
 
 	if(!found)
-	{
-		return true;
-	}
+		state_=true;
 	else
-		return false;
+		state_=false;
 }
 

@@ -30,7 +30,7 @@ private:
 
 public:
 	DM6_LocNotUpdated();
-	bool detect();
+	void detect();
 	void DM6_LocNotUpdatedCallback(const geometry_msgs::Pose2D &pose);
 };
 

@@ -11,12 +11,12 @@ DM6_LocNotUpdated::DM6_LocNotUpdated() : DetectionModule()
 	timeOut_ = ros::Duration(1);
 }
 
-bool DM6_LocNotUpdated::detect()
+void DM6_LocNotUpdated::detect()
 {
 	if(ros::Time::now()-lastUpdate_>timeOut_)
-		return true;
+		state_=true;
 	else
-		return false;
+		state_ = false;
 }
 
 void DM6_LocNotUpdated::DM6_LocNotUpdatedCallback(const geometry_msgs::Pose2D &pose)

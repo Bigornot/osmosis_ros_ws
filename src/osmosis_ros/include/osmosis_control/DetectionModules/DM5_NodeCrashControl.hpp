@@ -29,7 +29,7 @@ private:
 
 public:
 	DM5_NodeCrashControl();
-	bool detect();
+	void detect();
 };
 
 #endif //OSMOSIS_DM5_NodeCrashControl_HPP

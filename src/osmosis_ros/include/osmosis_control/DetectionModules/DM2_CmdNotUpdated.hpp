@@ -30,7 +30,7 @@ private:
 
 public:
 	DM2_CmdNotUpdated();
-	bool detect();
+	void detect();
 	void DM2_CmdNotUpdatedCallback(const geometry_msgs::Twist &cmd_vel);
 };
 

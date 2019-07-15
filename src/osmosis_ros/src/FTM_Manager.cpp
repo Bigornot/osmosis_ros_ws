@@ -32,7 +32,9 @@ FTM_Manager::FTM_Manager()
 
 	strategy_=new FTM_SafetyFirst();
 
-	freq_=1;
+	timeStart_ = ros::Time::now();
+	delayBeforeDM_ = 5; // 5 secondes before concidering the DMs
+	freq_=20;
 }
 
 void FTM_Manager::runDMs()
@@ -109,7 +111,7 @@ vector<FTM_Rule*> FTM_Manager::findDominantRecovery(vector<FTM_Rule*> Rules)
 
 	for (int i=0; i<Rules.size(); i++)//for each rules
 	{
-		if(!findRule(dominated, Rules[i]) && !findRule(dominant, Rules[i]))
+		if(!findRule(dominated, Rules[i]) && !findRM(dominant, Rules[i]))
 			dominant.push_back(Rules[i]);
 	}
 	return dominant;
@@ -205,7 +207,7 @@ void FTM_Manager::stopFinishedRMs(vector<FTM_Rule*> activated_rules)
 		if(!findRM(activated_rules, last_activated_rules[i]))
 		{
 			last_activated_rules[i]->stopRM();
-			cout << "Stopped RM : " << last_activated_rules[i] << endl;
+			cout << "Stopped RM : " << last_activated_rules[i]->getRMId() << endl;
 		}
 	}
 
@@ -229,19 +231,22 @@ vector<FTM_Rule*> FTM_Manager::getTriggeredFTM()
 {
 	Triggered_rules_.clear();
 
-	/*runDMs();
-
-	for(int i=0; i<FTM_rules_.size(); i++)
+	ros::Duration delay = ros::Duration(delayBeforeDM_);
+	if(ros::Time::now()-timeStart_>delay)
 	{
-		if(FTM_rules_[i]->getStateDM() && !findRule(Triggered_rules_, FTM_rules_[i]))
+		runDMs();
+
+		for(int i=0; i<FTM_rules_.size(); i++)
 		{
-			Triggered_rules_.push_back(FTM_rules_[i]);
+			if(FTM_rules_[i]->getStateDM() && !findRule(Triggered_rules_, FTM_rules_[i]))
+			{
+				Triggered_rules_.push_back(FTM_rules_[i]);
+			}
 		}
+		cout << endl;
+
 	}
-	cout << endl;*/
-
-	Triggered_rules_.push_back(FTM_rules_[5]);
-
+	
 	return Triggered_rules_;
 }
 

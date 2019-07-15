@@ -9,7 +9,7 @@ DM5_NodeCrashControl::DM5_NodeCrashControl() : DetectionModule()
 	nodesToCheck_.push_back("/osmosis_control_node");
 }
 
-bool DM5_NodeCrashControl::detect()
+void DM5_NodeCrashControl::detect()
 {
 	int i,j;
 	bool found=true;
@@ -27,10 +27,8 @@ bool DM5_NodeCrashControl::detect()
 	aliveNodes_.clear();
 
 	if(!found)
-	{
-		return true;
-	}
+		state_=true;
 	else
-		return false;
+		state_=false;
 }
 

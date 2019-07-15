@@ -10,12 +10,12 @@ DM3_WrongCommand::DM3_WrongCommand()
 	cmd_angular_z_min_=-50;
 }
 
-bool DM3_WrongCommand::detect()
+void DM3_WrongCommand::detect()
 {
 	if (cmd_.linear.x > cmd_linear_x_max_ || cmd_.angular.z > cmd_angular_z_max_ || cmd_.linear.x < cmd_linear_x_min_ || cmd_.angular.z < cmd_angular_z_min_)
-		return true;
+		state_=true;
 	else
-		return false;
+		state_=false;
 }
 
 //Topic callback

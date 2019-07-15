@@ -11,7 +11,7 @@ using namespace std;
 class DetectionModule
 {
 private :
-	enum driveState{IDLE, TRIGGERED};
+	enum driveState{IDLE, ACTIVE};
 	driveState driveState_;
 
 protected:
@@ -22,7 +22,7 @@ public :
 	DetectionModule();
 	void driveDetectionModule();
 	void run(); //method to lauch the detection node
-	virtual bool detect()=0; //method for the condition of the detection
+	virtual void detect()=0; //method for the condition of the detection
 	bool getState();
 };
 
