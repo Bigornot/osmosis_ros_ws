@@ -199,7 +199,10 @@ void FTM_Manager::doRecovery(vector<FTM_Rule*> activated_rules)
 	stopFinishedRMs(activated_rules);
 
 	for(int i=0; i<activated_rules.size(); i++)
-		activated_rules[i]->startRM();
+	{
+		if(!activated_rules[i]->getStateRM())
+			activated_rules[i]->startRM();
+	}
 
 	runRMs();
 }
