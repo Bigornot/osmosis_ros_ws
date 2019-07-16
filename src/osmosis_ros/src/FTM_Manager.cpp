@@ -33,7 +33,7 @@ FTM_Manager::FTM_Manager()
 	strategy_=new FTM_SafetyFirst();
 
 	timeStart_ = ros::Time::now();
-	delayBeforeDM_ = 5; // 5 secondes before concidering the DMs
+	delayBeforeStart_ = 2;
 	freq_=20;
 }
 
@@ -231,22 +231,17 @@ vector<FTM_Rule*> FTM_Manager::getTriggeredFTM()
 {
 	Triggered_rules_.clear();
 
-	ros::Duration delay = ros::Duration(delayBeforeDM_);
-	if(ros::Time::now()-timeStart_>delay)
+	runDMs();
+
+	for(int i=0; i<FTM_rules_.size(); i++)
 	{
-		runDMs();
-
-		for(int i=0; i<FTM_rules_.size(); i++)
+		if(FTM_rules_[i]->getStateDM() && !findRule(Triggered_rules_, FTM_rules_[i]))
 		{
-			if(FTM_rules_[i]->getStateDM() && !findRule(Triggered_rules_, FTM_rules_[i]))
-			{
-				Triggered_rules_.push_back(FTM_rules_[i]);
-			}
+			Triggered_rules_.push_back(FTM_rules_[i]);
 		}
-		cout << endl;
-
 	}
-	
+	cout << endl;
+
 	return Triggered_rules_;
 }
 
@@ -272,6 +267,8 @@ void FTM_Manager::debugDisplayRMid(vector<FTM_Rule*> vector)
 
 void FTM_Manager::run()
 {
+	ros::Duration(delayBeforeStart_).sleep();
+
 	ros::Rate loop_rate(freq_);
 
 	while(nh_.ok())
