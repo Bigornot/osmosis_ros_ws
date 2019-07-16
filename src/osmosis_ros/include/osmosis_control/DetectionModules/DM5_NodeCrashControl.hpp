@@ -29,6 +29,7 @@ private:
 
 public:
 	DM5_NodeCrashControl();
+	void set();
 	void detect();
 };
 

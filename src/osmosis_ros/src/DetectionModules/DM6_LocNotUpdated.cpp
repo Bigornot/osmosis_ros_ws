@@ -11,9 +11,15 @@ DM6_LocNotUpdated::DM6_LocNotUpdated() : DetectionModule()
 	timeOut_ = ros::Duration(1);
 }
 
+void DM6_LocNotUpdated::set()
+{
+	lastUpdate_=ros::Time::now();
+}
+
 void DM6_LocNotUpdated::detect()
 {
-	if(ros::Time::now()-lastUpdate_>timeOut_)
+	ros::Duration delay = ros::Time::now()-lastUpdate_;
+	if(delay>timeOut_)
 		state_=true;
 	else
 		state_ = false;

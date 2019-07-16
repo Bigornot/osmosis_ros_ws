@@ -28,6 +28,8 @@ private:
 	ros::Publisher pub_order_;
 	ros::Publisher pub_cmd_;
 	double pollRate_;
+	double delaySend_;
+	ros::Time start_;
 
 public:
 	RM2_ControlledStop(int id, vector<int> successors);

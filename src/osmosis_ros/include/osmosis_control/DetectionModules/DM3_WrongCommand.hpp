@@ -33,6 +33,7 @@ private:
 
 public:
 	DM3_WrongCommand();
+	void set();
 	void detect();
 	void DM3_WrongCommandCallback(const geometry_msgs::Twist & cmd_msg);
 

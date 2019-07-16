@@ -24,6 +24,11 @@ int FTM_Rule::getId()
 	return id_;
 }
 
+void FTM_Rule::setDM()
+{
+	DM_->set();
+}
+
 void FTM_Rule::runDM()
 {
 	DM_->run();

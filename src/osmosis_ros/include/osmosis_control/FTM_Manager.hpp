@@ -79,6 +79,7 @@ public :
 	vector<FTM_Rule*> findDominantRecovery(vector<FTM_Rule*> Rules);
 	FTM_Rule* findLowestCommonDominant(vector<FTM_Rule*> dominant);
 
+	void setDMs();
 	void runDMs();
 	void runRMs();
 

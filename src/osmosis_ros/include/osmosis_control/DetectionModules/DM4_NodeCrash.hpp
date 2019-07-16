@@ -29,6 +29,7 @@ private:
 
 public:
 	DM4_NodeCrash();
+	void set();
 	void detect();
 };
 

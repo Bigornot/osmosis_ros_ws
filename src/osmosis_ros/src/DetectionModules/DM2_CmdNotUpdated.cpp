@@ -9,9 +9,15 @@ DM2_CmdNotUpdated::DM2_CmdNotUpdated() : DetectionModule()
 	timeOut_ = ros::Duration(1);
 }
 
+void DM2_CmdNotUpdated::set()
+{
+	lastUpdate_=ros::Time::now();
+}
+
 void DM2_CmdNotUpdated::detect()
 {
-	if(ros::Time::now()-lastUpdate_>timeOut_)
+	ros::Duration delay = ros::Time::now()-lastUpdate_;
+	if(delay>timeOut_)
 		state_=true;
 	else
 		state_=false;

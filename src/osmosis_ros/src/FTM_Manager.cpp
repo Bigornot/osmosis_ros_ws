@@ -37,6 +37,12 @@ FTM_Manager::FTM_Manager()
 	freq_=20;
 }
 
+void FTM_Manager::setDMs()
+{
+	for(int i=0; i<FTM_rules_.size(); i++)
+		FTM_rules_[i]->setDM();
+}
+
 void FTM_Manager::runDMs()
 {
 	for(int i=0; i<FTM_rules_.size(); i++)
@@ -267,9 +273,11 @@ void FTM_Manager::debugDisplayRMid(vector<FTM_Rule*> vector)
 
 void FTM_Manager::run()
 {
+	ros::Rate loop_rate(freq_);
+
 	ros::Duration(delayBeforeStart_).sleep();
 
-	ros::Rate loop_rate(freq_);
+	setDMs();
 
 	while(nh_.ok())
 	{

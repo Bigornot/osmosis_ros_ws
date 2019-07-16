@@ -7,6 +7,11 @@ DM1_ProhibitedArea::DM1_ProhibitedArea() : DetectionModule()
  	state_=false;
 }
 
+void DM1_ProhibitedArea::set()
+{
+	
+}
+
 //compute detection out of zone
 void DM1_ProhibitedArea::detect()
 {

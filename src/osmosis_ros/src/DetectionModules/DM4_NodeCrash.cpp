@@ -13,6 +13,10 @@ DM4_NodeCrash::DM4_NodeCrash() : DetectionModule()
 	nodesToCheck_.push_back("/teleop_node");
 }
 
+void DM4_NodeCrash::set()
+{
+}
+
 void DM4_NodeCrash::detect()
 {
 	int i,j;

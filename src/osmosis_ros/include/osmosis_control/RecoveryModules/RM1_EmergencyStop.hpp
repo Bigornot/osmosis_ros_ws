@@ -27,6 +27,8 @@ private:
 	ros::Publisher pub_;
 	ros::Publisher pub_cmd_;
 	double pollRate_;
+	double delaySend_;
+	ros::Time start_;
 
 public:
 	RM1_EmergencyStop(int id, vector<int> successors);

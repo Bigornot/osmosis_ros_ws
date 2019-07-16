@@ -46,6 +46,7 @@ public:
 	int getPredecessorId();
 	vector<int> getSuccessorsId();
 
+	void setDM();
 	void runDM();
 	bool getStateDM();
 	void runRM();

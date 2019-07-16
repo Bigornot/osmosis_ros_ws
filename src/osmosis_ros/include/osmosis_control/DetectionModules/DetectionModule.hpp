@@ -21,6 +21,7 @@ protected:
 public :
 	DetectionModule();
 	void driveDetectionModule();
+	virtual void set()=0; // Executed when the FTM starts (after startDelay)
 	void run(); //method to lauch the detection node
 	virtual void detect()=0; //method for the condition of the detection
 	bool getState();

@@ -6,6 +6,8 @@ RM2_ControlledStop::RM2_ControlledStop(int id, vector<int> successors) : Recover
 	pub_cmd_=nh_.advertise<geometry_msgs::Twist>("/summit_xl_a/robotnik_base_control/cmd_vel", 100);
 	
 	pollRate_ = 100;
+	delaySend_=0.1;
+	start_=ros::Time::now();
 }
 
 void RM2_ControlledStop::startRecovery()
@@ -15,7 +17,8 @@ void RM2_ControlledStop::startRecovery()
 	data.data=true;
 
 	ros::Rate poll_rate(pollRate_);
-	while(pub_order_.getNumSubscribers() == 0)
+	start_=ros::Time::now();
+	while(pub_order_.getNumSubscribers() == 0 && ros::Time::now()-start_<ros::Duration(delaySend_))
 		poll_rate.sleep();
 
 	pub_order_.publish(data);
@@ -36,7 +39,8 @@ void RM2_ControlledStop::doRecovery()
 	cmd.angular.z=0;
 
 	ros::Rate poll_rate(pollRate_);
-	while(pub_cmd_.getNumSubscribers() == 0)
+	start_=ros::Time::now();
+	while(pub_cmd_.getNumSubscribers() == 0 && ros::Time::now()-start_<ros::Duration(delaySend_))
 		poll_rate.sleep();
 
 	pub_cmd_.publish(cmd);

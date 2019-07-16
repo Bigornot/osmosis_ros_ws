@@ -4,6 +4,8 @@ RM5_SwitchToTeleop::RM5_SwitchToTeleop(int id, vector<int> successors) : Recover
 {
 	pub_=nh_.advertise<std_msgs::Bool>("/do_RM5_SwitchToTeleop", 100);
 	pollRate_=100;
+	delaySend_=0.1;
+	start_=ros::Time::now();
 }
 
 void RM5_SwitchToTeleop::startRecovery()
@@ -12,7 +14,8 @@ void RM5_SwitchToTeleop::startRecovery()
 	data.data=true;
 
 	ros::Rate poll_rate(pollRate_);
-	while(pub_.getNumSubscribers() == 0)
+	start_=ros::Time::now();
+	while(pub_.getNumSubscribers() == 0 && ros::Time::now()-start_<ros::Duration(delaySend_))
 		poll_rate.sleep();
 
 	pub_.publish(data);

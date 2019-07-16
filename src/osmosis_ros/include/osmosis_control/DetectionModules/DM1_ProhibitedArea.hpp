@@ -29,6 +29,7 @@ private:
 
 public:
 	DM1_ProhibitedArea();
+	void set();
 	void detect();
 	void DM1_ProhibitedAreaCallback(const std_msgs::Bool & state);
 };

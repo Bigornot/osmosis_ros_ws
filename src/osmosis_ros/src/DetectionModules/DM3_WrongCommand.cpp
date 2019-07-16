@@ -10,6 +10,10 @@ DM3_WrongCommand::DM3_WrongCommand()
 	cmd_angular_z_min_=-50;
 }
 
+void DM3_WrongCommand::set()
+{
+}
+
 void DM3_WrongCommand::detect()
 {
 	if (cmd_.linear.x > cmd_linear_x_max_ || cmd_.angular.z > cmd_angular_z_max_ || cmd_.linear.x < cmd_linear_x_min_ || cmd_.angular.z < cmd_angular_z_min_)

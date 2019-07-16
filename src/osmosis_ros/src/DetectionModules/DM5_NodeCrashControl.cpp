@@ -9,6 +9,10 @@ DM5_NodeCrashControl::DM5_NodeCrashControl() : DetectionModule()
 	nodesToCheck_.push_back("/osmosis_control_node");
 }
 
+void DM5_NodeCrashControl::set()
+{
+}
+
 void DM5_NodeCrashControl::detect()
 {
 	int i,j;
