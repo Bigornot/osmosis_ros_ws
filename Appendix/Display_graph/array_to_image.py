@@ -36,7 +36,10 @@ del LN2[-1]
 file.close()
 
 for i in range(len(LX)):
-	"""Conversion from coordinate to pixels"""
+	"""Conversion from coordinate to pixels
+	You will have to change those formulas if you change the image,
+	as resolution might not be the same. We also used a little arbitrary shift
+	to reach a better precision"""
 	LX[i]=int((float(LX[i])+80)*(828/160)*1.04)
 for i in range(len(LY)):
 	LY[i]=int((80-float(LY[i]))*(740/160)*1.15)
@@ -50,8 +53,8 @@ for i in range(len(LN2)):
 """at this point we have 4 lists to work on:
 LX : [x(node1),x(node2),...](pixels)
 LY : [y(node1),y(node2),...](pixels)
-LN1 : [edge1_starting_node, edge2_starting_node, ... ](pixels)
-LN2 : [edge1_arrival_node, edge2_arrival_node, ... ](pixels)"""
+LN1 : [edge1_starting_node, edge2_starting_node, ... ](id of node)
+LN2 : [edge1_arrival_node, edge2_arrival_node, ... ](id of node)"""
 
 image=mpimg.imread("blagnac.jpg")
 

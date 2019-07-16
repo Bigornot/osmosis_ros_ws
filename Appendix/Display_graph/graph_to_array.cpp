@@ -5,7 +5,9 @@
 #include <vector>
 #include <fstream>
 
-float traiter_ligne_x(std::string line)
+//This works only with the test.graph syntax
+
+float apply_line_x(std::string line)
 {
 	float x=0;
 	int pos_x=line.find('x');
@@ -18,7 +20,7 @@ float traiter_ligne_x(std::string line)
 	return x;
 }
 
-float traiter_ligne_y(std::string line)
+float apply_line_y(std::string line)
 {
 	float y=0;
         int pos_y=line.find('y');
@@ -31,9 +33,9 @@ float traiter_ligne_y(std::string line)
         return y;
 }
 
-int traiter_ligne_noeud1(std::string line)
+int apply_line_node1(std::string line)
 {
-	int n=66;
+	int n=0;
 	int pos_N=line.find('N');
         if (pos_N>=0)
         {
@@ -44,9 +46,9 @@ int traiter_ligne_noeud1(std::string line)
 	return n;
 }
 
-int traiter_ligne_noeud2(std::string line)
+int apply_line_node2(std::string line)
 {
-	int n=7;
+	int n=0;
 	int pos_N=line.find('N',11);
         if (pos_N>=0)
         {
@@ -58,81 +60,80 @@ int traiter_ligne_noeud2(std::string line)
 	return n;
 }
 
-void graphe_vers_liste(std::vector<float> &LX, std::vector<float> &LY,std::vector<int> &LN1,std::vector<int> &LN2)
+void graph_to_list(std::vector<float> &LX, std::vector<float> &LY,std::vector<int> &LN1,std::vector<int> &LN2)
 {
-  std::ifstream fichier("test.graph", std::ios::in);  // on ouvre en lecture
+  std::ifstream file("test.graph", std::ios::in);  // open in read only
 	float x;
 	float y;
 	int n1;
 	int n2;
-	bool noeud=false;
+	bool node=false;
 
-        if(fichier)  // si l'ouverture a fonctionné
+        if(file)
         {
 					int i=1;
-					std::string ligne;
-        	while(getline(fichier, ligne))  // tant que l'on peut mettre la ligne dans "contenu"
+					std::string line;
+        	while(getline(file, line))  // while we can add content
         	{
-						int test=ligne.find("id");
+						int test=line.find("id");
 						if (test>=0)
 						{
-							x=traiter_ligne_x(ligne);
-							y=traiter_ligne_y(ligne);
+							x=apply_line_x(line);
+							y=apply_line_y(line);
 							LX.push_back(x);
 							LY.push_back(y);
 						}
-						if(noeud)
+						if(node)
 						{
-							test=ligne.find('N');
+							test=line.find('N');
 							if (test>=0)
 							{
-								n1=traiter_ligne_noeud1(ligne);
-								n2=traiter_ligne_noeud2(ligne);
+								n1=apply_line_node1(line);
+								n2=apply_line_node2(line);
 								LN1.push_back(n1);
 								LN2.push_back(n2);
 							}
 						}
 
-						int test2=ligne.find("edge");
+						int test2=line.find("edge");
 						if (test2>=0)
-							noeud=true;
+							node=true;
 		       }
-           fichier.close();
+           file.close();
         }
         else
-          std::cerr << "Impossible d'ouvrir le fichier !" << std::endl;
+          std::cerr << "Can't open the file !" << std::endl;
 }
 
 int main()
 {
 	std::vector<float> LX,LY;
 	std::vector<int> LN1,LN2;
-	graphe_vers_liste(LX,LY,LN1,LN2);
+	graph_to_list(LX,LY,LN1,LN2);
 
-  std::ofstream fichier("file.txt", std::ios::out | std::ios::trunc);
-	if (fichier)
+  std::ofstream file("file.txt", std::ios::out | std::ios::trunc);
+	if (file)
 	{
 		for (int i=0; i<LX.size();i++)
 		{
-			fichier<< LX[i]<<" ";
+			file<< LX[i]<<" ";
 		}
-			fichier<<std::endl;
+			file<<std::endl;
 		for (int i=0; i<LY.size();i++)
 		{
-			fichier<<LY[i]<<" ";
+			file<<LY[i]<<" ";
 		}
-			fichier<<std::endl;
+			file<<std::endl;
 		for (int i=0; i<LN1.size();i++)
 		{
-			fichier<< LN1[i]<<" ";
+			file<< LN1[i]<<" ";
 		}
-			fichier<<std::endl;
+			file<<std::endl;
 		for (int i=0; i<LN2.size();i++)
 		{
-			fichier<<LN2[i]<<" ";
+			file<<LN2[i]<<" ";
 		}
-
-		fichier.close();
+		file.close();
 	}
 	return 0;
 }
