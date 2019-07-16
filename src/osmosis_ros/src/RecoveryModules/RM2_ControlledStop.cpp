@@ -1,6 +1,6 @@
 #include <osmosis_control/RecoveryModules/RM2_ControlledStop.hpp>
 
-RM2_ControlledStop::RM2_ControlledStop(int id, vector<int> successors) : RecoveryModule(id, successors) 
+RM2_ControlledStop::RM2_ControlledStop(int id, vector<int> successors, bool managerCanStop) : RecoveryModule(id, successors, managerCanStop) 
 {
 	pub_order_=nh_.advertise<std_msgs::Bool>("/do_RM2_ControlledStop", 100);
 	pub_cmd_=nh_.advertise<geometry_msgs::Twist>("/summit_xl_a/robotnik_base_control/cmd_vel", 100);

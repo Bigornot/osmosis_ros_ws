@@ -29,7 +29,7 @@ private:
 	ros::V_string nodesToCheck_;
 
 public:
-	RM3_RespawnControlNodes(int id, vector<int> successors);
+	RM3_RespawnControlNodes(int id, vector<int> successors, bool managerCanStop);
 	void startRecovery();
 	void doRecovery();
 	void stopRecovery();

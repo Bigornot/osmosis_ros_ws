@@ -30,7 +30,7 @@ private:
 	ros::Time start_;
 
 public:
-	RM5_SwitchToTeleop(int id, vector<int> successors);
+	RM5_SwitchToTeleop(int id, vector<int> successors, bool managerCanStop);
 	void startRecovery();
 	void doRecovery();
 	void stopRecovery();

@@ -27,7 +27,7 @@ private:
 	ros::V_string nodesToCheck_;
 
 public:
-	RM4_RespawnNodes(int id, vector<int> successors);
+	RM4_RespawnNodes(int id, vector<int> successors, bool managerCanStop);
 	void startRecovery();
 	void doRecovery();
 	void stopRecovery();

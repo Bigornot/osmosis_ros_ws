@@ -1,11 +1,12 @@
 #include <osmosis_control/RecoveryModules/RecoveryModule.hpp>
 
-RecoveryModule::RecoveryModule(int id, vector<int> successors)
+RecoveryModule::RecoveryModule(int id, vector<int> successors, bool managerCanStop)
 {
 	driveState_=IDLE;
 	id_=id;
 	successors_=successors;
 	state_=false;
+	managerCanStop_=managerCanStop;
 }
 
 void RecoveryModule::driveRecoveryModule()
@@ -34,6 +35,11 @@ void RecoveryModule::driveRecoveryModule()
 			driveState_=IDLE;
 			break;
 	}
+}
+
+bool RecoveryModule::getManagerCanStop()
+{
+	return managerCanStop_;
 }
 
 bool RecoveryModule::getState()

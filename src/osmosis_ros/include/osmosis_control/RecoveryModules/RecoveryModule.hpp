@@ -16,13 +16,15 @@ private:
 
 	int id_;
 	vector<int> successors_;
+	bool managerCanStop_;
 	
 protected:
 	ros::NodeHandle nh_;
 	bool state_;
 
 public:
-	RecoveryModule(int id, vector<int> successors);
+	RecoveryModule(int id, vector<int> successors, bool managerCanStop);
+	bool getManagerCanStop();
 	bool getState();
 	void run();
 	void start();

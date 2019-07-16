@@ -31,7 +31,7 @@ private:
 	ros::Time start_;
 
 public:
-	RM1_EmergencyStop(int id, vector<int> successors);
+	RM1_EmergencyStop(int id, vector<int> successors, bool managerCanStop);
 	void startRecovery();
 	void doRecovery();
 	void stopRecovery();

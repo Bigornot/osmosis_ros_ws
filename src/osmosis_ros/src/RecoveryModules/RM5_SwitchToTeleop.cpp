@@ -1,6 +1,6 @@
 #include <osmosis_control/RecoveryModules/RM5_SwitchToTeleop.hpp>
 
-RM5_SwitchToTeleop::RM5_SwitchToTeleop(int id, vector<int> successors) : RecoveryModule(id, successors) 
+RM5_SwitchToTeleop::RM5_SwitchToTeleop(int id, vector<int> successors, bool managerCanStop) : RecoveryModule(id, successors, managerCanStop) 
 {
 	pub_=nh_.advertise<std_msgs::Bool>("/do_RM5_SwitchToTeleop", 100);
 	pollRate_=100;

@@ -9,6 +9,11 @@ FTM_Rule::FTM_Rule(int id, int predecessor, vector<int> successors, DetectionMod
 	RM_ = RM;
 }
 
+bool FTM_Rule::getManagerCanStopRM()
+{
+	return RM_->getManagerCanStop();
+}
+
 int FTM_Rule::getPredecessorId()
 {
 	return predecessor_;
