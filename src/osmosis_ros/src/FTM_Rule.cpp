@@ -39,7 +39,7 @@ void FTM_Rule::runDM()
 	DM_->run();
 }
 
-bool FTM_Rule::getStateDM()
+int FTM_Rule::getStateDM()
 {
 	return DM_->getState();
 }
@@ -49,7 +49,7 @@ void FTM_Rule::runRM()
 	RM_->run();
 }
 
-bool FTM_Rule::getStateRM()
+int FTM_Rule::getStateRM()
 {
 	return RM_->getState();
 }

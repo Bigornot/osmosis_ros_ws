@@ -25,7 +25,7 @@ protected:
 public:
 	RecoveryModule(int id, vector<int> successors, bool managerCanStop);
 	bool getManagerCanStop();
-	bool getState();
+	int getState();
 	void run();
 	void start();
 	void stop();
