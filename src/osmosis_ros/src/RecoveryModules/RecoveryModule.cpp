@@ -64,7 +64,6 @@ void RecoveryModule::stop()
 void RecoveryModule::run()
 {
 	driveRecoveryModule();
-	//ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 }
 
 int RecoveryModule::getId()
