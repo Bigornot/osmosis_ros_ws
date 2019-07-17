@@ -64,9 +64,14 @@ void HMI::driveHMI()
 			break;
 
 		case EMERGENCY_STOP:
+			cout << "EMERGENCY STOP" << endl;
 			ordersDone();
 			if(!emergency_stop_)
+			{
+				missionState_=ASKMISSION;
+				pointState_=ASKPOINT;
 				state_=IDLE;
+			}
 			break;
 
 		default:
