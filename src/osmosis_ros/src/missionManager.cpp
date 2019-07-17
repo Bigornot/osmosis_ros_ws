@@ -1,7 +1,7 @@
 //juil2018 J.Guiochet @ LAAS
 #include <osmosis_control/missionManager.hpp>
 
-////////////////////// PRIVATE ////////////////////// 
+////////////////////// PRIVATE //////////////////////
 
 void MissionManager::driveMissionManager()
 {
@@ -20,19 +20,19 @@ void MissionManager::driveMissionManager()
 			else if(hmi_point_)
 			{
 				resetIdle();
-				state_=POINT;	
+				state_=POINT;
 			}
 			break;
 
 		case POINT:
 			switch (pointState_)
 			{
-				case TARGETPOINT:				
+				case TARGETPOINT:
 					ROS_INFO("POINT TARGETPOINT\n");
 					goalKeyboard();
 					pointState_=WAITPOINT;
 					break;
-				
+
 				case WAITPOINT:
 					ROS_INFO("POINT WAITPOINT\n");
 					if(goal_reached_)
@@ -44,7 +44,7 @@ void MissionManager::driveMissionManager()
 					break;
 			}
 			break;
-		
+
 
 		case MISSION:
 			switch (missionState_)
@@ -74,8 +74,8 @@ void MissionManager::driveMissionManager()
 					break;
 			}
 			break;
-			
-		case EMERGENCY_STOP:	
+
+		case EMERGENCY_STOP:
 			ROS_INFO("EMERGENCY_STOP\n");
 			if(!emergency_stop_)
 				state_=IDLE;
@@ -84,7 +84,7 @@ void MissionManager::driveMissionManager()
 		default:
 			ROS_INFO("defaut\n");
 			break;
-				
+
         }
 }
 
@@ -129,9 +129,9 @@ void MissionManager::initMission(string name)
 	int taille=mission_.mission_steps.size();
 	for(i=0;i<taille;i++)
 		mission_.mission_steps.pop_back();
-	
+
 	string filename=ros::package::getPath("osmosis_control");
-	filename.append("/MISSION_" + name + ".miss");
+	filename.append("/Missions/MISSION_" + name + ".miss");
 
 	ifstream fichier(filename, ios::in);
 	string line;
@@ -236,7 +236,7 @@ void MissionManager::endMission()
 }
 
 
-////////////////////// PUBLIC  ////////////////////// 
+////////////////////// PUBLIC  //////////////////////
 
 //! ROS node initialization
 MissionManager::MissionManager()
@@ -307,7 +307,7 @@ void MissionManager::CallbackOrder(const osmosis_control::Hmi_OrderMsg &order)
 }
 
 
-////////////////////// MAIN  ////////////////////// 
+////////////////////// MAIN  //////////////////////
 
 int main(int argc, char** argv)
 {

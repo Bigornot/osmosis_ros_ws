@@ -41,7 +41,7 @@ private:
 	StateTeleop state_;
 	bool button_pressed_;
 	bool pub_on_;
-	
+
 	void joy_on();
 	void joy_off();
 	void driveJoy();

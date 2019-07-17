@@ -1,7 +1,7 @@
 //juil2018 J.Guiochet @ LAAS
 #include <osmosis_control/HMI.hpp>
 
-////////////////////// PRIVATE ////////////////////// 
+////////////////////// PRIVATE //////////////////////
 
 void HMI::driveHMI()
 {
@@ -101,12 +101,12 @@ void HMI::goalKeyboard()
 
 	order_cmd.doMission=false;
 	done_point_=false;
-	
+
 	cout << "Enter a new goal (x,y)" << endl;
 	cout << "x= ";
 	cin >> thegoal.x;
 	cout << "y= ";
-	cin >> thegoal.y;	
+	cin >> thegoal.y;
 	cout << "taxi (0,1)= ";
 	cin >> n;
 	state_and_point_cmd.taxi = n!=0;
@@ -146,7 +146,7 @@ bool HMI::checkMission(string name)
 	cout << "Mission in progress" << endl;
 
 	string filename=ros::package::getPath("osmosis_control");
-	filename.append("/MISSION_" + name + ".miss");
+	filename.append("/Missions/MISSION_" + name + ".miss");
 
 	ifstream fichier(filename, ios::in);
 
@@ -163,7 +163,7 @@ bool HMI::checkMission(string name)
 }
 
 
-////////////////////// PUBLIC ////////////////////// 
+////////////////////// PUBLIC //////////////////////
 
 HMI::HMI()
 {
@@ -201,7 +201,7 @@ void HMI::CallbackEmergencyStop(const std_msgs::Bool &stop)
 	emergency_stop_=stop.data;
 }
 
-////////////////////// MAIN ////////////////////// 
+////////////////////// MAIN //////////////////////
 
 int main(int argc, char** argv)
 {

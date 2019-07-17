@@ -57,9 +57,7 @@ private:
 
 	void ordersDone();
 	char askMode();
-
 	void goalKeyboard();
-
 	bool askMission();
 	bool checkMission(std::string name);
 
