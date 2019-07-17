@@ -47,7 +47,6 @@ private:
 	void driveJoy();
 
 public:
-
 	JoyTeleop();
 	void teleopCallbackJoy(const sensor_msgs::Joy & joy_msg);
 	void run();

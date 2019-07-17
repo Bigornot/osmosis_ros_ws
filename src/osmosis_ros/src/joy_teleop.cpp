@@ -28,19 +28,19 @@ void JoyTeleop::joy_on()
 	joy_teleop_cmd_.is_active=true;
 	button_pressed_=false;
 	pub_on_=true;
-	cout << "Activation de la manette" << endl;
+	cout << "Controller Activation" << endl;
 }
 
 void JoyTeleop::joy_off()
 {
 	joy_teleop_cmd_.is_active=false;
 	button_pressed_=false;
-	cout << "Desactivation de la manette" << endl;
+	cout << "Controller deactivation" << endl;
 }
 
 void JoyTeleop::teleopCallbackJoy(const sensor_msgs::Joy & joy_msg)
 {
-	// detection du front montant
+	// rising edge detection
 	if(joy_msg_.buttons[7]==0 && joy_msg.buttons[7]==1)
 		button_pressed_=true;
 
@@ -92,7 +92,7 @@ JoyTeleop::JoyTeleop()
 
 void JoyTeleop::run()
 {
-	cout << "Si tout se passe bien on peut desormais activer la manette\n";
+	cout << "You should now be able to activate the controller (with 'start')\n";
 
 	ros::Rate loop_rate(freq_);
 	while (nh_.ok())
@@ -104,7 +104,7 @@ void JoyTeleop::run()
 			if(state_==DESACTIVATED)
 				pub_on_=false;
 		}
-		
+
 	 	ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate
 	}

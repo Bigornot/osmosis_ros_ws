@@ -11,18 +11,18 @@ void OsmosisControl::osmosisControlFSM()
 		case WAIT_GOAL:
 			ROS_INFO("WAIT\n");
 			stop();
-			if(new_goal()) 
+			if(new_goal())
 				state_=MOVE_TO_GOAL;
 			break;
 
 		case MOVE_TO_GOAL:
 			ROS_INFO("MOVE\n");
 			ROS_INFO("x: %f  y:%f", robot_pose.x , robot_pose.y );
-			if (new_goal()) 
+			if (new_goal())
 				state_=MOVE_TO_GOAL;
-			else if (is_arrived()) 
+			else if (is_arrived())
 				state_=ARRIVED_GOAL;
-			else 
+			else
 				updateMove();
 			break;
 
@@ -40,7 +40,7 @@ void OsmosisControl::osmosisControlFSM()
 				state_=WAIT_GOAL;
 			break;
 
-		default: 
+		default:
 			break;
 	}
 }
@@ -48,7 +48,6 @@ void OsmosisControl::osmosisControlFSM()
 void OsmosisControl::callbackGoal(const osmosis_control::State_and_PointMsg & thegoal)
 {
 	state_and_target_=thegoal;
-	
 	ROS_INFO("GOAL : x: [%f], y:[%f]",state_and_target_.goal.x,state_and_target_.goal.y);
 }
 
@@ -74,10 +73,8 @@ void OsmosisControl::publish_is_arrived()
 	goal_reach_pub_.publish(a);
 }
 
-//! ROS node initialization
 OsmosisControl::OsmosisControl()
 {
-	freq_=10;
 	//set up the publishers and subscribers
 	cmd_vel_pub_   = nh_.advertise<geometry_msgs::Twist>("cmd_vel_control", 1);
 	goal_reach_pub_= nh_.advertise<std_msgs::Bool>("target_reached", 10);
@@ -89,8 +86,9 @@ OsmosisControl::OsmosisControl()
 	//initialization of attributes
 	state_and_target_.goal.x = old_goal_.x = state_and_target_.goal.y = old_goal_.y=0;
 	state_=WAIT_GOAL;
-
+	freq_=10;
 	emergency_stop_=false;
+
 }
 
 bool OsmosisControl::new_goal()
@@ -110,11 +108,9 @@ bool OsmosisControl::is_arrived()
 	double xPos = robot_pose.x - state_and_target_.goal.x;
 	double yPos = robot_pose.y - state_and_target_.goal.y;
 	bool is_arrived = false;
-	
+
 	if (sqrt( pow(xPos,2) + pow(yPos,2) ) < 0.2)
-	{
 		is_arrived = true;
-	}
 	return is_arrived;
 }
 
@@ -139,15 +135,12 @@ void OsmosisControl::updateMove()
 		double wPos = robot_pose.theta;
 		if ( wPos < 0) wPos += 2 * M_PI;
 		double obs_dist = sqrt(pow(obstacle.x,2) + pow(obstacle.y,2));
-
 		double obsG_x = (xPos) + obs_dist*cos(wPos + obstacle_lw);
 		double obsG_y = (yPos) + obs_dist*sin(wPos + obstacle_lw);
 
 		cout << "Ob_X:" << obsG_x << " Ob_Y" << obsG_y << endl;
-
 		cmd = PF(xPos,yPos,wPos,obsG_x,obsG_y);
 	}
-
 	cmd_=cmd;
 }
 
@@ -159,7 +152,6 @@ bool OsmosisControl::obstacleFromScan(const sensor_msgs::LaserScan& scan)
 	double xmax = numeric_limits<double>::min();
 	double ymin = numeric_limits<double>::max();
 	double ymax = numeric_limits<double>::min();
-
 	double far = obstacle_distance;
 
 	for (int i = 0; i < scan.ranges.size(); i++)
@@ -167,7 +159,7 @@ bool OsmosisControl::obstacleFromScan(const sensor_msgs::LaserScan& scan)
 		//if (scan.ranges[i] < scan.range_min) continue; //avoid use of continue see below
 		if (scan.ranges[i] >= scan.range_min)
 		{
-			if (scan.ranges[i] <= far) 
+			if (scan.ranges[i] <= far)
 			{
 				obs=true;
 
@@ -218,7 +210,7 @@ geometry_msgs::Twist OsmosisControl::PF(double x_p, double y_p,double theta_p, d
 	double dist = sqrt(pow((x_p-obs_dx),2)+pow((y_p-obs_dy),2));
 
 	///////// attractive force
-	if (dist_g <= nu) 
+	if (dist_g <= nu)
 	{
 		Fatt1 = -2*x_p;
 		Fatt2 = -2*y_p;

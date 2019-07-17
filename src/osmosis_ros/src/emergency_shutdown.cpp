@@ -6,8 +6,8 @@ void EmergencyShutdown::driveEmergencyShutdown()
 	string emergency_hit;
 	switch (state_)
 	{
-		case IDLE:
-			cout << "Press Return for emergency stop :";
+		case IDLE://nominal case
+			cout << "Press any caracter for emergency stop :";
 			cin >> emergency_hit;
 			state_=EMERGENCYHIT;
 		break;
@@ -28,10 +28,8 @@ void EmergencyShutdown::driveEmergencyShutdown()
   }
 }
 
-//! ROS node initialization
 EmergencyShutdown::EmergencyShutdown()
 {
-	//set up the publisher for the goal topic
 	emergency_.data=false;
 	emergency_pub_ = nh_.advertise<std_msgs::Bool>("/do_RM1_EmergencyStop", 1);
 	state_=IDLE;
@@ -42,7 +40,7 @@ void EmergencyShutdown::run()
 	ros::Rate loop_rate(10); //using 10 makes the robot oscillating trajectories, TBD check with the PF algo ?
 	while (nh_.ok())
 	{
-		driveEmergencyShutdown();
+		driveEmergencyShutdown();//state machine
 		ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate
 	}
