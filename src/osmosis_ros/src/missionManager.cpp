@@ -6,7 +6,10 @@
 void MissionManager::driveMissionManager()
 {
 	if(emergency_stop_)
+	{
+		abortMission();
 		state_=EMERGENCY_STOP;
+	}
 
 	switch (state_)
 	{
@@ -78,7 +81,11 @@ void MissionManager::driveMissionManager()
 		case EMERGENCY_STOP:
 			ROS_INFO("EMERGENCY_STOP\n");
 			if(!emergency_stop_)
+			{
+				missionState_=INITMISSION;
+				pointState_=WAITPOINT;
 				state_=IDLE;
+			}
 			break;
 
 		default:
@@ -122,6 +129,8 @@ void MissionManager::endPoint()
 void MissionManager::initMission(string name)
 {
 	goal_reached_=false;
+	missionAborted_=false;
+	missionOver_=false;
 
 	cout << "Init mission" << endl;
 
