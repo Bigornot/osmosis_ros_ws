@@ -10,6 +10,8 @@ RM3_RespawnControlNodes::RM3_RespawnControlNodes(int id, vector<int> successors,
 
 void RM3_RespawnControlNodes::startRecovery()
 {
+	cout << "START RM3" << endl;
+
 	bool found=false;
 	string command;
 
@@ -41,6 +43,7 @@ void RM3_RespawnControlNodes::startRecovery()
 
 void RM3_RespawnControlNodes::doRecovery()
 {
+	stop();
 }
 
 void RM3_RespawnControlNodes::stopRecovery()

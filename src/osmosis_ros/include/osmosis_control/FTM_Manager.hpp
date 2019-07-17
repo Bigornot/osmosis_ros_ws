@@ -64,7 +64,6 @@ private :
 	vector<FTM_Rule*> recursiveLowestCommonDominant(vector<FTM_Rule*> recursiveDominant);
 	bool findRM(vector<FTM_Rule*> rules, FTM_Rule* rule);
 	bool findRule(vector<FTM_Rule*> rules, FTM_Rule* rule);
-	void stopFinishedRMs(vector<FTM_Rule*> activated_rules);
 	vector<FTM_Rule*> checkSameRM(vector<FTM_Rule*> Rules);
 
 	FTM_Strategy* strategy_;

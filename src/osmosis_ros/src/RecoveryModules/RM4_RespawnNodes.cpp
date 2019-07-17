@@ -12,6 +12,8 @@ RM4_RespawnNodes::RM4_RespawnNodes(int id, vector<int> successors, bool managerC
 
 void RM4_RespawnNodes::startRecovery()
 {
+	cout << "START RM4" << endl;
+	
 	bool found=false;
 	string command;
 
@@ -43,6 +45,7 @@ void RM4_RespawnNodes::startRecovery()
 
 void RM4_RespawnNodes::doRecovery()
 {
+	stop();
 }
 
 void RM4_RespawnNodes::stopRecovery()

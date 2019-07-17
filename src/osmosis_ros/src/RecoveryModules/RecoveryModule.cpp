@@ -11,9 +11,11 @@ RecoveryModule::RecoveryModule(int id, vector<int> successors, bool managerCanSt
 
 void RecoveryModule::driveRecoveryModule()
 {
+	cout << "ID:" << id_ << " ";
 	switch(driveState_)
 	{
 		case IDLE:
+			cout << "IDLE" << endl;
 			if(state_)
 			{
 				startRecovery();
@@ -22,6 +24,7 @@ void RecoveryModule::driveRecoveryModule()
 			break;
 
 		case ACTIVATED:
+			cout << "ACTIVATED" << endl;
 			if(!state_)
 			{
 				stopRecovery();
@@ -54,6 +57,7 @@ void RecoveryModule::start()
 
 void RecoveryModule::stop()
 {
+	cout << "STOP" << endl;
 	state_=false;
 }
 
