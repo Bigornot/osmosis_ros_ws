@@ -55,20 +55,15 @@ private:
 
 	/////////  Methods   ////////
 	void driveHMI();
-
 	char askMode();
-
 	void goalKeyboard();
-
 	bool askMission();
 	bool checkMission(std::string name);
-
 	void resetDone();
 
 public:
 	HMI();
 	void run();
-
 	void HMICallbackHmiOrder(const osmosis_control::Hmi_DoneMsg &done);
 
 }; // end of class

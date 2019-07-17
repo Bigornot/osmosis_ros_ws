@@ -36,12 +36,11 @@ private:
 	StateTeleop state_;
 	bool button_pressed_;
 	bool pub_on_;
-	
+
 	void joy_on();
 	void joy_off();
 
 public:
-
 	void driveJoy();
 	Joy_teleop();
 	void teleopCallbackJoy(const sensor_msgs::Joy & joy_msg);

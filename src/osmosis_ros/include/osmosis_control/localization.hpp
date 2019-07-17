@@ -32,12 +32,12 @@
 class Localization
 {
 private:
-
     ros::NodeHandle nh_;
     ros::Publisher pose_pub_;
     ros::Subscriber odom_sub_;
     nav_msgs::Odometry odom_;
     geometry_msgs::Pose2D robot_pose;
+
 public:
     void localizationCallbackOdom(const nav_msgs::Odometry::ConstPtr& msg);
     bool run();

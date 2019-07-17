@@ -2,7 +2,7 @@
 #include <osmosis_control/missionManager.hpp>
 
 
-////////////////////// PRIVATE ////////////////////// 
+////////////////////// PRIVATE //////////////////////
 
 void MissionManager::driveMissionManager()
 {
@@ -17,7 +17,7 @@ void MissionManager::driveMissionManager()
 			else if(hmi_point_)
 			{
 				this->resetIdle();
-				state_=POINT;	
+				state_=POINT;
 			}
 			break;
 
@@ -28,7 +28,7 @@ void MissionManager::driveMissionManager()
 					this->goalKeyboard();
 					pointState_=WAITPOINT;
 					break;
-				
+
 				case WAITPOINT:
 					if(goal_reached_)
 					{
@@ -39,7 +39,7 @@ void MissionManager::driveMissionManager()
 					break;
 			}
 			break;
-		
+
 
 		case MISSION:
 			switch (missionState_)
@@ -111,9 +111,9 @@ void MissionManager::initMission(std::string name)
 	int taille=mission_.orders.size();
 	for(i=0;i<taille;i++)
 		mission_.orders.pop_back();
-	
+
 	std::string filename=ros::package::getPath("osmosis_control");
-	filename.append("/MISSION_" + name + ".miss");
+	filename.append("/Missions/MISSION_" + name + ".miss");
 
 	std::ifstream fichier(filename, std::ios::in);
 	std::string line;
@@ -218,7 +218,7 @@ void MissionManager::endMission()
 }
 
 
-////////////////////// PUBLIC  ////////////////////// 
+////////////////////// PUBLIC  //////////////////////
 
 //! ROS node initialization
 MissionManager::MissionManager()
@@ -287,7 +287,7 @@ void MissionManager::MissionManagerCallbackOrder(const osmosis_control::Hmi_Orde
 }
 
 
-////////////////////// MAIN  ////////////////////// 
+////////////////////// MAIN  //////////////////////
 
 int main(int argc, char** argv)
 {

@@ -2,7 +2,7 @@
 #include <osmosis_control/HMI.hpp>
 // test
 
-////////////////////// PRIVATE ////////////////////// 
+////////////////////// PRIVATE //////////////////////
 
 void HMI::driveHMI()
 {
@@ -79,14 +79,14 @@ void HMI::goalKeyboard()
 {
 	orders_cmd_.doMission=false;
 	this->resetDone();
-	
+
 	geometry_msgs::Point thegoal;
 	int n=0;
 	std::cout << "Enter a new goal (x,y)" << std::endl;
 	std::cout << "x= ";
 	std::cin >> thegoal.x;
 	std::cout << "y= ";
-	std::cin >> thegoal.y;	
+	std::cin >> thegoal.y;
 	std::cout << "taxi (0,1)= ";
 	std::cin >> n;
 	state_and_point_cmd_.taxi = n!=0;
@@ -126,7 +126,7 @@ bool HMI::checkMission(std::string name)
 	std::cout << "Mission ok" << std::endl;
 
 	std::string filename=ros::package::getPath("osmosis_control");
-	filename.append("/MISSION_" + name + ".miss");
+	filename.append("/Missions/MISSION_" + name + ".miss");
 
 	std::ifstream fichier(filename, std::ios::in);
 
@@ -149,7 +149,7 @@ void HMI::resetDone()
 }
 
 
-////////////////////// PUBLIC ////////////////////// 
+////////////////////// PUBLIC //////////////////////
 
 //! ROS node initialization
 HMI::HMI()
@@ -180,7 +180,7 @@ void HMI::HMICallbackHmiOrder(const osmosis_control::Hmi_DoneMsg &done)
 }
 
 
-////////////////////// MAIN ////////////////////// 
+////////////////////// MAIN //////////////////////
 
 int main(int argc, char** argv)
 {
