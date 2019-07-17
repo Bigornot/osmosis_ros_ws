@@ -59,8 +59,6 @@ Teleop::Teleop()
 {
 	freq_=10;
 	cmd_teleop_pub_ = nh_.advertise<osmosis_control::TeleopMsg>("/cmd_vel_teleop", 1);
-	//  cmd_joystick_sub_= nh_.subscribe("xxxxjoy", 1, &Teleopxxx::teleopCallbackJoystick, this);
-
 	teleop_cmd_.is_active=false;
 	teleop_cmd_.cmd_vel.linear.x=teleop_cmd_.cmd_vel.linear.y=teleop_cmd_.cmd_vel.angular.z=0;
 	state_=DESACTIVATED;
@@ -79,7 +77,6 @@ void Teleop::run()
 		cout <<".";
 		driveKeyboard();
 		cmd_teleop_pub_.publish(teleop_cmd_);
-		//ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate
 	}
 }
