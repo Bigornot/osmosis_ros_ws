@@ -15,7 +15,7 @@ void RM3_RespawnControlNodes::startRecovery()
 	bool found=false;
 	string command;
 
-	ros::V_string nodesToRespawn;
+	nodesToRespawn_.clear();
 	ros::V_string aliveNodes;
 	ros::master::getNodes(aliveNodes);
 
@@ -29,21 +29,39 @@ void RM3_RespawnControlNodes::startRecovery()
 		}
 
 		if(!found)
-			nodesToRespawn.push_back(nodesToCheck_[i]);
+			nodesToRespawn_.push_back(nodesToCheck_[i]);
 	}
 
 
-	for(int i=0; i<nodesToRespawn.size(); i++)
+	for(int i=0; i<nodesToRespawn_.size(); i++)
 	{
-		nodesToRespawn[i].erase(nodesToRespawn[i].begin());
-		command="xterm -e \"rosrun osmosis_control " + nodesToRespawn[i] + "\" &";
+		nodesToRespawn_[i].erase(nodesToRespawn_[i].begin());
+		command="xterm -e \"rosrun osmosis_control " + nodesToRespawn_[i] + "\" &";
 		system(command.c_str());
 	}
 }
 
 void RM3_RespawnControlNodes::doRecovery()
 {
-	stop();
+	bool respawnDone=true;
+	bool found=false;
+	ros::V_string aliveNodes;
+	ros::master::getNodes(aliveNodes);
+
+	for(int i=0; i<nodesToRespawn_.size(); i++)
+	{
+		for(int j=0; j<aliveNodes.size(); j++)
+		{
+			aliveNodes[j].erase(aliveNodes[j].begin());
+			if(nodesToRespawn_[i]==aliveNodes[j])
+				found=true;
+		}
+		if(!found)
+			respawnDone=false;
+	}
+
+	if(respawnDone)
+		stop();
 }
 
 void RM3_RespawnControlNodes::stopRecovery()

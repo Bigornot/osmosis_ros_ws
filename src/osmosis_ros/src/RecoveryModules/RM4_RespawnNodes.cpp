@@ -6,8 +6,9 @@ RM4_RespawnNodes::RM4_RespawnNodes(int id, vector<int> successors, bool managerC
 	nodesToCheck_.push_back("/safety_pilot_node");
 	nodesToCheck_.push_back("/localization_node");
 	nodesToCheck_.push_back("/joy_teleop_node");
+	nodesToCheck_.push_back("/joy_node");
+	//nodesToCheck_.push_back("/checkProhibitedArea_node");
 	nodesToCheck_.push_back("/emergency_shutdown_node");
-	nodesToCheck_.push_back("/checkProhibitedArea_node");
 }
 
 void RM4_RespawnNodes::startRecovery()
@@ -17,7 +18,7 @@ void RM4_RespawnNodes::startRecovery()
 	bool found=false;
 	string command;
 
-	ros::V_string nodesToRespawn;
+	nodesToRespawn_.clear();
 	ros::V_string aliveNodes;
 	ros::master::getNodes(aliveNodes);
 
@@ -31,21 +32,46 @@ void RM4_RespawnNodes::startRecovery()
 		}
 
 		if(!found)
-			nodesToRespawn.push_back(nodesToCheck_[i]);
+			nodesToRespawn_.push_back(nodesToCheck_[i]);
 	}
 
 
-	for(int i=0; i<nodesToRespawn.size(); i++)
+	for(int i=0; i<nodesToRespawn_.size(); i++)
 	{
-		nodesToRespawn[i].erase(nodesToRespawn[i].begin());
-		command="xterm -e \"rosrun osmosis_control " + nodesToRespawn[i] + "\" &";
+		nodesToRespawn_[i].erase(nodesToRespawn_[i].begin());
+		if(nodesToRespawn_[i]=="joy_node")
+			command="xterm -e \"rosrun joy " + nodesToRespawn_[i] + "\" &";
+		else
+			command="xterm -e \"rosrun osmosis_control " + nodesToRespawn_[i] + "\" &";
 		system(command.c_str());
 	}
 }
 
 void RM4_RespawnNodes::doRecovery()
 {
-	stop();
+	bool respawnDone=true;
+	bool found=false;
+	ros::V_string aliveNodes;
+	ros::master::getNodes(aliveNodes);
+
+	for(int i=0; i<aliveNodes.size(); i++)
+		aliveNodes[i].erase(aliveNodes[i].begin());
+
+	for(int i=0; i<nodesToRespawn_.size(); i++)
+	{
+		cout << "to respawn " << i << " " << nodesToRespawn_[i] << endl;
+		for(int j=0; j<aliveNodes.size(); j++)
+		{
+			cout << aliveNodes[j] << endl;
+			if(nodesToRespawn_[i]==aliveNodes[j])
+				found=true;
+		}
+		if(!found)
+			respawnDone=false;
+	}
+
+	if(respawnDone)
+		stop();
 }
 
 void RM4_RespawnNodes::stopRecovery()

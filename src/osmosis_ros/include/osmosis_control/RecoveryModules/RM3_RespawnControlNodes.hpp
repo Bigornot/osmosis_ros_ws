@@ -27,6 +27,7 @@ class RM3_RespawnControlNodes : public RecoveryModule
 {
 private:
 	ros::V_string nodesToCheck_;
+	ros::V_string nodesToRespawn_;
 
 public:
 	RM3_RespawnControlNodes(int id, vector<int> successors, bool managerCanStop);
