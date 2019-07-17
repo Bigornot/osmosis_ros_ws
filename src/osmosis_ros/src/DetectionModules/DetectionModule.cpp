@@ -29,8 +29,8 @@ void DetectionModule::run()
 	ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 }
 
-bool DetectionModule::getState()
+int DetectionModule::getState()
 {
-	return state_;
+	return driveState_;
 }
 

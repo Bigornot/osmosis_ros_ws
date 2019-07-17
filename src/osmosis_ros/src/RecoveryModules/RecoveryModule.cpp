@@ -11,7 +11,7 @@ RecoveryModule::RecoveryModule(int id, vector<int> successors, bool managerCanSt
 
 void RecoveryModule::driveRecoveryModule()
 {
-	cout << "ID:" << id_ << " ";
+	cout << "ID:" << id_ << " " << state_ << " ";
 	switch(driveState_)
 	{
 		case IDLE:
@@ -45,9 +45,9 @@ bool RecoveryModule::getManagerCanStop()
 	return managerCanStop_;
 }
 
-bool RecoveryModule::getState()
+int RecoveryModule::getState()
 {
-	return state_;
+	return driveState_;
 }
 
 void RecoveryModule::start()

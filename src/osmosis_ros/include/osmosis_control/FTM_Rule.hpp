@@ -49,9 +49,9 @@ public:
 
 	void setDM();
 	void runDM();
-	bool getStateDM();
+	int getStateDM();
 	void runRM();
-	bool getStateRM();
+	int getStateRM();
 
 	void startRM();
 	void stopRM();

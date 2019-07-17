@@ -48,5 +48,4 @@ void RM3_RespawnControlNodes::doRecovery()
 
 void RM3_RespawnControlNodes::stopRecovery()
 {
-	cout << "stop recov" << endl;
 }
