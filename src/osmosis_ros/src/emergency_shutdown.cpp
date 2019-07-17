@@ -20,11 +20,7 @@ void EmergencyShutdown::driveEmergencyShutdown()
 
 		case EMERGENCY:
 			ROS_ERROR("\nEMERGENCY STOP !\n");
-<<<<<<< HEAD
-			cin.get();
-=======
 			cin >> emergency_hit;
->>>>>>> a73e49499c84d6b388fb5febb598793e4c5f2158
 			emergency_.data=false;
 			emergency_pub_.publish(emergency_);
 			state_=IDLE;
