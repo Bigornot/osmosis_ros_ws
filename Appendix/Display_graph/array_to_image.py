@@ -1,39 +1,37 @@
 import matplotlib.image as mpimg
 import numpy as np
+import json
 
-file=open("file.txt","r")
-ligne=[]
+
+
+
+
+
+
+graph=open("test.graph","r")
+data=""
+for l in graph:
+	data=data+l
+
+obj=json.loads(data)
+graph.close()
+
 LX=[]
 LY=[]
 LN1=[]
 LN2=[]
 
-for l in file:
-	ligne.append(l)
+for node in obj["nodes"]:
+	LX.append(node["x"])
+	LY.append(node["y"])
+for edge in obj["edges"]:
+	LN1.append(int(edge[0][1:]))
+	LN2.append(int(edge[1][1:]))
 
-l1=ligne[0]
-l2=ligne[1]
-l3=ligne[2]
-l4=ligne[3]
-
-for el in l1.split(' '):
-	LX.append(el)
-
-for el in l2.split(' '):
-	LY.append(el)
-
-for el in l3.split(' '):
-	LN1.append(el)
-
-for el in l4.split(' '):
-	LN2.append(el)
-
-del LX[-1]
-del LY[-1]
-del LN1[-1]
-del LN2[-1]
-
-file.close()
+print(LX)
+print(LY)
+print(LN1)
+print(LN2)
 
 for i in range(len(LX)):
 	"""Conversion from coordinate to pixels
