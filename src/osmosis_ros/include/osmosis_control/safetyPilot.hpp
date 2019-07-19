@@ -67,8 +67,8 @@ public:
 	void callbackScan(const sensor_msgs::LaserScan & scan_msg);
 	void callbackTeleop(const osmosis_control::TeleopMsg & teleop_msg);
 
-	void driveSafetyPilot();
-	
+	void SafetyPilotFSM();
+
 	void stop();
 
 	//! ROS node topics publishing and subscribing initialization

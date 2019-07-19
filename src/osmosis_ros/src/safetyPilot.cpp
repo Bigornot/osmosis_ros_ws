@@ -1,6 +1,6 @@
 #include <osmosis_control/safetyPilot.hpp>
 
-void SafetyPilot::driveSafetyPilot()
+void SafetyPilot::SafetyPilotFSM()
 {
 	switch(state_)
 	{
@@ -48,7 +48,7 @@ geometry_msgs::Twist SafetyPilot::updateCmdWithLaserScan(geometry_msgs::Twist cm
 			cmd.linear.y = min(0.0, cmd.linear.y);
 		}
 	}
-	else 
+	else
 	{
 		cmd.linear.x = fmin(cmd.linear.x, + max_linear);
 		cmd.linear.y = fmin(cmd.linear.y, + max_linear);
@@ -115,7 +115,7 @@ bool SafetyPilot::run()
 	while (nh_.ok())
 	{
 		//computeCommandCtrlTeleop();
-		driveSafetyPilot();
+		SafetyPilotFSM();
 		cmd_vel_pub_.publish(base_cmd_);
 		ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate

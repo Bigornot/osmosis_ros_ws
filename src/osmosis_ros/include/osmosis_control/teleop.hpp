@@ -36,7 +36,7 @@ private:
 
 
 public:
-	void driveKeyboard();
+	void KeyboardFSM();
 	Teleop();
 	void run();
 

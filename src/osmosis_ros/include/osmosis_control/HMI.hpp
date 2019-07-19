@@ -50,7 +50,7 @@ private:
 	bool done_point_;
 
 	/////////  Methods   ////////
-	void driveHMI();
+	void HMI_FSM();
 
 	void ordersDone();
 	char askMode();

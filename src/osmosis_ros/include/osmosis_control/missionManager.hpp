@@ -67,7 +67,7 @@ private:
 	ros::Duration timeout_;
 
 	/////////  Methods   ////////
-	void driveMissionManager();
+	void MissionManagerFSM();
 
 	void resetIdle();
 	bool isGoalReached();

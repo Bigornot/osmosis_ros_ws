@@ -3,7 +3,7 @@
 
 ////////////////////// PRIVATE //////////////////////
 
-void MissionManager::driveMissionManager()
+void MissionManager::MissionManagerFSM()
 {
 	switch (state_)
 	{
@@ -258,7 +258,7 @@ void MissionManager::run()
 	ros::Rate loop_rate(10); //using 10 makes the robot oscillating trajectories, TBD check with the PF algo ?
 	while (nh_.ok())
 	    {
-		driveMissionManager();
+		MissionManagerFSM();
 	 	ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate
 	    }

@@ -2,7 +2,7 @@
 
 
 //compute drive commands based on keyboard input
-void Teleop::driveKeyboard()
+void Teleop::KeyboardFSM()
 {
 	geometry_msgs::Twist base_cmd;
 	char cmd[50];
@@ -75,7 +75,7 @@ void Teleop::run()
 	while (nh_.ok())
 	{
 		cout <<".";
-		driveKeyboard();
+		KeyboardFSM();
 		cmd_teleop_pub_.publish(teleop_cmd_);
 		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate
 	}
