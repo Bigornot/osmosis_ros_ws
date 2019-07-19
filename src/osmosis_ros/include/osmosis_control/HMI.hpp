@@ -53,7 +53,7 @@ private:
 	bool emergency_stop_;
 
 	/////////  Methods   ////////
-	void driveHMI();
+	void HMI_FSM();
 
 	void ordersDone();
 	char askMode();

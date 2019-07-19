@@ -3,7 +3,7 @@
 
 ////////////////////// PRIVATE //////////////////////
 
-void HMI::driveHMI()
+void HMI::HMI_FSM()
 {
 	if(emergency_stop_)
 		state_=EMERGENCY_STOP;
@@ -189,7 +189,7 @@ void HMI::run()
 	ros::Rate loop_rate(freq_); //using 10 makes the robot oscillating trajectories, TBD check with the PF algo ?
 	while (nh_.ok())
 	{
-		driveHMI();
+		HMI_FSM();
 	 	ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate
 	}

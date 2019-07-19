@@ -44,7 +44,7 @@ private:
 
 	void joy_on();
 	void joy_off();
-	void driveJoy();
+	void JoyFSM();
 
 public:
 	JoyTeleop();

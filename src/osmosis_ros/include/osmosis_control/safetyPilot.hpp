@@ -74,8 +74,8 @@ public:
 	void callbackControlledStop(const std_msgs::Bool &stop);
 	void callbackSwitchToTeleop(const std_msgs::Bool &switchToTeleop);
 
-	void driveSafetyPilot();
-	
+	void SafetyPilotFSM();
+
 	void stop();
 
 	//! ROS node topics publishing and subscribing initialization

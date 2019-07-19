@@ -1,7 +1,7 @@
 #include <osmosis_control/joy_teleop.hpp>
 
 //compute drive commands based on keyboard input
-void JoyTeleop::driveJoy()
+void JoyTeleop::JoyFSM()
 {
 	switch (state_)
 	{
@@ -97,7 +97,7 @@ void JoyTeleop::run()
 	ros::Rate loop_rate(freq_);
 	while (nh_.ok())
 	{
-		driveJoy();
+		JoyFSM();
 		if(pub_on_)
 		{
 			cmd_joy_teleop_pub_.publish(joy_teleop_cmd_);
