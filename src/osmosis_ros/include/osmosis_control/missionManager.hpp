@@ -25,7 +25,6 @@
 #include <ros/package.h>
 #include "std_msgs/Bool.h"
 #include "osmosis_control/Hmi_OrderMsg.h"
-#include "osmosis_control/Hmi_DoneMsg.h"
 
 using namespace std;
 
@@ -66,7 +65,7 @@ private:
 	ros::Time timeStartMission_;
 	ros::Duration timeout_;
 
-	osmosis_control::Hmi_DoneMsg done_;
+	std_msgs::Bool done_;
 
 	/////////  Methods   ////////
 	void MissionManagerFSM();
@@ -77,7 +76,7 @@ private:
 	void goalKeyboard();
 	void endPoint();
 
-        void initMission(string name);
+  void initMission(string name);
 	void parse(string line);
 	bool doMission();
 	bool isMissionOver();
