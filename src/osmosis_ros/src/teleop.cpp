@@ -13,7 +13,7 @@ void Teleop::KeyboardFSM()
 		case DESACTIVATED:
 			if(cmd[0]!='1' && cmd[0]!='+' && cmd[0]!='l' && cmd[0]!='r' && cmd[0]!='.')
 			{
-				cout << "unknown command:" << cmd << "\n";
+				ROS_INFO("unknown command: %s",cmd);
 				//continue;
 			}
 			else if (cmd[0]=='1')
@@ -24,7 +24,12 @@ void Teleop::KeyboardFSM()
 			break;
 
 		case ACTIVATED:
-			//move forward
+			//move forward*
+			if(cmd[0]!='1' && cmd[0]!='+' && cmd[0]!='l' && cmd[0]!='r' && cmd[0]!='.')
+			{
+				ROS_INFO("unknown command: %s",cmd);
+				//continue;
+			}
 			if(cmd[0]=='+') base_cmd.linear.x = 0.25;
 
 			//turn left (yaw) and drive forward at the same time
@@ -67,14 +72,11 @@ Teleop::Teleop()
 
 void Teleop::run()
 {
-	cout << "Type a command and then press enter.  "
-	"Use '1' to activate the telecommand then'+' to move forward, 'l' to turn left, "
-	"'r' to turn right, '.' to exit.\n";
+	ROS_INFO("Type a command and then press enter. Use '1' to activate the telecommand then'+' to move forward, 'l' to turn left, 'r' to turn right, '.' to exit.");
 
 	ros::Rate loop_rate(freq_);
 	while (nh_.ok())
 	{
-		cout <<".";
 		KeyboardFSM();
 		cmd_teleop_pub_.publish(teleop_cmd_);
 		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate
