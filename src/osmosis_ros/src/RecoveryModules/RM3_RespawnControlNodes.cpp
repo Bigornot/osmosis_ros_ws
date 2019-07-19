@@ -6,6 +6,9 @@ RM3_RespawnControlNodes::RM3_RespawnControlNodes(int id, vector<int> successors,
 	nodesToCheck_.push_back("/graph_planner_node");
 	nodesToCheck_.push_back("/osmosis_control_node");
 	nodesToCheck_.push_back("/mission_manager_node");
+
+	n_max_wait_=10;
+	n_=0;
 }
 
 void RM3_RespawnControlNodes::startRecovery()
@@ -14,6 +17,7 @@ void RM3_RespawnControlNodes::startRecovery()
 
 	bool found=false;
 	string command;
+	n_=0;
 
 	nodesToRespawn_.clear();
 	ros::V_string aliveNodes;
@@ -43,6 +47,12 @@ void RM3_RespawnControlNodes::startRecovery()
 
 void RM3_RespawnControlNodes::doRecovery()
 {
+	if(n_>n_max_wait_)
+	{
+		startRecovery();
+		n_=0;
+	}
+
 	bool respawnDone=true;
 	bool found=false;
 	ros::V_string aliveNodes;
@@ -62,6 +72,8 @@ void RM3_RespawnControlNodes::doRecovery()
 
 	if(respawnDone)
 		stop();
+
+	n_++;
 }
 
 void RM3_RespawnControlNodes::stopRecovery()

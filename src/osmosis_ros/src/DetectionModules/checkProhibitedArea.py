@@ -43,7 +43,7 @@ rospack = rospkg.RosPack()
 path = rospack.get_path('osmosis_control')
 path += "/../../Appendix/Display_graph/blagnac_area.jpg"
 image = mpimg.imread(path)
-rospy.init_node('checkArea', anonymous=True)
+rospy.init_node('checkProhibitedArea_node')
 rospy.Subscriber("/pose", Pose2D, poseCallback)
 pub = rospy.Publisher('inProhibitedArea', Bool, queue_size=10)
 

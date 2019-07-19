@@ -26,6 +26,8 @@ class RM4_RespawnNodes : public RecoveryModule
 private:
 	ros::V_string nodesToCheck_;
 	ros::V_string nodesToRespawn_;
+	int n_;
+	int n_max_wait_;
 
 public:
 	RM4_RespawnNodes(int id, vector<int> successors, bool managerCanStop);

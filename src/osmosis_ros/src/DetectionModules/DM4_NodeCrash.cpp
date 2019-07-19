@@ -10,7 +10,7 @@ DM4_NodeCrash::DM4_NodeCrash() : DetectionModule()
 	nodesToCheck_.push_back("/localization_node");
 	nodesToCheck_.push_back("/safety_pilot_node");
 	nodesToCheck_.push_back("/teleop_node");
-	//nodesToCheck_.push_back("/checkProhibitedArea_node");
+	nodesToCheck_.push_back("/checkProhibitedArea_node");
 }
 
 void DM4_NodeCrash::set()

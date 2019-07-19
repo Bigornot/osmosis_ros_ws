@@ -29,6 +29,9 @@ private:
 	ros::V_string nodesToCheck_;
 	ros::V_string nodesToRespawn_;
 
+	int n_;
+	int n_max_wait_;
+
 public:
 	RM3_RespawnControlNodes(int id, vector<int> successors, bool managerCanStop);
 	void startRecovery();

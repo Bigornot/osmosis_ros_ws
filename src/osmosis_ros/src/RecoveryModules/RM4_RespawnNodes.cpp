@@ -7,8 +7,11 @@ RM4_RespawnNodes::RM4_RespawnNodes(int id, vector<int> successors, bool managerC
 	nodesToCheck_.push_back("/localization_node");
 	nodesToCheck_.push_back("/joy_teleop_node");
 	nodesToCheck_.push_back("/joy_node");
-	//nodesToCheck_.push_back("/checkProhibitedArea_node");
+	nodesToCheck_.push_back("/checkProhibitedArea_node");
 	nodesToCheck_.push_back("/emergency_shutdown_node");
+
+	n_=0;
+	n_max_wait_=10;
 }
 
 void RM4_RespawnNodes::startRecovery()
@@ -17,6 +20,7 @@ void RM4_RespawnNodes::startRecovery()
 	
 	bool found=false;
 	string command;
+	n_=0;
 
 	nodesToRespawn_.clear();
 	ros::V_string aliveNodes;
@@ -40,7 +44,9 @@ void RM4_RespawnNodes::startRecovery()
 	{
 		nodesToRespawn_[i].erase(nodesToRespawn_[i].begin());
 		if(nodesToRespawn_[i]=="joy_node")
-			command="xterm -e \"rosrun joy " + nodesToRespawn_[i] + "\" &";
+			command="xterm -e \"rosrun joy joy_node\" &";
+		else if(nodesToRespawn_[i]=="checkProhibitedArea_node")
+			command="xterm -e \"rosrun osmosis_control checkProhibitedArea.py\" &";
 		else
 			command="xterm -e \"rosrun osmosis_control " + nodesToRespawn_[i] + "\" &";
 		system(command.c_str());
@@ -49,6 +55,12 @@ void RM4_RespawnNodes::startRecovery()
 
 void RM4_RespawnNodes::doRecovery()
 {
+	if(n_>n_max_wait_)
+	{
+		startRecovery();
+		n_=0;
+	}
+
 	bool respawnDone=true;
 	bool found=false;
 	ros::V_string aliveNodes;
@@ -72,6 +84,8 @@ void RM4_RespawnNodes::doRecovery()
 
 	if(respawnDone)
 		stop();
+
+	n_++;
 }
 
 void RM4_RespawnNodes::stopRecovery()
