@@ -33,6 +33,9 @@ private:
 
 	DetectionModule* DM_;
 	RecoveryModule* RM_;
+
+	enum RunState{IDLE, ACTIVE, RECOVERY};
+	RunState state_;
 	
 	int id_;
 
@@ -40,6 +43,9 @@ private:
 	vector<int> successors_;
 	
 public:
+	void runState();
+	int getState();
+
 	FTM_Rule(int id, int predecessor, vector<int> successor, DetectionModule* DM, RecoveryModule* RM);
 
 	int getId();

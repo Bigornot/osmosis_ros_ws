@@ -222,7 +222,8 @@ vector<FTM_Rule*> FTM_Manager::getTriggeredFTM()
 
 	for(int i=0; i<FTM_rules_.size(); i++)
 	{
-		if(FTM_rules_[i]->getStateDM() && !findRule(Triggered_rules_, FTM_rules_[i]))
+		// If the rule is ACTIVE or in RECOVERY
+		if(FTM_rules_[i]->getState())
 		{
 			Triggered_rules_.push_back(FTM_rules_[i]);
 		}
@@ -252,6 +253,12 @@ void FTM_Manager::debugDisplayRMid(vector<FTM_Rule*> vector)
 	cout<<endl;
 }
 
+void FTM_Manager::runRules()
+{
+	for(int i=0; i<FTM_rules_.size(); i++)
+		FTM_rules_[i]->runState();
+}
+
 void FTM_Manager::run()
 {
 	ros::Rate loop_rate(freq_);
@@ -263,8 +270,10 @@ void FTM_Manager::run()
 	while(nh_.ok())
 	{
 		runDMs();
+		runRules();
 		strategy_->execute(this);
 		runRMs();
+
 		ros::spinOnce();
 		loop_rate.sleep();
 	}

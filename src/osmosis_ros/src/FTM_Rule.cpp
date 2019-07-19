@@ -1,5 +1,38 @@
 #include <osmosis_control/FTM_Rule.hpp>
 
+void FTM_Rule::runState()
+{
+	switch(state_)
+	{
+		case IDLE:
+			if(getStateRM())
+				state_=RECOVERY;
+			else if(getStateDM())
+				state_=ACTIVE;
+			break;
+		case ACTIVE:
+			if(getStateRM())
+				state_=RECOVERY;
+			else if(!getStateDM())
+				state_=IDLE;
+			break;
+		case RECOVERY:
+			if(!getStateRM())
+			{
+				if(getStateDM())
+					state_=ACTIVE;
+				else
+					state_=IDLE;
+			}
+			break;
+	}
+}
+
+int FTM_Rule::getState()
+{
+	return state_;
+}
+
 FTM_Rule::FTM_Rule(int id, int predecessor, vector<int> successors, DetectionModule* DM, RecoveryModule* RM)
 {
 	id_=id;
@@ -7,6 +40,7 @@ FTM_Rule::FTM_Rule(int id, int predecessor, vector<int> successors, DetectionMod
 	successors_=successors;
 	DM_ = DM;
 	RM_ = RM;
+	state_=IDLE;
 }
 
 bool FTM_Rule::getManagerCanStopRM()
