@@ -36,10 +36,9 @@ private:
 	ros::NodeHandle nh_;
 	double freq_;
 	ros::Publisher orders_pub_;
-	ros::Subscriber emergency_stop_sub_;
 	ros::Subscriber done_sub_;
 
-	enum StateDriveHMI{IDLE,POINT,MISSION, EMERGENCY_STOP};
+	enum StateDriveHMI{IDLE,POINT,MISSION};
 	StateDriveHMI state_;
 	enum StateMission {ASKMISSION,WAITMISSION};
 	StateMission missionState_;
@@ -49,8 +48,6 @@ private:
 	bool goal_reached_;
 	bool done_mission_;
 	bool done_point_;
-
-	bool emergency_stop_;
 
 	/////////  Methods   ////////
 	void driveHMI();
@@ -66,8 +63,6 @@ public:
 	void run();
 
 	void CallbackOrderDone(const osmosis_control::Hmi_DoneMsg &done);
-	void CallbackEmergencyStop(const std_msgs::Bool &stop);
-
-}; // end of class
+};
 
 #endif

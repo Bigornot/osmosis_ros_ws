@@ -5,12 +5,6 @@
 
 void MissionManager::driveMissionManager()
 {
-	if(emergency_stop_)
-	{
-		abortMission();
-		state_=EMERGENCY_STOP;
-	}
-
 	switch (state_)
 	{
 		case IDLE:
@@ -75,16 +69,6 @@ void MissionManager::driveMissionManager()
 						state_=IDLE;
 					}
 					break;
-			}
-			break;
-
-		case EMERGENCY_STOP:
-			ROS_INFO("EMERGENCY_STOP\n");
-			if(!emergency_stop_)
-			{
-				missionState_=INITMISSION;
-				pointState_=WAITPOINT;
-				state_=IDLE;
 			}
 			break;
 
@@ -254,10 +238,8 @@ MissionManager::MissionManager()
 	goal_pub_ = nh_.advertise<osmosis_control::State_and_PointMsg>("goal", 1);
 	hmi_done_pub_ = nh_.advertise<osmosis_control::Hmi_DoneMsg>("hmi_done", 1);
 	goal_reached_sub_ = nh_.subscribe("/goal_reached", 1, &MissionManager::CallbackGoalReached, this);
-	emergency_stop_sub_ = nh_.subscribe("/do_RM1_EmergencyStop", 1, &MissionManager::CallbackEmergencyStop, this);
 	hmi_order_sub_ = nh_.subscribe("/order", 1, &MissionManager::CallbackOrder, this);
 
-	emergency_stop_=false;
 	goal_reached_=false;
 	state_=IDLE;
 	missionState_=INITMISSION;
@@ -285,13 +267,6 @@ void MissionManager::run()
 void MissionManager::CallbackGoalReached(const std_msgs::Bool &goal_reached)
 {
 	goal_reached_=goal_reached.data;
-}
-
-void MissionManager::CallbackEmergencyStop(const std_msgs::Bool &stop)
-{
-	missionAborted_=true;
-	missionOver_=true;
-	emergency_stop_=stop.data;
 }
 
 void MissionManager::CallbackOrder(const osmosis_control::Hmi_OrderMsg &order)

@@ -5,9 +5,6 @@
 
 void HMI::driveHMI()
 {
-	if(emergency_stop_)
-		state_=EMERGENCY_STOP;
-
 	switch (state_)
 	{
 		case IDLE:
@@ -60,17 +57,6 @@ void HMI::driveHMI()
 						state_=IDLE;
 					}
 					break;
-			}
-			break;
-
-		case EMERGENCY_STOP:
-			cout << "EMERGENCY STOP" << endl;
-			ordersDone();
-			if(!emergency_stop_)
-			{
-				missionState_=ASKMISSION;
-				pointState_=ASKPOINT;
-				state_=IDLE;
 			}
 			break;
 
@@ -175,13 +161,11 @@ HMI::HMI()
 	freq_=10;
 	orders_pub_ = nh_.advertise<osmosis_control::Hmi_OrderMsg>("order", 1);
 	done_sub_ = nh_.subscribe("/hmi_done", 1, &HMI::CallbackOrderDone, this);
-	emergency_stop_sub_ = nh_.subscribe("/do_RM1_EmergencyStop", 1, &HMI::CallbackEmergencyStop, this);
 	state_=IDLE;
 	pointState_=ASKPOINT;
 	missionState_=ASKMISSION;
 	done_point_=true;
 	done_mission_=true;
-	emergency_stop_=false;
 }
 
 void HMI::run()
@@ -199,11 +183,6 @@ void HMI::CallbackOrderDone(const osmosis_control::Hmi_DoneMsg &done)
 {
 	done_point_=done.point;
 	done_mission_=done.mission;
-}
-
-void HMI::CallbackEmergencyStop(const std_msgs::Bool &stop)
-{
-	emergency_stop_=stop.data;
 }
 
 ////////////////////// MAIN //////////////////////

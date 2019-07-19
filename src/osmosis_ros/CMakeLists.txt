@@ -160,12 +160,12 @@ add_executable(teleop_node src/teleop.cpp)
 add_executable(graph_planner_node src/graphPlanner.cpp src/graph.cpp)
 add_executable(mission_manager_node src/missionManager.cpp)
 add_executable(joy_teleop_node src/joy_teleop.cpp)
-add_executable(emergency_shutdown_node src/emergency_shutdown.cpp)
 add_executable(HMI_node src/HMI.cpp)
 
 
 add_dependencies(osmosis_control_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(safety_pilot_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(localization_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(teleop_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(graph_planner_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(mission_manager_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
@@ -191,11 +191,10 @@ target_link_libraries(teleop_node ${catkin_LIBRARIES})
 target_link_libraries(graph_planner_node ${catkin_LIBRARIES} -ljsoncpp)
 target_link_libraries(mission_manager_node ${catkin_LIBRARIES})
 target_link_libraries(joy_teleop_node ${catkin_LIBRARIES})
-target_link_libraries(emergency_shutdown_node ${catkin_LIBRARIES})
 target_link_libraries(HMI_node ${catkin_LIBRARIES})
 
 
- #target_link_libraries(json  ${catkin_LIBRARIES}  ${JSONCPP_LIBRARIES})
+#target_link_libraries(json  ${catkin_LIBRARIES}  ${JSONCPP_LIBRARIES})
 #############
 ## Install ##
 #############

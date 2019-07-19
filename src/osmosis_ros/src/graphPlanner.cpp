@@ -2,12 +2,6 @@
 
 void GraphPlanner::graphPlannerFSM()
 {
-	if(emergency_stop_)
-	{
-		done();
-		state_=emergency_stop;
-	}
-
 	switch (state_)
 	{
 		case wait_goal:
@@ -58,14 +52,7 @@ void GraphPlanner::graphPlannerFSM()
 			state_=wait_goal;
 			break;
 
-		case emergency_stop:
-			ROS_INFO("EMERGENCY STOP\n");
-			if(!emergency_stop_)
-				state_=wait_goal;
-			break;
-
-		default : state_=wait_goal;
-
+		default : break;
 	}
 }
 
@@ -80,11 +67,9 @@ GraphPlanner::GraphPlanner()
 	goal_sub_=nh_.subscribe("/goal", 1, &GraphPlanner::callbackGoal, this);
 	odom_sub_=nh_.subscribe("/pose", 1, &GraphPlanner::callbackPose, this);
 	target_reached_sub_=nh_.subscribe("/target_reached", 1, &GraphPlanner::callbackTargetReached, this);
-	emergency_stop_sub_=nh_.subscribe("/do_RM1_EmergencyStop", 1, &GraphPlanner::callbackEmergencyStop, this);
 	state_=wait_goal;
 	_new_goal=false;
 	target_reached_=false;
-	emergency_stop_=false;
 }
 
 void GraphPlanner::callbackTargetReached(const std_msgs::Bool & target_reached)
@@ -113,11 +98,6 @@ void GraphPlanner::callbackPose(const geometry_msgs::Pose2D & msg)
 	current.x = msg.x;
 	current.y = msg.y;
 	//ROS_INFO("NEW POS : x: [%f], y:[%f]",current.x,current.y);
-}
-
-void GraphPlanner::callbackEmergencyStop(const std_msgs::Bool &stop)
-{
-	emergency_stop_=stop.data;
 }
 
 //from MAUVE

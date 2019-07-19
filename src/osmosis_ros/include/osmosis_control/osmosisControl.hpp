@@ -46,7 +46,6 @@ private:
 	ros::Publisher cmd_vel_pub_;
 	ros::Publisher goal_reach_pub_;
 
-	ros::Subscriber emergency_stop_sub_;
 	ros::Subscriber odom_sub_;
 	ros::Subscriber scan_sub_;
 	ros::Subscriber goal_sub_;
@@ -61,17 +60,14 @@ private:
 	sensor_msgs::LaserScan scan_;
 	nav_msgs::Odometry odom_;
 
-	enum State {WAIT_GOAL, MOVE_TO_GOAL, ARRIVED_GOAL, EMERGENCY_STOP};
+	enum State {WAIT_GOAL, MOVE_TO_GOAL, ARRIVED_GOAL};
 	State state_;
-
-	bool emergency_stop_;
 
 public:
 
 	void callbackGoal(const osmosis_control::State_and_PointMsg & thegoal);
 	void callbackScan(const sensor_msgs::LaserScan & thescan);
 	void callbackPose(const geometry_msgs::Pose2D & msg);
-	void callbackEmergencyStop(const std_msgs::Bool &stop);
 	void publish_is_arrived();
 
 	//! ROS node initialization

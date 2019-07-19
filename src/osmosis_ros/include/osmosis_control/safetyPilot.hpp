@@ -48,12 +48,8 @@ private:
 	ros::Subscriber controlled_stop_sub_;
 	ros::Subscriber switch_to_teleop_sub_;
 
-	enum State{COMPUTE_CMD, EMERGENCY_STOP, CONTROLLED_STOP, SWITCH_TO_TELEOP};
+	enum State{COMPUTE_CMD};
 	State state_;
-
-	bool emergency_stop_;
-	bool controlled_stop_;
-	bool switch_to_teleop_;
 
 	geometry_msgs::Twist base_cmd_ctrl_;
 	geometry_msgs::Twist base_cmd_;
@@ -70,9 +66,6 @@ public:
 	void callbackCmdVelCtrl(const geometry_msgs::Twist & cmd_msg);
 	void callbackScan(const sensor_msgs::LaserScan & scan_msg);
 	void callbackTeleop(const osmosis_control::TeleopMsg & teleop_msg);
-	void callbackEmergencyStop(const std_msgs::Bool &stop);
-	void callbackControlledStop(const std_msgs::Bool &stop);
-	void callbackSwitchToTeleop(const std_msgs::Bool &switchToTeleop);
 
 	void driveSafetyPilot();
 	
