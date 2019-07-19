@@ -48,17 +48,15 @@ geometry_msgs::Twist SafetyPilot::updateCmdWithLaserScan(geometry_msgs::Twist cm
 			cmd.linear.y = min(0.0, cmd.linear.y);
 		}
 	}
-	else
-	{
-		cmd.linear.x = fmin(cmd.linear.x, + max_linear);
-		cmd.linear.y = fmin(cmd.linear.y, + max_linear);
-		cmd.linear.x = fmax(cmd.linear.x, - max_linear);
-		cmd.linear.y = fmax(cmd.linear.y, - max_linear);
-		cmd.angular.x = fmin(cmd.angular.x, + max_angular);
-		cmd.angular.y = fmin(cmd.angular.y, + max_angular);
-		cmd.angular.x = fmax(cmd.angular.x, - max_angular);
-		cmd.angular.y = fmax(cmd.angular.y, - max_angular);
-	}
+
+	cmd.linear.x = fmin(cmd.linear.x, + max_linear);
+	cmd.linear.y = fmin(cmd.linear.y, + max_linear);
+	cmd.linear.x = fmax(cmd.linear.x, - max_linear);
+	cmd.linear.y = fmax(cmd.linear.y, - max_linear);
+	cmd.angular.x = fmin(cmd.angular.x, + max_angular);
+	cmd.angular.y = fmin(cmd.angular.y, + max_angular);
+	cmd.angular.x = fmax(cmd.angular.x, - max_angular);
+	cmd.angular.y = fmax(cmd.angular.y, - max_angular);
 
 	return cmd;
 }
