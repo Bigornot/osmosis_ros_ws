@@ -2,13 +2,7 @@ import matplotlib.image as mpimg
 import numpy as np
 import json
 
-
-
-
-
-
-
-graph=open("test.graph","r")
+graph=open("../../ressources/blagnac.graph","r")
 data=""
 for l in graph:
 	data=data+l
@@ -28,16 +22,11 @@ for edge in obj["edges"]:
 	LN1.append(int(edge[0][1:]))
 	LN2.append(int(edge[1][1:]))
 
-print(LX)
-print(LY)
-print(LN1)
-print(LN2)
-
 for i in range(len(LX)):
 	"""Conversion from coordinate to pixels
 	You will have to change those formulas if you change the image,
 	as resolution might not be the same. We also used a little arbitrary shift
-	to reach a better precision"""
+	to reach a better precision on the blagnac image"""
 	LX[i]=int((float(LX[i])+80)*(828/160)*1.04)
 for i in range(len(LY)):
 	LY[i]=int((80-float(LY[i]))*(740/160)*1.15)
@@ -55,15 +44,14 @@ LN1 : [edge1_starting_node, edge2_starting_node, ... ](id of node)
 LN2 : [edge1_arrival_node, edge2_arrival_node, ... ](id of node)"""
 
 
-"""Dans un premier temps on affiche le graphe sur l image"""
-
-image=mpimg.imread("blagnac.jpg")
+#Then we draw the graph on the image
+image=mpimg.imread("../../ressources/blagnac.jpg")
 
 #let's place the nodes on the image
 for i in range(len(LX)):
-	for taillex in range(10):
-		for tailley in range(10):
-			image[LY[i]-5+taillex][LX[i]-5+tailley]=(0, 0, 0)
+	for sizex in range(10):
+		for sizey in range(10):
+			image[LY[i]-5+sizex][LX[i]-5+sizey]=(0, 0, 0)
 
 #and let's trace the edges
 for i in range(len(LN1)):
@@ -77,13 +65,14 @@ for i in range(len(LN1)):
 
 	b=-a*LX[LN1[i]]+LY[LN1[i]]
 	X=range(abs(LX[LN2[i]]-LX[LN1[i]]))
-
+	
 	for x in X:
 		y=int(a*(x+min(LX[LN1[i]],LX[LN2[i]]))+b)
 		image[y][x+min(LX[LN1[i]],LX[LN2[i]])]=(0, 0, 0)
+
 	Y=range(abs(LY[LN2[i]]-LY[LN1[i]]))
 	for y in Y:
-			x=int((y+min(LY[LN1[i]],LY[LN2[i]]) - b)/a  )
-			image[y+min(LY[LN1[i]],LY[LN2[i]])][x]=(0, 0, 0)
+		x=int((y+min(LY[LN1[i]],LY[LN2[i]]) - b)/a  )
+		image[y+min(LY[LN1[i]],LY[LN2[i]])][x]=(0, 0, 0)
 
-mpimg.imsave("blagnac_graph.jpg",image)
+mpimg.imsave("../osmosis_simulation/models/blagnac.jpg",image)
