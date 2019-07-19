@@ -31,7 +31,7 @@ using namespace std;
 const double stop_distance = 0.8;
 const double stop_lateral_distance = 0.3;
 const double  max_linear = 1.0;
-const double max_angular = 0.4;
+const double max_angular = 2;
 
 class SafetyPilot
 {
