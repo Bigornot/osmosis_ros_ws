@@ -65,6 +65,8 @@ private:
 	ros::Time timeStartMission_;
 	ros::Duration timeout_;
 
+	osmosis_control::Hmi_DoneMsg done_;
+
 	/////////  Methods   ////////
 	void MissionManagerFSM();
 
@@ -76,11 +78,14 @@ private:
 
   void initMission(string name);
 	void parse(string line);
-	void doMission();
+	bool doMission();
 	bool isMissionOver();
-	void sendNextOrder();
+	void nextOrder();
 	void abortMission();
 	void endMission();
+
+	void publishMissionGoal();
+	void publishDone();
 
 public:
 	MissionManager();

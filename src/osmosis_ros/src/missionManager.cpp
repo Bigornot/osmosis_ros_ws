@@ -27,6 +27,7 @@ void MissionManager::MissionManagerFSM()
 				case TARGETPOINT:
 					ROS_INFO("POINT TARGETPOINT\n");
 					goalKeyboard();
+					publishMissionGoal();
 					pointState_=WAITPOINT;
 					break;
 
@@ -35,6 +36,7 @@ void MissionManager::MissionManagerFSM()
 					if(goal_reached_)
 					{
 						endPoint();
+						publishDone();
 						pointState_=TARGETPOINT;
 						state_=IDLE;
 					}
@@ -49,15 +51,19 @@ void MissionManager::MissionManagerFSM()
 				case INITMISSION:
 					ROS_INFO("MISSION INITMISSION\n");
 					initMission(mission_name_);
+					publishMissionGoal();
 					missionState_=EXECUTEMISSION;
 					break;
 
 				case EXECUTEMISSION:
 					ROS_INFO("MISSION EXECUTEMISSION\n");
-					doMission();
+					if(doMission())
+						publishMissionGoal();
+
 					if(missionAborted_)
 					{
 						abortMission();
+						publishDone();
 						missionState_=INITMISSION;
 						state_=IDLE;
 					}
@@ -65,6 +71,7 @@ void MissionManager::MissionManagerFSM()
 					else if(missionOver_)
 					{
 						endMission();
+						publishDone();
 						missionState_=INITMISSION;
 						state_=IDLE;
 					}
@@ -93,10 +100,14 @@ bool MissionManager::isGoalReached()
 void MissionManager::goalKeyboard()
 {
 	goal_reached_=false;
+
 	ROS_INFO("x= %f",state_and_point_cmd_.goal.x);
 	ROS_INFO("y= %f",state_and_point_cmd_.goal.y);
 	ROS_INFO("taxi= %d",state_and_point_cmd_.taxi);
+}
 
+void MissionManager::publishMissionGoal()
+{
 	goal_pub_.publish(state_and_point_cmd_);
 }
 
@@ -105,6 +116,11 @@ void MissionManager::endPoint()
 	std_msgs::Bool done;
 	done.data=true;
 	hmi_done_pub_.publish(done);
+}
+
+void MissionManager::publishDone()
+{
+	hmi_done_pub_.publish(done_);
 }
 
 void MissionManager::initMission(string name)
@@ -142,7 +158,6 @@ void MissionManager::initMission(string name)
 	missionOver_=false;
 	mission_.step=0;
 	state_and_point_cmd_=mission_.mission_steps[mission_.step];
-	goal_pub_.publish(state_and_point_cmd_);
 }
 
 void MissionManager::parse(string line)
@@ -167,8 +182,10 @@ void MissionManager::parse(string line)
 	}
 }
 
-void MissionManager::doMission()
+bool MissionManager::doMission()
 {
+	bool next=false;
+
 	if(ros::Time::now()-timeStartMission_>timeout_)
 	{
 		missionAborted_=true;
@@ -183,8 +200,13 @@ void MissionManager::doMission()
 			missionOver_=true;
 		}
 		else
-			sendNextOrder();
+		{
+			next=true;
+			nextOrder();
+		}
 	}
+
+	return next;
 }
 
 bool MissionManager::isMissionOver()
@@ -197,11 +219,10 @@ bool MissionManager::isMissionOver()
 	return over;
 }
 
-void MissionManager::sendNextOrder()
+void MissionManager::nextOrder()
 {
 	goal_reached_=false;
 	state_and_point_cmd_=mission_.mission_steps[mission_.step];
-	goal_pub_.publish(state_and_point_cmd_);
 }
 
 void MissionManager::abortMission()
@@ -211,16 +232,13 @@ void MissionManager::abortMission()
 
 	std_msgs::Bool done;
 	done.data=false;
-	hmi_done_pub_.publish(done);
 }
 
 void MissionManager::endMission()
 {
 	std_msgs::Bool done;
 	done.data=true;
-	hmi_done_pub_.publish(done);
 }
-
 
 ////////////////////// PUBLIC  //////////////////////
 

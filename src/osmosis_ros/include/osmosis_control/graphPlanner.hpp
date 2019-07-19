@@ -44,8 +44,8 @@ public:
 	bool plan_computed();
 	bool is_arrived();
 	bool plan_done();
-	void done();
-	void send_target();
+	void publishDone();
+	void publishSendTarget();
 	void graphPlannerFSM();
 
 	void callbackGoal(const osmosis_control::State_and_PointMsg & thegoal);
