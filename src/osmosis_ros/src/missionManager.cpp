@@ -113,9 +113,7 @@ void MissionManager::publishMissionGoal()
 
 void MissionManager::endPoint()
 {
-	std_msgs::Bool done;
-	done.data=true;
-	hmi_done_pub_.publish(done);
+	done_.data=true;
 }
 
 void MissionManager::publishDone()
@@ -230,14 +228,12 @@ void MissionManager::abortMission()
 	missionAborted_=false;
 	missionOver_=true;
 
-	std_msgs::Bool done;
-	done.data=false;
+	done_.data=false;
 }
 
 void MissionManager::endMission()
 {
-	std_msgs::Bool done;
-	done.data=true;
+	done_.data=true;
 }
 
 ////////////////////// PUBLIC  //////////////////////
