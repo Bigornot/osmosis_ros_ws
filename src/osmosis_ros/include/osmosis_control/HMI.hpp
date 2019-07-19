@@ -25,7 +25,6 @@
 #include "std_msgs/Bool.h"
 #include "osmosis_control/State_and_PointMsg.h"
 #include "osmosis_control/Hmi_OrderMsg.h"
-#include "osmosis_control/Hmi_DoneMsg.h"
 
 using namespace std;
 
@@ -46,8 +45,7 @@ private:
 	StatePoint pointState_;
 
 	bool goal_reached_;
-	bool done_mission_;
-	bool done_point_;
+	bool mission_done_;
 
 	/////////  Methods   ////////
 	void HMI_FSM();
@@ -62,7 +60,7 @@ public:
 	HMI();
 	void run();
 
-	void CallbackOrderDone(const osmosis_control::Hmi_DoneMsg &done);
+	void CallbackOrderDone(const std_msgs::Bool &done);
 };
 
 #endif

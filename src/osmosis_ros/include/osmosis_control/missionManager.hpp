@@ -25,7 +25,6 @@
 #include <ros/package.h>
 #include "std_msgs/Bool.h"
 #include "osmosis_control/Hmi_OrderMsg.h"
-#include "osmosis_control/Hmi_DoneMsg.h"
 
 using namespace std;
 
@@ -75,7 +74,7 @@ private:
 	void goalKeyboard();
 	void endPoint();
 
-        void initMission(string name);
+  void initMission(string name);
 	void parse(string line);
 	void doMission();
 	bool isMissionOver();

@@ -102,9 +102,8 @@ void MissionManager::goalKeyboard()
 
 void MissionManager::endPoint()
 {
-	osmosis_control::Hmi_DoneMsg done;
-	done.mission=false;
-	done.point=true;
+	std_msgs::Bool done;
+	done.data=true;
 	hmi_done_pub_.publish(done);
 }
 
@@ -210,17 +209,15 @@ void MissionManager::abortMission()
 	missionAborted_=false;
 	missionOver_=true;
 
-	osmosis_control::Hmi_DoneMsg done;
-	done.mission=true;
-	done.point=false;
+	std_msgs::Bool done;
+	done.data=false;
 	hmi_done_pub_.publish(done);
 }
 
 void MissionManager::endMission()
 {
-	osmosis_control::Hmi_DoneMsg done;
-	done.mission=true;
-	done.point=false;
+	std_msgs::Bool done;
+	done.data=true;
 	hmi_done_pub_.publish(done);
 }
 
@@ -232,7 +229,7 @@ MissionManager::MissionManager()
 {
 	//set up the publisher for the goal topic
 	goal_pub_ = nh_.advertise<osmosis_control::State_and_PointMsg>("goal", 1);
-	hmi_done_pub_ = nh_.advertise<osmosis_control::Hmi_DoneMsg>("hmi_done", 1);
+	hmi_done_pub_ = nh_.advertise<std_msgs::Bool>("hmi_done", 1);
 	goal_reached_sub_ = nh_.subscribe("/goal_reached", 1, &MissionManager::CallbackGoalReached, this);
 	hmi_order_sub_ = nh_.subscribe("/order", 1, &MissionManager::CallbackOrder, this);
 

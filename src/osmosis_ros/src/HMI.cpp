@@ -26,7 +26,7 @@ void HMI::HMI_FSM()
 					break;
 
 				case WAITPOINT:
-					if (done_point_)
+					if (mission_done_)
 					{
 						state_=IDLE;
 						pointState_=ASKPOINT;
@@ -49,7 +49,7 @@ void HMI::HMI_FSM()
 					break;
 
 				case WAITMISSION:
-					if(done_mission_)
+					if(mission_done_)
 					{
 						ROS_INFO("Mission done !");
 						missionState_=ASKMISSION;
@@ -66,8 +66,7 @@ void HMI::HMI_FSM()
 
 void HMI::ordersDone()
 {
-	done_mission_=true;;
-	done_point_=true;
+	mission_done_=true;
 }
 
 char HMI::askMode()
@@ -90,7 +89,7 @@ void HMI::goalKeyboard()
 	int n=0;
 
 	order_cmd.doMission=false;
-	done_point_=false;
+	mission_done_=false;
 
 	ROS_INFO("Enter a new goal (x,y)");
 	ROS_INFO("x= ");
@@ -110,7 +109,7 @@ bool HMI::askMission()
 {
 	osmosis_control::Hmi_OrderMsg order_cmd;
 	order_cmd.doMission=true;
-	done_mission_=false;
+	mission_done_=false;
 
 	bool ok=false;
 
@@ -121,7 +120,7 @@ bool HMI::askMission()
 	if(checkMission(name))
 	{
 		ok=true;
-		done_mission_=false;
+		mission_done_=false;
 		order_cmd.mission_name=name;
 		orders_pub_.publish(order_cmd);
 	}
@@ -163,8 +162,7 @@ HMI::HMI()
 	state_=IDLE;
 	pointState_=ASKPOINT;
 	missionState_=ASKMISSION;
-	done_point_=true;
-	done_mission_=true;
+	mission_done_=true;
 }
 
 void HMI::run()
@@ -178,14 +176,12 @@ void HMI::run()
 	}
 }
 
-void HMI::CallbackOrderDone(const osmosis_control::Hmi_DoneMsg &done)
+void HMI::CallbackOrderDone(const std_msgs::Bool &mission_done)
 {
-	done_point_=done.point;
-	done_mission_=done.mission;
+	mission_done_=mission_done.data;
 }
 
 ////////////////////// MAIN //////////////////////
-
 int main(int argc, char** argv)
 {
 	//init the ROS node
