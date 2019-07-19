@@ -118,7 +118,8 @@ void OsmosisControl::updateMove()
 		double obsG_x = (xPos) + obs_dist*cos(wPos + obstacle_lw);
 		double obsG_y = (yPos) + obs_dist*sin(wPos + obstacle_lw);
 
-		cout << "Ob_X:" << obsG_x << " Ob_Y" << obsG_y << endl;
+		ROS_INFO("Ob_X: %f",obsG_x);
+		ROS_INFO("Ob_Y: %f",obsG_y);
 		cmd = PF(xPos,yPos,wPos,obsG_x,obsG_y);
 	}
 	cmd_=cmd;

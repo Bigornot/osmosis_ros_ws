@@ -28,14 +28,14 @@ void JoyTeleop::joy_on()
 	joy_teleop_cmd_.is_active=true;
 	button_pressed_=false;
 	pub_on_=true;
-	cout << "Controller Activation" << endl;
+	ROS_INFO("Controller Activation");
 }
 
 void JoyTeleop::joy_off()
 {
 	joy_teleop_cmd_.is_active=false;
 	button_pressed_=false;
-	cout << "Controller deactivation" << endl;
+	ROS_INFO("Controller deactivation");
 }
 
 void JoyTeleop::teleopCallbackJoy(const sensor_msgs::Joy & joy_msg)
@@ -89,8 +89,7 @@ JoyTeleop::JoyTeleop()
 
 void JoyTeleop::run()
 {
-	cout << "You should now be able to activate the controller (with 'start')\n";
-
+	ROS_INFO("You should now be able to activate the controller (with 'start')");
 	ros::Rate loop_rate(freq_);
 	while (nh_.ok())
 	{
@@ -101,7 +100,6 @@ void JoyTeleop::run()
 			if(state_==DESACTIVATED)
 				pub_on_=false;
 		}
-
 	 	ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate
 	}
@@ -112,7 +110,6 @@ int main(int argc, char** argv)
 {
 	//init the ROS node
 	ros::init(argc, argv, "joy_teleop_node");
-	cout << "JOY" << endl;
 
 	JoyTeleop myJoyTeleop;
 	myJoyTeleop.run();

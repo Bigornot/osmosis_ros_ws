@@ -2,7 +2,6 @@
 #include <osmosis_control/HMI.hpp>
 
 ////////////////////// PRIVATE //////////////////////
-
 void HMI::HMI_FSM()
 {
 	switch (state_)
@@ -52,7 +51,7 @@ void HMI::HMI_FSM()
 				case WAITMISSION:
 					if(done_mission_)
 					{
-						cout<<"Mission done !" << endl;
+						ROS_INFO("Mission done !");
 						missionState_=ASKMISSION;
 						state_=IDLE;
 					}
@@ -76,7 +75,7 @@ char HMI::askMode()
 	char mode;
 	string input;
 
-	cout << endl << "Enter the mode : ('P':Point 'M':mission)" << endl;
+	ROS_INFO("Enter the mode : ('P':Point 'M':mission)");
 	cin >> input;
 	mode=input[0];
 
@@ -93,12 +92,12 @@ void HMI::goalKeyboard()
 	order_cmd.doMission=false;
 	done_point_=false;
 
-	cout << "Enter a new goal (x,y)" << endl;
-	cout << "x= ";
+	ROS_INFO("Enter a new goal (x,y)");
+	ROS_INFO("x= ");
 	cin >> thegoal.x;
-	cout << "y= ";
+	ROS_INFO("y= ");
 	cin >> thegoal.y;
-	cout << "taxi (0,1)= ";
+	ROS_INFO("taxi (0,1)= ");
 	cin >> n;
 	state_and_point_cmd.taxi = n!=0;
 
@@ -116,7 +115,7 @@ bool HMI::askMission()
 	bool ok=false;
 
 	string name;
-	cout << "Enter the mission : " << endl;
+	ROS_INFO("Enter the mission : ");
 	cin >> name;
 
 	if(checkMission(name))
@@ -134,7 +133,7 @@ bool HMI::checkMission(string name)
 	bool ok=false;
 	goal_reached_=false;
 
-	cout << "Mission in progress" << endl;
+	ROS_INFO("Mission in progress");
 
 	string filename=ros::package::getPath("osmosis_control");
 	filename.append("/Missions/MISSION_" + name + ".miss");

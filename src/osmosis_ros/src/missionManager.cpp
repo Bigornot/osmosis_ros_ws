@@ -93,11 +93,9 @@ bool MissionManager::isGoalReached()
 void MissionManager::goalKeyboard()
 {
 	goal_reached_=false;
-	cout<<"x= " << state_and_point_cmd_.goal.x << " y= " << state_and_point_cmd_.goal.y << " taxi=";
-	if(state_and_point_cmd_.taxi)
-		cout << "true" << endl;
-	else
-		cout << "false" << endl;
+	ROS_INFO("x= %f",state_and_point_cmd_.goal.x);
+	ROS_INFO("y= %f",state_and_point_cmd_.goal.y);
+	ROS_INFO("taxi= %d",state_and_point_cmd_.taxi);
 
 	goal_pub_.publish(state_and_point_cmd_);
 }
@@ -116,7 +114,7 @@ void MissionManager::initMission(string name)
 	missionAborted_=false;
 	missionOver_=false;
 
-	cout << "Init mission" << endl;
+	ROS_INFO("Init mission");
 
 	int i;
 	int taille=mission_.mission_steps.size();
@@ -135,11 +133,9 @@ void MissionManager::initMission(string name)
 
 	for(i=0; i<mission_.mission_steps.size();i++)
 	{
-		cout<<"x:"<<mission_.mission_steps[i].goal.x << " y:" << mission_.mission_steps[i].goal.y;
-		if(mission_.mission_steps[i].taxi)
-			cout << " taxi=true" << endl;
-		else
-			cout << " taxi=false" << endl;
+		ROS_INFO("x: %f",mission_.mission_steps[i].goal.x);
+		ROS_INFO("y: %f",mission_.mission_steps[i].goal.y);
+		ROS_INFO("taxi= %d",mission_.mission_steps[i].taxi);
 	}
 
 	timeStartMission_=ros::Time::now();
