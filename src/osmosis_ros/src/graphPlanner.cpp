@@ -252,7 +252,8 @@ int main(int argc, char** argv)
 
 	GraphPlanner myGraphPlanner;
 
-	myGraphPlanner.initGraph("test.graph");
+	myGraphPlanner.initGraph("/../../ressources/blagnac.graph");
 	myGraphPlanner.run();
-	//while(1){ROS_INFO("OUT...");}
+	//while(1){ROS_INFO("OUT...");
 }
+
