@@ -125,7 +125,7 @@ bool HMI::askMission()
 	{
 		ok=true;
 		mission_done_=false;
-		order_cmd.mission_name=name;
+		order_cmd_.mission_name=name;
 	}
 	return ok;
 }

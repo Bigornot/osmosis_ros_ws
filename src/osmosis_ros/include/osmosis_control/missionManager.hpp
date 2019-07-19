@@ -65,7 +65,7 @@ private:
 	ros::Time timeStartMission_;
 	ros::Duration timeout_;
 
-	osmosis_control::Hmi_DoneMsg done_;
+	std_msgs::Bool done_;
 
 	/////////  Methods   ////////
 	void MissionManagerFSM();
