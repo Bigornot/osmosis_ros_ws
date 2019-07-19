@@ -2,7 +2,7 @@
 
 
 //compute drive commands based on keyboard input
-void Teleop::FSMKeyboard()
+void Teleop::KeyboardFSM()
 {
 	geometry_msgs::Twist base_cmd;
 	char cmd[50];
