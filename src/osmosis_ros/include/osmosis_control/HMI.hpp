@@ -45,6 +45,8 @@ private:
 	enum StatePoint {ASKPOINT,WAITPOINT};
 	StatePoint pointState_;
 
+	osmosis_control::Hmi_OrderMsg order_cmd_;
+
 	bool goal_reached_;
 	bool done_mission_;
 	bool done_point_;
@@ -57,6 +59,7 @@ private:
 	void goalKeyboard();
 	bool askMission();
 	bool checkMission(std::string name);
+	void publishOrder();
 
 public:
 	HMI();

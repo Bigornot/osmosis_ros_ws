@@ -23,6 +23,7 @@ void HMI::HMI_FSM()
 			{
 				case ASKPOINT:
 					goalKeyboard();
+					publishOrder();
 					pointState_=WAITPOINT;
 					break;
 
@@ -41,7 +42,10 @@ void HMI::HMI_FSM()
 			{
 				case ASKMISSION:
 					if(askMission())
+					{
+						publishOrder();
 						missionState_=WAITMISSION;
+					}
 					else
 					{
 						ROS_ERROR("Mission Aborted");
@@ -86,11 +90,9 @@ char HMI::askMode()
 void HMI::goalKeyboard()
 {
 	geometry_msgs::Point thegoal;
-	osmosis_control::Hmi_OrderMsg order_cmd;
-	osmosis_control::State_and_PointMsg state_and_point_cmd;
 	int n=0;
 
-	order_cmd.doMission=false;
+	order_cmd_.doMission=false;
 	done_point_=false;
 
 	cout << "Enter a new goal (x,y)" << endl;
@@ -100,17 +102,19 @@ void HMI::goalKeyboard()
 	cin >> thegoal.y;
 	cout << "taxi (0,1)= ";
 	cin >> n;
-	state_and_point_cmd.taxi = n!=0;
 
-	state_and_point_cmd.goal=thegoal;
-	order_cmd.state_and_point=state_and_point_cmd;
-	orders_pub_.publish(order_cmd);
+	order_cmd_.state_and_point.taxi = n!=0;
+	order_cmd_.state_and_point.goal = thegoal;
+}
+
+void HMI::publishOrder()
+{
+	orders_pub_.publish(order_cmd_);
 }
 
 bool HMI::askMission()
 {
-	osmosis_control::Hmi_OrderMsg order_cmd;
-	order_cmd.doMission=true;
+	order_cmd_.doMission=true;
 	done_mission_=false;
 
 	bool ok=false;
@@ -123,8 +127,7 @@ bool HMI::askMission()
 	{
 		ok=true;
 		done_mission_=false;
-		order_cmd.mission_name=name;
-		orders_pub_.publish(order_cmd);
+		order_cmd_.mission_name=name;
 	}
 	return ok;
 }

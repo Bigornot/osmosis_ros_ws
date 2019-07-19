@@ -31,7 +31,7 @@ void GraphPlanner::graphPlannerFSM()
 			}
 			else
 			{
-				send_target();
+				publishSendTarget();
 				state_=follow;
 			}
 			break;
@@ -48,7 +48,7 @@ void GraphPlanner::graphPlannerFSM()
 
 		case goal_done:
 			ROS_INFO("DONE\n");
-			done();
+			publishDone();
 			state_=wait_goal;
 			break;
 
@@ -167,7 +167,7 @@ bool GraphPlanner::plan_computed()
 	return plan.size() > 0;
 }
 
-void GraphPlanner::done() 
+void GraphPlanner::publishDone() 
 {
 	std_msgs::Bool target_reached;
 	target_reached.data=true;;
@@ -182,7 +182,7 @@ bool GraphPlanner::plan_done()
 	return ( target_index >= (int)plan.size() );
 }
 
-void GraphPlanner::send_target()
+void GraphPlanner::publishSendTarget()
 {
 
 	//ROS_INFO ("target_index < plan.size() : %d < %u",target_index,plan.size());
