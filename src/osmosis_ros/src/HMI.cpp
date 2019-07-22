@@ -2,6 +2,7 @@
 #include <osmosis_control/HMI.hpp>
 
 ////////////////////// PRIVATE //////////////////////
+
 void HMI::HMI_FSM()
 {
 	switch (state_)
@@ -104,11 +105,6 @@ void HMI::goalKeyboard()
 	mission_cmd_.mission_goal.point = thegoal;
 }
 
-void HMI::publishMission()
-{
-	mission_pub_.publish(mission_cmd_);
-}
-
 bool HMI::askMission()
 {
 	mission_cmd_.doRunwayMission=true;
@@ -153,6 +149,11 @@ bool HMI::checkMission(string name)
 	return ok;
 }
 
+void HMI::publishMission()
+{
+	mission_pub_.publish(mission_cmd_);
+}
+
 
 ////////////////////// PUBLIC //////////////////////
 
@@ -182,7 +183,9 @@ void HMI::callbackMissionDone(const std_msgs::Bool &mission_done)
 	mission_done_=mission_done.data;
 }
 
+
 ////////////////////// MAIN //////////////////////
+
 int main(int argc, char** argv)
 {
 	//init the ROS node

@@ -34,31 +34,12 @@ using namespace std;
 
 class GraphPlanner
 {
-public:
-	GraphPlanner();
-	void read_ports();
-	void compute_plan();
-	void execute_plan();
-	bool new_goal();
-	bool no_goal();
-	bool plan_computed();
-	bool is_arrived();
-	bool plan_done();
-	void publishDone();
-	void publishSendTarget();
-	void graphPlannerFSM();
-
-	void callbackGoal(const osmosis_control::GoalMsg & thegoal);
-	void callbackPose(const geometry_msgs::Pose2D & msg);
-	void callbackTargetReached(const std_msgs::Bool & target_reached);
-
-	void initGraph(const std::string& filename);
-	void run();
-
-
 private:
+	///////// Attributes ////////
 	ros::NodeHandle nh_;
+
 	double freq_;
+
 	ros::Publisher target_pub_;
 	ros::Publisher goal_reached_pub_;
 	ros::Subscriber goal_sub_;
@@ -78,7 +59,34 @@ private:
 	enum State {WAIT_GOAL,WAIT_COMPUTE_PLAN,SEND,FOLLOW,GOAL_DONE};
 	State state_;
 
-}; // end of class
+	///////// Methods ////////
+	void graphPlannerFSM();
 
+	bool new_goal();
+	void compute_plan();
+	bool plan_computed();
+	bool plan_done();
+	bool is_arrived();
+	void execute_plan();
+
+	void publishDone();
+	void publishSendTarget();
+
+	//void read_ports();
+	//bool no_goal();
+
+public:
+	GraphPlanner();
+
+	void initGraph(const std::string& filename);
+	void run();
+
+	void callbackGoal(const osmosis_control::GoalMsg & thegoal);
+	void callbackPose(const geometry_msgs::Pose2D & msg);
+	void callbackTargetReached(const std_msgs::Bool & target_reached);
+
+	//void GraphPlanner::callbackGoalId(const string & thegoal_id)
+
+}; // end of class
 
 #endif

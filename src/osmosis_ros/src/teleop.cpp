@@ -1,7 +1,7 @@
 #include <osmosis_control/teleop.hpp>
 
+////////////////////// PRIVATE //////////////////////
 
-//compute drive commands based on keyboard input
 void Teleop::KeyboardFSM()
 {
 	geometry_msgs::Twist base_cmd;
@@ -59,7 +59,8 @@ void Teleop::KeyboardFSM()
 }
 
 
-//! ROS node topics publishing and subscribing initialization
+////////////////////// PUBLIC //////////////////////
+
 Teleop::Teleop()
 {
 	freq_=10;
@@ -68,7 +69,6 @@ Teleop::Teleop()
 	teleop_cmd_.cmd_vel.linear.x=teleop_cmd_.cmd_vel.linear.y=teleop_cmd_.cmd_vel.angular.z=0;
 	state_=DESACTIVATED;
 }
-
 
 void Teleop::run()
 {
@@ -83,6 +83,8 @@ void Teleop::run()
 	}
 }
 
+
+////////////////////// MAIN //////////////////////
 
 int main(int argc, char** argv)
 {

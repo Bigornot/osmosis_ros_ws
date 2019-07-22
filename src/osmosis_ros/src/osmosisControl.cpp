@@ -1,6 +1,8 @@
 //July2017 J.Guiochet @ LAAS with cc/paste from C.Lesire @ ONERA
 #include <osmosis_control/osmosisControl.hpp>
 
+////////////////////// PRIVATE //////////////////////
+
 void OsmosisControl::osmosisControlFSM()
 {
 	switch(state_)
@@ -32,44 +34,6 @@ void OsmosisControl::osmosisControlFSM()
 
 		default: break;
 	}
-}
-
-void OsmosisControl::callbackGoal(const osmosis_control::GoalMsg & thegoal)
-{
-	target_=thegoal;
-	ROS_INFO("GOAL : x: [%f], y:[%f]",target_.point.x,target_.point.y);
-}
-
-void OsmosisControl::callbackScan(const sensor_msgs::LaserScan & thescan)
-{
-	scan_=thescan;
-}
-
-void OsmosisControl::callbackPose(const geometry_msgs::Pose2D & msg)
-{
-	robot_pose = msg;
-}
-
-void OsmosisControl::publish_is_arrived()
-{
-	std_msgs::Bool a;
-	a.data=true;
-	goal_reach_pub_.publish(a);
-}
-
-OsmosisControl::OsmosisControl()
-{
-	//set up the publishers and subscribers
-	cmd_vel_pub_   = nh_.advertise<geometry_msgs::Twist>("cmd_vel_control", 1);
-	goal_reach_pub_= nh_.advertise<std_msgs::Bool>("target_reached", 10);
-	scan_sub_ = nh_.subscribe("/summit_xl_a/front_laser/scan", 1, &OsmosisControl::callbackScan, this);
-	goal_sub_ = nh_.subscribe("/target", 1, &OsmosisControl::callbackGoal, this);
-	odom_sub_ = nh_.subscribe("/pose", 1, &OsmosisControl::callbackPose, this);
-
-	//initialization of attributes
-	target_.point.x = old_goal_.x =target_.point.y = old_goal_.y=0;
-	state_=WAIT_GOAL;
-	freq_=10;
 }
 
 bool OsmosisControl::new_goal()
@@ -238,6 +202,31 @@ geometry_msgs::Twist OsmosisControl::PF(double x_p, double y_p,double theta_p, d
 	return control;
 }
 
+void OsmosisControl::publish_is_arrived()
+{
+	std_msgs::Bool a;
+	a.data=true;
+	goal_reach_pub_.publish(a);
+}
+
+
+////////////////////// PUBLIC //////////////////////
+
+OsmosisControl::OsmosisControl()
+{
+	//set up the publishers and subscribers
+	cmd_vel_pub_   = nh_.advertise<geometry_msgs::Twist>("cmd_vel_control", 1);
+	goal_reach_pub_= nh_.advertise<std_msgs::Bool>("target_reached", 10);
+	scan_sub_ = nh_.subscribe("/summit_xl_a/front_laser/scan", 1, &OsmosisControl::callbackScan, this);
+	goal_sub_ = nh_.subscribe("/target", 1, &OsmosisControl::callbackGoal, this);
+	odom_sub_ = nh_.subscribe("/pose", 1, &OsmosisControl::callbackPose, this);
+
+	//initialization of attributes
+	target_.point.x = old_goal_.x =target_.point.y = old_goal_.y=0;
+	state_=WAIT_GOAL;
+	freq_=10;
+}
+
 bool OsmosisControl::run()
 {
 	ros::Rate loop_rate(freq_); //using 10 makes the robot oscillating trajectories, TBD check with the PF algo
@@ -251,6 +240,25 @@ bool OsmosisControl::run()
 
 	return true;
 }
+
+void OsmosisControl::callbackGoal(const osmosis_control::GoalMsg & thegoal)
+{
+	target_=thegoal;
+	ROS_INFO("GOAL : x: [%f], y:[%f]",target_.point.x,target_.point.y);
+}
+
+void OsmosisControl::callbackScan(const sensor_msgs::LaserScan & thescan)
+{
+	scan_=thescan;
+}
+
+void OsmosisControl::callbackPose(const geometry_msgs::Pose2D & msg)
+{
+	robot_pose = msg;
+}
+
+
+////////////////////// MAIN //////////////////////
 
 int main(int argc, char** argv)
 {

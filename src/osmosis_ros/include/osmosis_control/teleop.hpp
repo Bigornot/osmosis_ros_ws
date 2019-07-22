@@ -27,6 +27,7 @@ using namespace std;
 class Teleop
 {
 private:
+	///////// Attributes ////////
 	ros::NodeHandle nh_;
 	double freq_;
 	ros::Publisher cmd_teleop_pub_;
@@ -34,9 +35,10 @@ private:
 	enum StateTeleop {DESACTIVATED, ACTIVATED};
 	StateTeleop state_;
 
+	///////// Methods ////////
+	void KeyboardFSM();
 
 public:
-	void KeyboardFSM();
 	Teleop();
 	void run();
 

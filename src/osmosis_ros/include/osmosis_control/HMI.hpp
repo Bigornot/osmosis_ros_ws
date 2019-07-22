@@ -55,6 +55,7 @@ private:
 	void goalKeyboard();
 	bool askMission();
 	bool checkMission(std::string name);
+
 	void publishMission();
 
 public:

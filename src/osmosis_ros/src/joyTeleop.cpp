@@ -1,6 +1,7 @@
 #include <osmosis_control/joyTeleop.hpp>
 
-//compute drive commands based on keyboard input
+////////////////////// PRIVATE //////////////////////
+
 void JoyTeleop::JoyFSM()
 {
 	switch (state_)
@@ -40,6 +41,49 @@ void JoyTeleop::joy_off()
 	ROS_INFO("Controller deactivation");
 }
 
+
+////////////////////// PUBLIC //////////////////////
+
+JoyTeleop::JoyTeleop()
+{
+	freq_=10;
+
+	cmd_joy_teleop_pub_ = nh_.advertise<osmosis_control::TeleopMsg>("/cmd_vel_teleop", 1);
+	cmd_joystick_sub_= nh_.subscribe("/joy", 1, &JoyTeleop::teleopCallbackJoy, this);
+
+	vector<int> buttons(11,0);
+	vector<float> axes(8,0);
+	sensor_msgs::Joy msg;
+	msg.buttons=buttons;
+	msg.axes=axes;
+	joy_msg_=msg;
+
+	joy_msg_.buttons[7]=0;
+	joy_teleop_cmd_.is_active=false;
+	joy_teleop_cmd_.cmd_vel.linear.x=joy_teleop_cmd_.cmd_vel.linear.y=joy_teleop_cmd_.cmd_vel.angular.z=0;
+	button_pressed_=false;
+	pub_on_=false;
+   	state_=DESACTIVATED;
+}
+
+void JoyTeleop::run()
+{
+	ROS_INFO("You should now be able to activate the controller (with 'start')");
+	ros::Rate loop_rate(freq_);
+	while (nh_.ok())
+	{
+		JoyFSM();
+		if(pub_on_)
+		{
+			cmd_joy_teleop_pub_.publish(joy_teleop_cmd_);
+			if(state_==DESACTIVATED)
+				pub_on_=false;
+		}
+	 	ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
+		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate
+	}
+}
+
 void JoyTeleop::teleopCallbackJoy(const sensor_msgs::Joy & joy_msg)
 {
 	// rising edge detection
@@ -65,48 +109,7 @@ void JoyTeleop::teleopCallbackJoy(const sensor_msgs::Joy & joy_msg)
 }
 
 
-//! ROS node topics publishing and subscribing initialization
-JoyTeleop::JoyTeleop()
-{
-	freq_=10;
-
-	cmd_joy_teleop_pub_ = nh_.advertise<osmosis_control::TeleopMsg>("/cmd_vel_teleop", 1);
-	cmd_joystick_sub_= nh_.subscribe("/joy", 1, &JoyTeleop::teleopCallbackJoy, this);
-
-	vector<int> buttons(11,0);
-	vector<float> axes(8,0);
-	sensor_msgs::Joy msg;
-	msg.buttons=buttons;
-	msg.axes=axes;
-	joy_msg_=msg;
-
-	joy_msg_.buttons[7]=0;
-	joy_teleop_cmd_.is_active=false;
-	joy_teleop_cmd_.cmd_vel.linear.x=joy_teleop_cmd_.cmd_vel.linear.y=joy_teleop_cmd_.cmd_vel.angular.z=0;
-	button_pressed_=false;
-	pub_on_=false;
-   	state_=DESACTIVATED;
-}
-
-
-void JoyTeleop::run()
-{
-	ROS_INFO("You should now be able to activate the controller (with 'start')");
-	ros::Rate loop_rate(freq_);
-	while (nh_.ok())
-	{
-		JoyFSM();
-		if(pub_on_)
-		{
-			cmd_joy_teleop_pub_.publish(joy_teleop_cmd_);
-			if(state_==DESACTIVATED)
-				pub_on_=false;
-		}
-	 	ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
-		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate
-	}
-}
-
+////////////////////// MAIN //////////////////////
 
 int main(int argc, char** argv)
 {

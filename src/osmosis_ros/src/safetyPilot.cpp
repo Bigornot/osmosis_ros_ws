@@ -1,5 +1,7 @@
 #include <osmosis_control/safetyPilot.hpp>
 
+////////////////////// PRIVATE //////////////////////
+
 void SafetyPilot::SafetyPilotFSM()
 {
 	switch(state_)
@@ -79,22 +81,9 @@ void SafetyPilot::computeCommandCtrlTeleop()
 	base_cmd_=cmd; // command to publish
 }
 
-void SafetyPilot::callbackCmdVelCtrl(const geometry_msgs::Twist & cmd_msg)
-{
-	base_cmd_ctrl_ = cmd_msg;
-}
 
-void SafetyPilot::callbackScan(const sensor_msgs::LaserScan & scan_msg)
-{
-	scan_=scan_msg;
-}
+////////////////////// PUBLIC //////////////////////
 
-void SafetyPilot::callbackTeleop(const osmosis_control::TeleopMsg & teleop_msg)
-{
-	base_cmd_teleop_=teleop_msg;
-}
-
-//! ROS node topics publishing and subscribing initialization
 SafetyPilot::SafetyPilot()
 {
 	freq_=10;
@@ -119,6 +108,24 @@ bool SafetyPilot::run()
 
 	return true;
 }
+
+void SafetyPilot::callbackCmdVelCtrl(const geometry_msgs::Twist & cmd_msg)
+{
+	base_cmd_ctrl_ = cmd_msg;
+}
+
+void SafetyPilot::callbackScan(const sensor_msgs::LaserScan & scan_msg)
+{
+	scan_=scan_msg;
+}
+
+void SafetyPilot::callbackTeleop(const osmosis_control::TeleopMsg & teleop_msg)
+{
+	base_cmd_teleop_=teleop_msg;
+}
+
+
+////////////////////// MAIN //////////////////////
 
 int main(int argc, char** argv)
 {
