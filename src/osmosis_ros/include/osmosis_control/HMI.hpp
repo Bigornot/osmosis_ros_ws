@@ -34,7 +34,7 @@ private:
 	///////// Attributes /////////
 	ros::NodeHandle nh_;
 	double freq_;
-	ros::Publisher orders_pub_;
+	ros::Publisher mission_pub_;
 	ros::Subscriber done_sub_;
 
 	enum StateDriveHMI{IDLE,REACH_POINT_MISSION,RUNWAY_MISSION};
@@ -51,18 +51,18 @@ private:
 	/////////  Methods   ////////
 	void HMI_FSM();
 
-	void ordersDone();
+	void missionDone();
 	char askMode();
 	void goalKeyboard();
 	bool askMission();
 	bool checkMission(std::string name);
-	void publishOrder();
+	void publishMission();
 
 public:
 	HMI();
 	void run();
 
-	void CallbackOrderDone(const std_msgs::Bool &done);
+	void CallbackMissionDone(const std_msgs::Bool &done);
 };
 
 #endif

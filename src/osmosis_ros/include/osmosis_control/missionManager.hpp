@@ -43,7 +43,7 @@ private:
 	ros::Publisher goal_pub_;
 	ros::Publisher hmi_done_pub_;
 	ros::Subscriber goal_reached_sub_;
-	ros::Subscriber hmi_order_sub_;
+	ros::Subscriber hmi_mission_sub_;
 
 	enum StateDriveMission{IDLE,REACH_POINT_MISSION,RUNWAY_MISSION};
 	StateDriveMission state_;
@@ -78,9 +78,9 @@ private:
   void initMission(string name);
 	void parse(string line);
 	void doMission();
-	bool checkNextOrder();
+	bool checkNextStep();
 	bool isMissionOver();
-	void nextOrder();
+	void nextStep();
 	void abortMission();
 	void endMission();
 
@@ -92,7 +92,7 @@ public:
 	void run();
 
 	void CallbackGoalReached(const std_msgs::Bool &goal_reached);
-	void CallbackOrder(const osmosis_control::MissionMsg &order);
+	void CallbackMission(const osmosis_control::MissionMsg &mission);
 
 }; // end of class
 

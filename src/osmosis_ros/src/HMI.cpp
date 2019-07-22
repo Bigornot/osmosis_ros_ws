@@ -22,7 +22,7 @@ void HMI::HMI_FSM()
 			{
 				case ASK_MISSION:
 					goalKeyboard();
-					publishOrder();
+					publishMission();
 					pointState_=WAIT_END_MISSION;
 					break;
 
@@ -42,7 +42,7 @@ void HMI::HMI_FSM()
 				case ASK_MISSION:
 					if(askMission())
 					{
-						publishOrder();
+						publishMission();
 						missionState_=WAIT_END_MISSION;
 					}
 					else
@@ -67,7 +67,7 @@ void HMI::HMI_FSM()
 	}
 }
 
-void HMI::ordersDone()
+void HMI::missionDone()
 {
 	mission_done_=true;
 }
@@ -104,9 +104,9 @@ void HMI::goalKeyboard()
 	mission_cmd_.mission_goal.point = thegoal;
 }
 
-void HMI::publishOrder()
+void HMI::publishMission()
 {
-	orders_pub_.publish(mission_cmd_);
+	mission_pub_.publish(mission_cmd_);
 }
 
 bool HMI::askMission()
@@ -159,8 +159,8 @@ bool HMI::checkMission(string name)
 HMI::HMI()
 {
 	freq_=10;
-	orders_pub_ = nh_.advertise<osmosis_control::MissionMsg>("order", 1);
-	done_sub_ = nh_.subscribe("/hmi_done", 1, &HMI::CallbackOrderDone, this);
+	mission_pub_ = nh_.advertise<osmosis_control::MissionMsg>("mission", 1);
+	done_sub_ = nh_.subscribe("/hmi_done", 1, &HMI::CallbackMissionDone, this);
 	state_=IDLE;
 	pointState_=ASK_MISSION;
 	missionState_=ASK_MISSION;
@@ -178,7 +178,7 @@ void HMI::run()
 	}
 }
 
-void HMI::CallbackOrderDone(const std_msgs::Bool &mission_done)
+void HMI::CallbackMissionDone(const std_msgs::Bool &mission_done)
 {
 	mission_done_=mission_done.data;
 }

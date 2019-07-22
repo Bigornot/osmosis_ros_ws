@@ -58,7 +58,7 @@ void MissionManager::MissionManagerFSM()
 				case EXECUTE_MISSION:
 					ROS_INFO("RUNWAY_MISSION EXECUTE_MISSION\n");
 					doMission();
-					if(checkNextOrder())
+					if(checkNextStep())
 						publishMissionGoal();
 
 					if(missionAborted_)
@@ -159,7 +159,7 @@ void MissionManager::initMission(string name)
 
 void MissionManager::parse(string line)
 {
-	osmosis_control::GoalMsg order;
+	osmosis_control::GoalMsg step;
 
 	if(line.size()>=14)
 	{
@@ -169,11 +169,11 @@ void MissionManager::parse(string line)
 			int coma2=line.find(',', coma+1);
 			if(coma2>=0)
 			{
-				order.point.x=stof(line.substr(2, coma-2));
-				order.point.y=stof(line.substr(coma+3, coma2-coma-3));
-				order.taxi=stoi(line.substr(coma2+6,1))!=0;
+				step.point.x=stof(line.substr(2, coma-2));
+				step.point.y=stof(line.substr(coma+3, coma2-coma-3));
+				step.taxi=stoi(line.substr(coma2+6,1))!=0;
 
-				mission_.mission_steps.push_back(order);
+				mission_.mission_steps.push_back(step);
 			}
 		}
 	}
@@ -188,7 +188,7 @@ void MissionManager::doMission()
 	}
 }
 
-bool MissionManager::checkNextOrder()
+bool MissionManager::checkNextStep()
 {
 	bool next=false;
 
@@ -202,7 +202,7 @@ bool MissionManager::checkNextOrder()
 		else
 		{
 			next=true;
-			nextOrder();
+			nextStep();
 		}
 	}
 
@@ -219,7 +219,7 @@ bool MissionManager::isMissionOver()
 	return over;
 }
 
-void MissionManager::nextOrder()
+void MissionManager::nextStep()
 {
 	goal_reached_=false;
 	goal_cmd_=mission_.mission_steps[mission_.step];
@@ -247,7 +247,7 @@ MissionManager::MissionManager()
 	goal_pub_ = nh_.advertise<osmosis_control::GoalMsg>("mission_goal", 1);
 	hmi_done_pub_ = nh_.advertise<std_msgs::Bool>("hmi_done", 1);
 	goal_reached_sub_ = nh_.subscribe("/goal_reached", 1, &MissionManager::CallbackGoalReached, this);
-	hmi_order_sub_ = nh_.subscribe("/order", 1, &MissionManager::CallbackOrder, this);
+	hmi_mission_sub_ = nh_.subscribe("/mission", 1, &MissionManager::CallbackMission, this);
 
 	goal_reached_=false;
 	state_=IDLE;
@@ -278,22 +278,22 @@ void MissionManager::CallbackGoalReached(const std_msgs::Bool &goal_reached)
 	goal_reached_=goal_reached.data;
 }
 
-void MissionManager::CallbackOrder(const osmosis_control::MissionMsg &order)
+void MissionManager::CallbackMission(const osmosis_control::MissionMsg &mission)
 {
-	if(order.doRunwayMission)
+	if(mission.doRunwayMission)
 	{
-		ROS_INFO("\nMISSION\n");
+		ROS_INFO("\nRUNWAY MISSION\n");
 		hmi_mission_=true;
 		hmi_point_=false;
-		mission_name_=order.mission_name;
+		mission_name_=mission.mission_name;
 	}
 
 	else
 	{
-		ROS_INFO("\nPOINT\n");
+		ROS_INFO("\nREACH POINT MISSION\n");
 		hmi_mission_=false;
 		hmi_point_=true;
-		goal_cmd_=order.mission_goal;
+		goal_cmd_=mission.mission_goal;
 	}
 }
 

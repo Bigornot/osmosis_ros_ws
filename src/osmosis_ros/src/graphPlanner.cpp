@@ -64,7 +64,7 @@ GraphPlanner::GraphPlanner()
 	//set up the publisher for the goal topic
 	target_pub_ = nh_.advertise<osmosis_control::GoalMsg>("target", 1);
 	goal_reached_pub_ = nh_.advertise<std_msgs::Bool>("goal_reached", 1);
-	goal_sub_=nh_.subscribe("/goal", 1, &GraphPlanner::callbackGoal, this);
+	goal_sub_=nh_.subscribe("/mission_goal", 1, &GraphPlanner::callbackGoal, this);
 	odom_sub_=nh_.subscribe("/pose", 1, &GraphPlanner::callbackPose, this);
 	target_reached_sub_=nh_.subscribe("/target_reached", 1, &GraphPlanner::callbackTargetReached, this);
 	state_=WAIT_GOAL;
@@ -81,7 +81,6 @@ void GraphPlanner::callbackTargetReached(const std_msgs::Bool & target_reached)
 void GraphPlanner::callbackGoal(const osmosis_control::GoalMsg & thegoal)
 {
 	mission_goal_=thegoal;
-
 	_new_goal=true;
 	ROS_INFO("NEW GOAL : x: [%f], y:[%f]",mission_goal_.point.x,mission_goal_.point.y);
 }
