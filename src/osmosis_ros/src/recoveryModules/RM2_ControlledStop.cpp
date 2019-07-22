@@ -1,5 +1,8 @@
 #include <osmosis_control/recoveryModules/RM2_ControlledStop.hpp>
 
+
+////////////////////// PUBLIC //////////////////////
+
 RM2_ControlledStop::RM2_ControlledStop(int id, vector<int> successors) : RecoveryModule(id, successors) 
 {
 	pub_order_=nh_.advertise<std_msgs::Bool>("/do_RM2_ControlledStop", 100);

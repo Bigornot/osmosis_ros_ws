@@ -25,12 +25,15 @@
 class DM1_ProhibitedArea : public DetectionModule
 {
 private:
+	///////// Attributes ////////
 	ros::Subscriber state_sub_;
+
+	///////// Methods ////////
+	void detect();
 
 public:
 	DM1_ProhibitedArea();
 	void init();
-	void detect();
 	void DM1_ProhibitedAreaCallback(const std_msgs::Bool & state);
 };
 

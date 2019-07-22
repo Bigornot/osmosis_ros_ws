@@ -1,41 +1,7 @@
 #include <osmosis_control/FTM_Manager.hpp>
 
-FTM_Manager::FTM_Manager()
-{
-	// Declarations of the detection modules
-	// DMx_ = new DM_type()
-	DM1_prohibited_area_ = new DM1_ProhibitedArea();
-	DM2_cmd_not_updated_ = new DM2_CmdNotUpdated();
-	DM3_wrong_command_ = new DM3_WrongCommand();
-	DM4_node_crash_ = new DM4_NodeCrash();
-	DM5_node_crash_control_ = new DM5_NodeCrashControl();
-	DM6_loc_not_updated_ = new DM6_LocNotUpdated();
 
-	// Declarations of the recovery modules
-	// The recovery tree is built here
-	// RMx_ = new RM_type(id, predecessor, {successors})
-	RM1_emergency_stop_ = new RM1_EmergencyStop(1, {2,5});
-	RM2_controlled_stop_ = new RM2_ControlledStop(2, {3,4});
-	RM3_respawn_control_nodes_ = new RM3_RespawnControlNodes(3, {});
-	RM4_respawn_nodes_ = new RM4_RespawnNodes(4, {});
-	RM5_switch_to_teleop_ = new RM5_SwitchToTeleop(5, {3,4});
-
-	// Declarations of the rules (linking of detection modules and recovery modules)
-	// The FMT tree the built here
-	// FTM_rules_.push_back(new FTM_Rule(id, predecessor, {successors}, DMx_, RMx_))
-	FTM_rules_.push_back(new FTM_Rule(1, 0, {2, 3, 6}, DM1_prohibited_area_, RM1_emergency_stop_));
-	FTM_rules_.push_back(new FTM_Rule(2, 1, {4,5}, DM2_cmd_not_updated_, RM2_controlled_stop_));
-	FTM_rules_.push_back(new FTM_Rule(3, 1, {}, DM3_wrong_command_, RM2_controlled_stop_));
-	FTM_rules_.push_back(new FTM_Rule(4, 5, {}, DM4_node_crash_, RM4_respawn_nodes_));
-	FTM_rules_.push_back(new FTM_Rule(5, 2, {4}, DM5_node_crash_control_, RM3_respawn_control_nodes_));
-	FTM_rules_.push_back(new FTM_Rule(6, 1, {}, DM6_loc_not_updated_, RM5_switch_to_teleop_));
-
-	strategy_=new FTM_SafetyFirst();
-
-	time_start_ = ros::Time::now();
-	delay_before_start_ = 2;
-	freq_=20;
-}
+////////////////////// PRIVATE //////////////////////
 
 void FTM_Manager::initDMs()
 {
@@ -49,35 +15,18 @@ void FTM_Manager::runDMs()
 		FTM_rules_[i]->runDM();
 }
 
+void FTM_Manager::runRules()
+{
+	for(int i=0; i<FTM_rules_.size(); i++)
+		FTM_rules_[i]->runFSM();
+}
+
 void FTM_Manager::runRMs()
 {
 	vector<FTM_Rule*> RMs = checkSameRM(FTM_rules_);
 
 	for(int i=0; i<RMs.size(); i++)
 		RMs[i]->runRM();
-}
-
-vector<FTM_Rule*> FTM_Manager::findDominant(vector<FTM_Rule*> rules)
-{
-	vector<FTM_Rule*> dominated;
-	vector<FTM_Rule*> dominant;
-
-	for (int i=0; i<rules.size(); i++)//for each rules
-	{
-		dominated=findDominated(rules[i],&dominated);
-	}
-
-	cout << "Dominated FTM :";
-	for(int i=0; i<dominated.size(); i++)
-		cout << " " << dominated[i]->getId();
-	cout << endl;
-
-	for (int i=0; i<rules.size(); i++)//for each rules
-	{
-		if(!findRule(dominated, rules[i]) && !findRule(dominant, rules[i]))
-			dominant.push_back(rules[i]);
-	}
-	return dominant;
 }
 
 vector<FTM_Rule*> FTM_Manager::findDominated(FTM_Rule* dominant_rule, vector<FTM_Rule*>* dominated)
@@ -97,32 +46,6 @@ vector<FTM_Rule*> FTM_Manager::findDominated(FTM_Rule* dominant_rule, vector<FTM
 	return *dominated;
 }
 
-vector<FTM_Rule*> FTM_Manager::findDominantRecovery(vector<FTM_Rule*> rules)
-{
-	vector<FTM_Rule*> dominated;
-	vector<FTM_Rule*> dominant;
-	vector<FTM_Rule*> checked;
-
-	checked=checkSameRM(rules);
-
-	for (int i=0; i<rules.size(); i++)//for each rules
-	{
-		dominated=findDominatedRecovery(rules[i],&dominated);
-	}
-
-	cout << "Dominated RM :";
-	for(int i=0; i<dominated.size(); i++)
-		cout << " " << dominated[i]->getRMId();
-	cout << endl;
-
-	for (int i=0; i<rules.size(); i++)//for each rules
-	{
-		if(!findRule(dominated, rules[i]) && !findRM(dominant, rules[i]))
-			dominant.push_back(rules[i]);
-	}
-	return dominant;
-}
-
 vector<FTM_Rule*>  FTM_Manager::findDominatedRecovery(FTM_Rule* dominant_rule, vector<FTM_Rule*>* dominated)
 {
 	vector<int> successorsId = dominant_rule->getRMSuc();
@@ -138,11 +61,6 @@ vector<FTM_Rule*>  FTM_Manager::findDominatedRecovery(FTM_Rule* dominant_rule, v
 		}
 	}
 	return *dominated;
-}
-
-FTM_Rule* FTM_Manager::findLowestCommonDominant(vector<FTM_Rule*> dominant)
-{
-	return recursiveLowestCommonDominant(dominant)[0];
 }
 
 vector<FTM_Rule*> FTM_Manager::recursiveLowestCommonDominant(vector<FTM_Rule*> recursive_dominant)
@@ -194,15 +112,6 @@ bool FTM_Manager::findRule(vector<FTM_Rule*> rules, FTM_Rule* rule)
 	return found;
 }
 
-void FTM_Manager::doRecovery(vector<FTM_Rule*> activated_rules)
-{
-	for(int i=0; i<activated_rules.size(); i++)
-	{
-		if(!activated_rules[i]->getStateRM())
-			activated_rules[i]->startRM();
-	}
-}
-
 vector<FTM_Rule*> FTM_Manager::checkSameRM(vector<FTM_Rule*> rules)
 {
 	vector<FTM_Rule*> back_rules=rules;
@@ -214,6 +123,46 @@ vector<FTM_Rule*> FTM_Manager::checkSameRM(vector<FTM_Rule*> rules)
 			rules.push_back(back_rules[i]);
 	}
 	return rules;
+}
+
+
+////////////////////// PUBLIC //////////////////////
+
+FTM_Manager::FTM_Manager()
+{
+	// Declarations of the detection modules
+	// DMx_ = new DM_type()
+	DM1_prohibited_area_ = new DM1_ProhibitedArea();
+	DM2_cmd_not_updated_ = new DM2_CmdNotUpdated();
+	DM3_wrong_command_ = new DM3_WrongCommand();
+	DM4_node_crash_ = new DM4_NodeCrash();
+	DM5_node_crash_control_ = new DM5_NodeCrashControl();
+	DM6_loc_not_updated_ = new DM6_LocNotUpdated();
+
+	// Declarations of the recovery modules
+	// The recovery tree is built here
+	// RMx_ = new RM_type(id, predecessor, {successors})
+	RM1_emergency_stop_ = new RM1_EmergencyStop(1, {2,5});
+	RM2_controlled_stop_ = new RM2_ControlledStop(2, {3,4});
+	RM3_respawn_control_nodes_ = new RM3_RespawnControlNodes(3, {});
+	RM4_respawn_nodes_ = new RM4_RespawnNodes(4, {});
+	RM5_switch_to_teleop_ = new RM5_SwitchToTeleop(5, {3,4});
+
+	// Declarations of the rules (linking of detection modules and recovery modules)
+	// The FMT tree the built here
+	// FTM_rules_.push_back(new FTM_Rule(id, predecessor, {successors}, DMx_, RMx_))
+	FTM_rules_.push_back(new FTM_Rule(1, 0, {2, 3, 6}, DM1_prohibited_area_, RM1_emergency_stop_));
+	FTM_rules_.push_back(new FTM_Rule(2, 1, {4,5}, DM2_cmd_not_updated_, RM2_controlled_stop_));
+	FTM_rules_.push_back(new FTM_Rule(3, 1, {}, DM3_wrong_command_, RM2_controlled_stop_));
+	FTM_rules_.push_back(new FTM_Rule(4, 5, {}, DM4_node_crash_, RM4_respawn_nodes_));
+	FTM_rules_.push_back(new FTM_Rule(5, 2, {4}, DM5_node_crash_control_, RM3_respawn_control_nodes_));
+	FTM_rules_.push_back(new FTM_Rule(6, 1, {}, DM6_loc_not_updated_, RM5_switch_to_teleop_));
+
+	strategy_=new FTM_SafetyFirst();
+
+	time_start_ = ros::Time::now();
+	delay_before_start_ = 2;
+	freq_=20;
 }
 
 vector<FTM_Rule*> FTM_Manager::getActiveOrRecoveryRules()
@@ -231,6 +180,69 @@ vector<FTM_Rule*> FTM_Manager::getActiveOrRecoveryRules()
 	cout << endl;
 
 	return active_or_recovery_rules_;
+}
+
+vector<FTM_Rule*> FTM_Manager::findDominant(vector<FTM_Rule*> rules)
+{
+	vector<FTM_Rule*> dominated;
+	vector<FTM_Rule*> dominant;
+
+	for (int i=0; i<rules.size(); i++)//for each rules
+	{
+		dominated=findDominated(rules[i],&dominated);
+	}
+
+	cout << "Dominated FTM :";
+	for(int i=0; i<dominated.size(); i++)
+		cout << " " << dominated[i]->getId();
+	cout << endl;
+
+	for (int i=0; i<rules.size(); i++)//for each rules
+	{
+		if(!findRule(dominated, rules[i]) && !findRule(dominant, rules[i]))
+			dominant.push_back(rules[i]);
+	}
+	return dominant;
+}
+
+vector<FTM_Rule*> FTM_Manager::findDominantRecovery(vector<FTM_Rule*> rules)
+{
+	vector<FTM_Rule*> dominated;
+	vector<FTM_Rule*> dominant;
+	vector<FTM_Rule*> checked;
+
+	checked=checkSameRM(rules);
+
+	for (int i=0; i<rules.size(); i++)//for each rules
+	{
+		dominated=findDominatedRecovery(rules[i],&dominated);
+	}
+
+	cout << "Dominated RM :";
+	for(int i=0; i<dominated.size(); i++)
+		cout << " " << dominated[i]->getRMId();
+	cout << endl;
+
+	for (int i=0; i<rules.size(); i++)//for each rules
+	{
+		if(!findRule(dominated, rules[i]) && !findRM(dominant, rules[i]))
+			dominant.push_back(rules[i]);
+	}
+	return dominant;
+}
+
+FTM_Rule* FTM_Manager::findLowestCommonDominant(vector<FTM_Rule*> dominant)
+{
+	return recursiveLowestCommonDominant(dominant)[0];
+}
+
+void FTM_Manager::doRecovery(vector<FTM_Rule*> activated_rules)
+{
+	for(int i=0; i<activated_rules.size(); i++)
+	{
+		if(!activated_rules[i]->getStateRM())
+			activated_rules[i]->startRM();
+	}
 }
 
 void FTM_Manager::debugDisplayRulesId(vector<FTM_Rule*> rules)
@@ -251,12 +263,6 @@ void FTM_Manager::debugDisplayRMId(vector<FTM_Rule*> rules)
 	}
 	cout<<endl;
 	cout<<endl;
-}
-
-void FTM_Manager::runRules()
-{
-	for(int i=0; i<FTM_rules_.size(); i++)
-		FTM_rules_[i]->runState();
 }
 
 void FTM_Manager::run()
@@ -280,6 +286,7 @@ void FTM_Manager::run()
 		loop_rate.sleep();
 	}
 }
+
 
 ////////////////////// MAIN //////////////////////
 

@@ -1,12 +1,7 @@
 #include <osmosis_control/recoveryModules/RecoveryModule.hpp>
 
-RecoveryModule::RecoveryModule(int id, vector<int> successors)
-{
-	drive_state_=IDLE;
-	id_=id;
-	successors_=successors;
-	state_=false;
-}
+
+////////////////////// PRIVATE //////////////////////
 
 void RecoveryModule::recoveryModuleFSM()
 {
@@ -37,6 +32,17 @@ void RecoveryModule::recoveryModuleFSM()
 			drive_state_=IDLE;
 			break;
 	}
+}
+
+
+////////////////////// PUBLIC //////////////////////
+
+RecoveryModule::RecoveryModule(int id, vector<int> successors)
+{
+	drive_state_=IDLE;
+	id_=id;
+	successors_=successors;
+	state_=false;
 }
 
 int RecoveryModule::getState()

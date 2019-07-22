@@ -40,6 +40,7 @@ class FTM_Strategy;
 class FTM_Manager
 {
 private :
+	///////// Attributes /////////
 	ros::NodeHandle nh_;
 	double freq_;
 	vector<FTM_Rule*> FTM_rules_;
@@ -63,25 +64,26 @@ private :
 	double delay_before_start_;
 	ros::Time time_start_;
 
-	vector<FTM_Rule*> findDominated(FTM_Rule* dominant_rule, vector<FTM_Rule*>* dominated);
+	///////// Methods /////////	
+	void initDMs();
+	void runDMs();
+	void runRules();
+	void runRMs();
+	vector<FTM_Rule*> findDominated(FTM_Rule* dominant_rule, vector<FTM_Rule*>* dominated);	
 	vector<FTM_Rule*> findDominatedRecovery(FTM_Rule* dominant_rule, vector<FTM_Rule*>* dominated);
 	vector<FTM_Rule*> recursiveLowestCommonDominant(vector<FTM_Rule*> recursive_dominant);
 	bool findRM(vector<FTM_Rule*> rules, FTM_Rule* rule);
 	bool findRule(vector<FTM_Rule*> rules, FTM_Rule* rule);
 	vector<FTM_Rule*> checkSameRM(vector<FTM_Rule*> rules);
-	
+
 public :
 	FTM_Manager();
-	vector<FTM_Rule*> getActiveOrRecoveryRules();
-	void doRecovery(vector<FTM_Rule*> activated_rules);
-	vector<FTM_Rule*> findDominant(vector<FTM_Rule*> Rules);
-	vector<FTM_Rule*> findDominantRecovery(vector<FTM_Rule*> Rules);
-	FTM_Rule* findLowestCommonDominant(vector<FTM_Rule*> dominant);
 
-	void runRules();
-	void initDMs();
-	void runDMs();
-	void runRMs();
+	vector<FTM_Rule*> getActiveOrRecoveryRules();
+	vector<FTM_Rule*> findDominant(vector<FTM_Rule*> Rules);	
+	vector<FTM_Rule*> findDominantRecovery(vector<FTM_Rule*> Rules);
+	FTM_Rule* findLowestCommonDominant(vector<FTM_Rule*> dominant);	
+	void doRecovery(vector<FTM_Rule*> activated_rules);
 
 	void debugDisplayRulesId(vector<FTM_Rule*> rules);
 	void debugDisplayRMId(vector<FTM_Rule*> rules);

@@ -1,17 +1,7 @@
 #include <osmosis_control/detectionModules/DM5_NodeCrashControl.hpp>
 
-//! ROS node topics publishing and subscribing initialization
-DM5_NodeCrashControl::DM5_NodeCrashControl() : DetectionModule()
-{
-	nodesToCheck_.push_back("/HMI_node");
-	nodesToCheck_.push_back("/graph_planner_node");
-	nodesToCheck_.push_back("/mission_manager_node");
-	nodesToCheck_.push_back("/osmosis_control_node");
-}
 
-void DM5_NodeCrashControl::init()
-{
-}
+////////////////////// PRIVATE //////////////////////
 
 void DM5_NodeCrashControl::detect()
 {
@@ -35,4 +25,20 @@ void DM5_NodeCrashControl::detect()
 	else
 		state_=false;
 }
+
+
+////////////////////// PUBLIC //////////////////////
+
+DM5_NodeCrashControl::DM5_NodeCrashControl() : DetectionModule()
+{
+	nodesToCheck_.push_back("/HMI_node");
+	nodesToCheck_.push_back("/graph_planner_node");
+	nodesToCheck_.push_back("/mission_manager_node");
+	nodesToCheck_.push_back("/osmosis_control_node");
+}
+
+void DM5_NodeCrashControl::init()
+{
+}
+
 

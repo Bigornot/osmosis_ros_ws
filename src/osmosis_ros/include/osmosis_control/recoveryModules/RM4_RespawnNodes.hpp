@@ -24,6 +24,7 @@
 class RM4_RespawnNodes : public RecoveryModule
 {
 private:
+	///////// Attributes ////////
 	ros::V_string nodesToCheck_;
 	ros::V_string nodesToRespawn_;
 	int n_;
@@ -31,6 +32,7 @@ private:
 
 public:
 	RM4_RespawnNodes(int id, vector<int> successors);
+
 	void startRecovery();
 	void doRecovery();
 	void stopRecovery();

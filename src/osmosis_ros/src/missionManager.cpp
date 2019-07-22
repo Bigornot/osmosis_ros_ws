@@ -1,6 +1,7 @@
 //juil2018 J.Guiochet @ LAAS
 #include <osmosis_control/missionManager.hpp>
 
+
 ////////////////////// PRIVATE //////////////////////
 
 void MissionManager::MissionManagerFSM()

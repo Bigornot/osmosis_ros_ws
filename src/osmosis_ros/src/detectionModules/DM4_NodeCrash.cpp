@@ -1,20 +1,6 @@
 #include <osmosis_control/detectionModules/DM4_NodeCrash.hpp>
 
-//! ROS node topics publishing and subscribing initialization
-DM4_NodeCrash::DM4_NodeCrash() : DetectionModule()
-{
-	nodesToCheck_.push_back("/teleop_node");
-	nodesToCheck_.push_back("/joy_node");
-	nodesToCheck_.push_back("/joy_teleop_node");
-	nodesToCheck_.push_back("/localization_node");
-	nodesToCheck_.push_back("/safety_pilot_node");
-	nodesToCheck_.push_back("/teleop_node");
-	nodesToCheck_.push_back("/checkProhibitedArea_node");
-}
-
-void DM4_NodeCrash::init()
-{
-}
+////////////////////// PRIVATE //////////////////////
 
 void DM4_NodeCrash::detect()
 {
@@ -38,3 +24,23 @@ void DM4_NodeCrash::detect()
 	else
 		state_=false;
 }
+
+
+////////////////////// PUBLIC //////////////////////
+
+DM4_NodeCrash::DM4_NodeCrash() : DetectionModule()
+{
+	nodesToCheck_.push_back("/teleop_node");
+	nodesToCheck_.push_back("/joy_node");
+	nodesToCheck_.push_back("/joy_teleop_node");
+	nodesToCheck_.push_back("/localization_node");
+	nodesToCheck_.push_back("/safety_pilot_node");
+	nodesToCheck_.push_back("/teleop_node");
+	nodesToCheck_.push_back("/checkProhibitedArea_node");
+}
+
+void DM4_NodeCrash::init()
+{
+}
+
+

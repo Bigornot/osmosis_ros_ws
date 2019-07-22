@@ -1,6 +1,9 @@
 #include <osmosis_control/FTM_Rule.hpp>
 
-void FTM_Rule::runState()
+
+////////////////////// PUBLIC //////////////////////
+
+void FTM_Rule::runFSM()
 {
 	switch(state_)
 	{
@@ -28,11 +31,6 @@ void FTM_Rule::runState()
 	}
 }
 
-int FTM_Rule::getState()
-{
-	return state_;
-}
-
 FTM_Rule::FTM_Rule(int id, int predecessor, vector<int> successors, DetectionModule* DM, RecoveryModule* RM)
 {
 	id_=id;
@@ -41,6 +39,11 @@ FTM_Rule::FTM_Rule(int id, int predecessor, vector<int> successors, DetectionMod
 	DM_ = DM;
 	RM_ = RM;
 	state_=IDLE;
+}
+
+int FTM_Rule::getState()
+{
+	return state_;
 }
 
 int FTM_Rule::getPredecessorId()
@@ -102,4 +105,5 @@ vector<int> FTM_Rule::getRMSuc()
 {
 	return RM_->getSuccessorsId();
 }
+
 

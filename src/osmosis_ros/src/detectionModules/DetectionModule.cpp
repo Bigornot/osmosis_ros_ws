@@ -1,10 +1,7 @@
 #include <osmosis_control/detectionModules/DetectionModule.hpp>
 
-DetectionModule::DetectionModule ()
-{
-	state_=false;
-	drive_state_=IDLE;
-}
+
+////////////////////// PRIVATE //////////////////////
 
 void DetectionModule::detectionModuleFSM()
 {
@@ -22,6 +19,20 @@ void DetectionModule::detectionModuleFSM()
 	}
 }
 
+
+////////////////////// PUBLIC //////////////////////
+
+DetectionModule::DetectionModule ()
+{
+	state_=false;
+	drive_state_=IDLE;
+}
+
+int DetectionModule::getState()
+{
+	return drive_state_;
+}
+
 void DetectionModule::run()
 {
 	detect();
@@ -29,7 +40,4 @@ void DetectionModule::run()
 	ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 }
 
-int DetectionModule::getState()
-{
-	return drive_state_;
-}
+

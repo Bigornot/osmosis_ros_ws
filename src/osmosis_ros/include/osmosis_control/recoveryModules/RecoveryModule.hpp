@@ -11,11 +11,15 @@ using namespace std;
 class RecoveryModule
 {
 private:
+	///////// Attributes ////////
 	enum driveState{IDLE, ACTIVATED};
 	driveState drive_state_;
 
 	int id_;
 	vector<int> successors_;
+
+	///////// Methods ////////
+	void recoveryModuleFSM();
 
 protected:
 	ros::NodeHandle nh_;
@@ -27,7 +31,6 @@ public:
 	void run();
 	void start();
 	void stop();
-	void recoveryModuleFSM();
 	int getId();
 	vector<int> getSuccessorsId();
 	virtual void doRecovery()=0;

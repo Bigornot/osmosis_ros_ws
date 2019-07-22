@@ -25,6 +25,7 @@
 class RM2_ControlledStop : public RecoveryModule
 {
 private:
+	///////// Attributes ////////
 	ros::Publisher pub_order_;
 	ros::Publisher pub_cmd_;
 	double pollRate_;
@@ -32,7 +33,8 @@ private:
 	ros::Time start_;
 
 public:
-	RM2_ControlledStop(int id, vector<int> successors);
+	RM2_ControlledStop(int id, vector<int> successors);	
+	
 	void startRecovery();
 	void doRecovery();
 	void stopRecovery();

@@ -26,6 +26,7 @@
 class RM3_RespawnControlNodes : public RecoveryModule
 {
 private:
+	///////// Attributes ////////
 	ros::V_string nodesToCheck_;
 	ros::V_string nodesToRespawn_;
 
@@ -34,6 +35,7 @@ private:
 
 public:
 	RM3_RespawnControlNodes(int id, vector<int> successors);
+
 	void startRecovery();
 	void doRecovery();
 	void stopRecovery();

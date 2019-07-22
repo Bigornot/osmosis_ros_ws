@@ -29,6 +29,7 @@
 class FTM_Rule
 {
 private:
+	///////// Attributes ////////
 	ros::NodeHandle nh_;
 
 	DetectionModule* DM_;
@@ -38,29 +39,28 @@ private:
 	RunState state_;
 	
 	int id_;
-
 	int predecessor_;
 	vector<int> successors_;
+
 	
-public:
-	void runState();
-	int getState();
+public:	
+	void runFSM();
 
 	FTM_Rule(int id, int predecessor, vector<int> successor, DetectionModule* DM, RecoveryModule* RM);
 
-	int getId();
+	int getState();
 	int getPredecessorId();
 	vector<int> getSuccessorsId();
+	int getId();
 
 	void initDM();
 	void runDM();
 	int getStateDM();
+
 	void runRM();
 	int getStateRM();
-
 	void startRM();
 	void stopRM();
-
 	int getRMId();
 	vector<int> getRMSuc();
 };

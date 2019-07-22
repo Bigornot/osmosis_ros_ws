@@ -1,6 +1,20 @@
 #include <osmosis_control/detectionModules/DM6_LocNotUpdated.hpp>
 
-//! ROS node topics publishing and subscribing initialization
+
+////////////////////// PRIVATE //////////////////////
+
+void DM6_LocNotUpdated::detect()
+{
+	ros::Duration delay = ros::Time::now()-lastUpdate_;
+	if(delay>timeOut_)
+		state_=true;
+	else
+		state_ = false;
+}
+
+
+////////////////////// PUBLIC //////////////////////
+
 DM6_LocNotUpdated::DM6_LocNotUpdated() : DetectionModule()
 {
 	pose_sub_  = nh_.subscribe("/pose", 1, &DM6_LocNotUpdated::DM6_LocNotUpdatedCallback, this);
@@ -14,15 +28,6 @@ DM6_LocNotUpdated::DM6_LocNotUpdated() : DetectionModule()
 void DM6_LocNotUpdated::init()
 {
 	lastUpdate_=ros::Time::now();
-}
-
-void DM6_LocNotUpdated::detect()
-{
-	ros::Duration delay = ros::Time::now()-lastUpdate_;
-	if(delay>timeOut_)
-		state_=true;
-	else
-		state_ = false;
 }
 
 void DM6_LocNotUpdated::DM6_LocNotUpdatedCallback(const geometry_msgs::Pose2D &pose)

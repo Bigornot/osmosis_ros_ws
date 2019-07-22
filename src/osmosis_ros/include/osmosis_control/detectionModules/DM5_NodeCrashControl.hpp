@@ -24,13 +24,16 @@
 class DM5_NodeCrashControl : public DetectionModule
 {
 private:
+	///////// Attributes ////////
 	ros::V_string aliveNodes_;
 	ros::V_string nodesToCheck_;
+
+	///////// Methods ////////
+	void detect();
 
 public:
 	DM5_NodeCrashControl();
 	void init();
-	void detect();
 };
 
 #endif //OSMOSIS_DM5_NodeCrashControl_HPP

@@ -24,14 +24,17 @@
 class DM2_CmdNotUpdated : public DetectionModule
 {
 private:
+	///////// Attributes ////////
 	ros::Subscriber cmd_vel_sub_;
 	ros::Time lastUpdate_;
 	ros::Duration timeOut_;
 
+	///////// Methods ////////
+	void detect();
+
 public:
 	DM2_CmdNotUpdated();
 	void init();
-	void detect();
 	void DM2_CmdNotUpdatedCallback(const geometry_msgs::Twist &cmd_vel);
 };
 

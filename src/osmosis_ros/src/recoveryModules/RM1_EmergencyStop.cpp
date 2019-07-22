@@ -1,5 +1,8 @@
 #include <osmosis_control/recoveryModules/RM1_EmergencyStop.hpp>
 
+
+////////////////////// PUBLIC //////////////////////
+
 RM1_EmergencyStop::RM1_EmergencyStop(int id, vector<int> successors) : RecoveryModule(id, successors) 
 {
 	pub_=nh_.advertise<std_msgs::Bool>("/do_RM1_EmergencyStop", 100);
@@ -45,3 +48,5 @@ void RM1_EmergencyStop::doRecovery()
 void RM1_EmergencyStop::stopRecovery()
 {
 }
+
+

@@ -11,8 +11,13 @@ using namespace std;
 class DetectionModule
 {
 private :
+	///////// Attributes ////////
 	enum driveState{IDLE, ACTIVE};
 	driveState drive_state_;
+
+	///////// Methods ////////
+	virtual void detect()=0; //method for the condition of the detection
+	void detectionModuleFSM();
 
 protected:
 	ros::NodeHandle nh_;
@@ -20,11 +25,11 @@ protected:
 
 public :
 	DetectionModule();
-	void detectionModuleFSM();
+
 	virtual void init()=0; // Executed when the FTM starts (after startDelay)
-	void run();
-	virtual void detect()=0; //method for the condition of the detection
 	int getState();
+
+	void run();
 };
 
 #endif

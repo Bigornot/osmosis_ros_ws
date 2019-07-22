@@ -24,6 +24,7 @@
 class DM3_WrongCommand : public DetectionModule
 {
 private:
+	///////// Attributes ////////
 	ros::Subscriber cmd_sub_;
 	geometry_msgs::Twist cmd_;
 	float cmd_linear_x_max_;
@@ -31,10 +32,12 @@ private:
 	float cmd_angular_z_max_;
 	float cmd_angular_z_min_;
 
+	///////// Methods ////////
+	void detect();
+
 public:
 	DM3_WrongCommand();
 	void init();
-	void detect();
 	void DM3_WrongCommandCallback(const geometry_msgs::Twist & cmd_msg);
 
 }; // end of class

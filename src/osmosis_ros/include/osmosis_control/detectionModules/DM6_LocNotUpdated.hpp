@@ -24,14 +24,17 @@
 class DM6_LocNotUpdated : public DetectionModule
 {
 private:
+	///////// Attributes ////////
 	ros::Subscriber pose_sub_;
 	ros::Time lastUpdate_;
 	ros::Duration timeOut_;
 
+	///////// Methods ////////
+	void detect();
+
 public:
 	DM6_LocNotUpdated();
 	void init();
-	void detect();
 	void DM6_LocNotUpdatedCallback(const geometry_msgs::Pose2D &pose);
 };
 

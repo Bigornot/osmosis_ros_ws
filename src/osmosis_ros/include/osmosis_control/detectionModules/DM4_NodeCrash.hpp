@@ -24,13 +24,16 @@
 class DM4_NodeCrash : public DetectionModule
 {
 private:
+	///////// Attributes ////////
 	ros::V_string aliveNodes_;
 	ros::V_string nodesToCheck_;
+	
+	///////// Methods ////////
+	void detect();
 
 public:
 	DM4_NodeCrash();
 	void init();
-	void detect();
 };
 
 #endif //OSMOSIS_DM4_NodeCrash_HPP

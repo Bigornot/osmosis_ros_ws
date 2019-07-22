@@ -1,5 +1,8 @@
 #include <osmosis_control/recoveryModules/RM4_RespawnNodes.hpp>
 
+
+////////////////////// PUBLIC //////////////////////
+
 RM4_RespawnNodes::RM4_RespawnNodes(int id, vector<int> successors) : RecoveryModule(id, successors)
 {
 	nodesToCheck_.push_back("/teleop_node");

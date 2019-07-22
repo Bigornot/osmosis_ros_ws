@@ -24,6 +24,7 @@
 class RM1_EmergencyStop : public RecoveryModule
 {
 private:
+	///////// Attributes ////////
 	ros::Publisher pub_;
 	ros::Publisher pub_cmd_;
 	double pollRate_;
@@ -32,6 +33,7 @@ private:
 
 public:
 	RM1_EmergencyStop(int id, vector<int> successors);
+
 	void startRecovery();
 	void doRecovery();
 	void stopRecovery();
