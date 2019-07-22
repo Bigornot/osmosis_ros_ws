@@ -1,5 +1,7 @@
 #include <osmosis_control/graphPlanner.hpp>
 
+////////////////////// PRIVATE //////////////////////
+
 void GraphPlanner::graphPlannerFSM()
 {
 	switch (state_)
@@ -57,69 +59,6 @@ void GraphPlanner::graphPlannerFSM()
 }
 
 
-//! ROS node initialization
-GraphPlanner::GraphPlanner()
-{
-	freq_=10;
-	//set up the publisher for the goal topic
-	target_pub_ = nh_.advertise<osmosis_control::GoalMsg>("target", 1);
-	goal_reached_pub_ = nh_.advertise<std_msgs::Bool>("goal_reached", 1);
-	goal_sub_=nh_.subscribe("/mission_goal", 1, &GraphPlanner::callbackGoal, this);
-	odom_sub_=nh_.subscribe("/pose", 1, &GraphPlanner::callbackPose, this);
-	target_reached_sub_=nh_.subscribe("/target_reached", 1, &GraphPlanner::callbackTargetReached, this);
-	state_=WAIT_GOAL;
-	_new_goal=false;
-	target_reached_=false;
-}
-
-void GraphPlanner::callbackTargetReached(const std_msgs::Bool & target_reached)
-{
-	target_reached_=target_reached.data;
-	ROS_INFO("Target reached : [%d]",target_reached_);
-}
-
-void GraphPlanner::callbackGoal(const osmosis_control::GoalMsg & thegoal)
-{
-	mission_goal_=thegoal;
-	_new_goal=true;
-	ROS_INFO("NEW GOAL : x: [%f], y:[%f]",mission_goal_.point.x,mission_goal_.point.y);
-}
-
-/*void GraphPlanner::callbackGoalId(const string & thegoal_id)
-{
-	goal_id=thegoal_id;
-	_new_goal=true;
-	ROS_INFO("NEW GOAL : [%s]",thegoal_id);
-}*/
-
-void GraphPlanner::callbackPose(const geometry_msgs::Pose2D & msg)
-{
-	current.x = msg.x;
-	current.y = msg.y;
-	//ROS_INFO("NEW POS : x: [%f], y:[%f]",current.x,current.y);
-}
-
-//from MAUVE
-/*void GraphPlanner::read_ports()
-{
-	auto in_goal = shell().goal.read();
-	auto in_id = shell().goal_id.read();
-	if (in_goal.status == runtime::DataStatus::NEW_DATA || in_id.status == runtime::DataStatus::NEW_DATA)
-	{
-		_new_goal = true;
-		graph = shell().map.read();
-		auto p = shell().pose.read();
-		current = p.location;
-		logger().info("current location {}", current);
-		if (in_id.status == runtime::DataStatus::NEW_DATA)
-			goal = graph.getNode(in_id.value)->point;
-		else
-			goal = in_goal.value;
-		logger().info("received new goal {}", goal);
-		_has_goal = true;
-	}
-}*/
-
 bool GraphPlanner::new_goal()
 {
 	bool newg=false;
@@ -130,11 +69,6 @@ bool GraphPlanner::new_goal()
 	}
 	return newg;
 }
-
-/*bool GraphPlanner::no_goal()
-{
-	return ! (_has_goal);
-}*/
 
 void GraphPlanner::compute_plan()
 {
@@ -166,6 +100,26 @@ bool GraphPlanner::plan_computed()
 	return plan.size() > 0;
 }
 
+bool GraphPlanner::plan_done()
+{
+	return ( target_index >= (int)plan.size() );
+}
+
+bool GraphPlanner::is_arrived()
+{
+	return target_reached_;
+}
+
+void GraphPlanner::execute_plan()
+{
+	//current = shell().pose.read().location;
+	//double d = Graph::distance(current, plan[target_index]);
+	//logger().debug("distance to current target {}", d);
+	ROS_INFO("POSE x: %f  y:%f", current.x , current.y );
+	ROS_INFO("PLAN x: %f  y:%f", plan[target_index].x , plan[target_index].y );
+	ROS_INFO("dist to target = %f", Graph::distance(current, plan[target_index]));
+}
+
 void GraphPlanner::publishDone()
 {
 	std_msgs::Bool target_reached;
@@ -174,11 +128,6 @@ void GraphPlanner::publishDone()
 
 	//  shell().arrived.write(true);
 	//  _has_goal = false;
-}
-
-bool GraphPlanner::plan_done()
-{
-	return ( target_index >= (int)plan.size() );
 }
 
 void GraphPlanner::publishSendTarget()
@@ -197,19 +146,47 @@ void GraphPlanner::publishSendTarget()
 	//  }
 }
 
-bool GraphPlanner::is_arrived()
+//from MAUVE
+/*void GraphPlanner::read_ports()
 {
-	return target_reached_;
-}
+	auto in_goal = shell().goal.read();
+	auto in_id = shell().goal_id.read();
+	if (in_goal.status == runtime::DataStatus::NEW_DATA || in_id.status == runtime::DataStatus::NEW_DATA)
+	{
+		_new_goal = true;
+		graph = shell().map.read();
+		auto p = shell().pose.read();
+		current = p.location;
+		logger().info("current location {}", current);
+		if (in_id.status == runtime::DataStatus::NEW_DATA)
+			goal = graph.getNode(in_id.value)->point;
+		else
+			goal = in_goal.value;
+		logger().info("received new goal {}", goal);
+		_has_goal = true;
+	}
+}*/
 
-void GraphPlanner::execute_plan()
+/*bool GraphPlanner::no_goal()
 {
-	//current = shell().pose.read().location;
-	//double d = Graph::distance(current, plan[target_index]);
-	//logger().debug("distance to current target {}", d);
-	ROS_INFO("POSE x: %f  y:%f", current.x , current.y );
-	ROS_INFO("PLAN x: %f  y:%f", plan[target_index].x , plan[target_index].y );
-	ROS_INFO("dist to target = %f", Graph::distance(current, plan[target_index]));
+	return ! (_has_goal);
+}*/
+
+
+////////////////////// PUBLIC //////////////////////
+
+GraphPlanner::GraphPlanner()
+{
+	freq_=10;
+	//set up the publisher for the goal topic
+	target_pub_ = nh_.advertise<osmosis_control::GoalMsg>("target", 1);
+	goal_reached_pub_ = nh_.advertise<std_msgs::Bool>("goal_reached", 1);
+	goal_sub_=nh_.subscribe("/mission_goal", 1, &GraphPlanner::callbackGoal, this);
+	odom_sub_=nh_.subscribe("/pose", 1, &GraphPlanner::callbackPose, this);
+	target_reached_sub_=nh_.subscribe("/target_reached", 1, &GraphPlanner::callbackTargetReached, this);
+	state_=WAIT_GOAL;
+	_new_goal=false;
+	target_reached_=false;
 }
 
 // this method should be placed somewhere else... where ???
@@ -226,7 +203,6 @@ void GraphPlanner::initGraph(const string& filename)
 	//cout<<"HEY : "<<g.getNode("N49")->point.x<<endl;
 }
 
-
 void GraphPlanner::run()
 {
 	ros::Rate loop_rate(freq_); //using 10 makes the robot oscillating trajectories, TBD check with the PF algo ?
@@ -242,7 +218,35 @@ void GraphPlanner::run()
 	//while(1){ROS_INFO("OUT...");}
 }
 
+void GraphPlanner::callbackTargetReached(const std_msgs::Bool & target_reached)
+{
+	target_reached_=target_reached.data;
+	ROS_INFO("Target reached : [%d]",target_reached_);
+}
 
+void GraphPlanner::callbackGoal(const osmosis_control::GoalMsg & thegoal)
+{
+	mission_goal_=thegoal;
+	_new_goal=true;
+	ROS_INFO("NEW GOAL : x: [%f], y:[%f]",mission_goal_.point.x,mission_goal_.point.y);
+}
+
+void GraphPlanner::callbackPose(const geometry_msgs::Pose2D & msg)
+{
+	current.x = msg.x;
+	current.y = msg.y;
+	//ROS_INFO("NEW POS : x: [%f], y:[%f]",current.x,current.y);
+}
+
+/*void GraphPlanner::callbackGoalId(const string & thegoal_id)
+{
+	goal_id=thegoal_id;
+	_new_goal=true;
+	ROS_INFO("NEW GOAL : [%s]",thegoal_id);
+}*/
+
+
+////////////////////// MAIN //////////////////////
 
 int main(int argc, char** argv)
 {
@@ -253,5 +257,4 @@ int main(int argc, char** argv)
 
 	myGraphPlanner.initGraph("/../../ressources/blagnac.graph");
 	myGraphPlanner.run();
-	//while(1){ROS_INFO("OUT...");
 }

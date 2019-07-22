@@ -99,19 +99,9 @@ void MissionManager::goalKeyboard()
 	ROS_INFO("taxi= %d",goal_cmd_.taxi);
 }
 
-void MissionManager::publishMissionGoal()
-{
-	goal_pub_.publish(goal_cmd_);
-}
-
 void MissionManager::endPoint()
 {
 	done_.data=true;
-}
-
-void MissionManager::publishDone()
-{
-	hmi_done_pub_.publish(done_);
 }
 
 void MissionManager::initMission(string name)
@@ -231,6 +221,17 @@ void MissionManager::endMission()
 {
 	done_.data=true;
 }
+
+void MissionManager::publishMissionGoal()
+{
+	goal_pub_.publish(goal_cmd_);
+}
+
+void MissionManager::publishDone()
+{
+	hmi_done_pub_.publish(done_);
+}
+
 
 ////////////////////// PUBLIC  //////////////////////
 

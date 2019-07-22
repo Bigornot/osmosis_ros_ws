@@ -29,6 +29,7 @@ using namespace std;
 class JoyTeleop
 {
 private:
+	///////// Attributes ////////
 	ros::NodeHandle nh_;
 	double freq_;
 
@@ -42,14 +43,17 @@ private:
 	bool button_pressed_;
 	bool pub_on_;
 
+	///////// Methods ////////
+	void JoyFSM();
 	void joy_on();
 	void joy_off();
-	void JoyFSM();
 
 public:
 	JoyTeleop();
-	void teleopCallbackJoy(const sensor_msgs::Joy & joy_msg);
+
 	void run();
+
+	void teleopCallbackJoy(const sensor_msgs::Joy & joy_msg);
 
 }; // end of class
 

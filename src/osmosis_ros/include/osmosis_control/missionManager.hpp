@@ -73,7 +73,7 @@ private:
 	void goalKeyboard();
 	void endPoint();
 
-  void initMission(string name);
+	void initMission(string name);
 	void parse(string line);
 	void doMission();
 	bool checkNextStep();

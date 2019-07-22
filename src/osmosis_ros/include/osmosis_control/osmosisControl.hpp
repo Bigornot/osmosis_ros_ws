@@ -41,6 +41,7 @@ const double psi=0.1;
 class OsmosisControl
 {
 private:
+	///////// Attributes ////////
 	ros::NodeHandle nh_;
 	double freq_;
 	ros::Publisher cmd_vel_pub_;
@@ -63,33 +64,26 @@ private:
 	enum State {WAIT_GOAL, MOVE_TO_GOAL, ARRIVED_GOAL};
 	State state_;
 
+	///////// Methods ////////
+	void osmosisControlFSM();
+
+	bool new_goal();
+	bool is_arrived();
+	void stop();
+	void updateMove();
+	bool obstacleFromScan(const sensor_msgs::LaserScan& scan);
+	geometry_msgs::Twist PF(double x_p, double y_p,	double theta_p, double obs_dx, double obs_dy);
+
+	void publish_is_arrived();
+
 public:
+	OsmosisControl();
+
+	bool run();
 
 	void callbackGoal(const osmosis_control::GoalMsg & thegoal);
 	void callbackScan(const sensor_msgs::LaserScan & thescan);
 	void callbackPose(const geometry_msgs::Pose2D & msg);
-	void publish_is_arrived();
-
-	//! ROS node initialization
-	OsmosisControl();
-
-	bool new_goal();
-	bool is_arrived();
-
-	void stop();
-
-	void updateMove();
-
-	bool obstacleFromScan(const sensor_msgs::LaserScan& scan);
-
-	geometry_msgs::Twist PF(double x_p, double y_p,
-	double theta_p, double obs_dx, double obs_dy);
-
-	bool run();
-
-	void osmosisControlFSM();
-
-
 }; // end of class
 
 #endif //OSMOSIS_CONTROL_HPP

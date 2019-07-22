@@ -36,6 +36,7 @@ const double max_angular = 2;
 class SafetyPilot
 {
 private:
+	///////// Attributes ////////
 	ros::NodeHandle nh_;
 	double freq_;
 
@@ -55,27 +56,20 @@ private:
 	osmosis_control::TeleopMsg base_cmd_teleop_;
 	sensor_msgs::LaserScan scan_;
 
-public:
-
-	// from MAUVE safetyPilot update operation
-	geometry_msgs::Twist updateCmdWithLaserScan(geometry_msgs::Twist cmd,sensor_msgs::LaserScan s);
-
-	// from MAUVE "priority" ressource: choose between teleop or control
-	void computeCommandCtrlTeleop();
-	void callbackCmdVelCtrl(const geometry_msgs::Twist & cmd_msg);
-	void callbackScan(const sensor_msgs::LaserScan & scan_msg);
-	void callbackTeleop(const osmosis_control::TeleopMsg & teleop_msg);
-
+	///////// Methods ////////
 	void SafetyPilotFSM();
-
 	void stop();
+	geometry_msgs::Twist updateCmdWithLaserScan(geometry_msgs::Twist cmd,sensor_msgs::LaserScan s);
+	void computeCommandCtrlTeleop();
 
-	//! ROS node topics publishing and subscribing initialization
+public:
 	SafetyPilot();
 
 	bool run();
 
-
+	void callbackCmdVelCtrl(const geometry_msgs::Twist & cmd_msg);
+	void callbackScan(const sensor_msgs::LaserScan & scan_msg);
+	void callbackTeleop(const osmosis_control::TeleopMsg & teleop_msg);
 }; // end of class
 
 #endif //OSMOSIS_SAFETYPILOT_HPP
