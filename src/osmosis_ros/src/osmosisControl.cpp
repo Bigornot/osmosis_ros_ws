@@ -34,10 +34,10 @@ void OsmosisControl::osmosisControlFSM()
 	}
 }
 
-void OsmosisControl::callbackGoal(const osmosis_control::State_and_PointMsg & thegoal)
+void OsmosisControl::callbackGoal(const osmosis_control::GoalMsg & thegoal)
 {
 	target_=thegoal;
-	ROS_INFO("GOAL : x: [%f], y:[%f]",target_.goal.x,target_.goal.y);
+	ROS_INFO("GOAL : x: [%f], y:[%f]",target_.point.x,target_.point.y);
 }
 
 void OsmosisControl::callbackScan(const sensor_msgs::LaserScan & thescan)
@@ -67,7 +67,7 @@ OsmosisControl::OsmosisControl()
 	odom_sub_ = nh_.subscribe("/pose", 1, &OsmosisControl::callbackPose, this);
 
 	//initialization of attributes
-	target_.goal.x = old_goal_.x =target_.goal.y = old_goal_.y=0;
+	target_.point.x = old_goal_.x =target_.point.y = old_goal_.y=0;
 	state_=WAIT_GOAL;
 	freq_=10;
 }
@@ -75,18 +75,18 @@ OsmosisControl::OsmosisControl()
 bool OsmosisControl::new_goal()
 {
 	bool new_goal=false;
-	if (fabs(target_.goal.x-old_goal_.x)>0.1 || fabs(target_.goal.y-old_goal_.y)>0.1)
+	if (fabs(target_.point.x-old_goal_.x)>0.1 || fabs(target_.point.y-old_goal_.y)>0.1)
 	{
 		new_goal = true;
-		old_goal_=target_.goal;
+		old_goal_=target_.point;
 	}
 	return new_goal;
 }
 
 bool OsmosisControl::is_arrived()
 {
-	double xPos = robot_pose.x - target_.goal.x;
-	double yPos = robot_pose.y - target_.goal.y;
+	double xPos = robot_pose.x - target_.point.x;
+	double yPos = robot_pose.y - target_.point.y;
 	bool is_arrived = false;
 
 	if (sqrt( pow(xPos,2) + pow(yPos,2) ) < 0.2)
@@ -110,8 +110,8 @@ void OsmosisControl::updateMove()
 	// if no obstacle or taxi mode on -> avoid
 	if(!obstacleFromScan(scan_) || target_.taxi)
 	{
-		double xPos = robot_pose.x - target_.goal.x;
-		double yPos = robot_pose.y - target_.goal.y;
+		double xPos = robot_pose.x - target_.point.x;
+		double yPos = robot_pose.y - target_.point.y;
 		double wPos = robot_pose.theta;
 		if ( wPos < 0) wPos += 2 * M_PI;
 		double obs_dist = sqrt(pow(obstacle.x,2) + pow(obstacle.y,2));

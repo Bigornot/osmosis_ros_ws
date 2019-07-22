@@ -24,7 +24,7 @@
 #include <ros/package.h>
 #include "std_msgs/Bool.h"
 #include "osmosis_control/GoalMsg.h"
-#include "osmosis_control/Hmi_OrderMsg.h"
+#include "osmosis_control/MissionMsg.h"
 
 using namespace std;
 
@@ -43,7 +43,7 @@ private:
 	StateMission missionState_;
 	StateMission pointState_;
 
-	osmosis_control::Hmi_OrderMsg order_cmd_;
+	osmosis_control::MissionMsg mission_cmd_;
 
 	bool goal_reached_;
 	bool mission_done_;

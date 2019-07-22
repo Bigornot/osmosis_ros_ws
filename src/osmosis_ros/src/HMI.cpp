@@ -89,7 +89,7 @@ void HMI::goalKeyboard()
 	geometry_msgs::Point thegoal;
 	int n=0;
 
-	order_cmd_.doMission=false;
+	mission_cmd_.doRunwayMission=false;
 	mission_done_=false;
 
 	ROS_INFO("Enter a new goal (x,y)");
@@ -100,18 +100,18 @@ void HMI::goalKeyboard()
 	ROS_INFO("taxi (0,1)= ");
 	cin >> n;
 
-	order_cmd_.mission_goal.taxi = n!=0;
-	order_cmd_.mission_goal.goal = thegoal;
+	mission_cmd_.mission_goal.taxi = n!=0;
+	mission_cmd_.mission_goal.point = thegoal;
 }
 
 void HMI::publishOrder()
 {
-	orders_pub_.publish(order_cmd_);
+	orders_pub_.publish(mission_cmd_);
 }
 
 bool HMI::askMission()
 {
-	order_cmd_.doMission=true;
+	mission_cmd_.doRunwayMission=true;
 	mission_done_=false;
 
 	bool ok=false;
@@ -124,7 +124,7 @@ bool HMI::askMission()
 	{
 		ok=true;
 		mission_done_=false;
-		order_cmd_.mission_name=name;
+		mission_cmd_.mission_name=name;
 	}
 	return ok;
 }
@@ -159,7 +159,7 @@ bool HMI::checkMission(string name)
 HMI::HMI()
 {
 	freq_=10;
-	orders_pub_ = nh_.advertise<osmosis_control::Hmi_OrderMsg>("order", 1);
+	orders_pub_ = nh_.advertise<osmosis_control::MissionMsg>("order", 1);
 	done_sub_ = nh_.subscribe("/hmi_done", 1, &HMI::CallbackOrderDone, this);
 	state_=IDLE;
 	pointState_=ASK_MISSION;

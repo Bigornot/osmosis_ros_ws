@@ -24,7 +24,7 @@
 #include <string>
 #include <ros/package.h>
 #include "std_msgs/Bool.h"
-#include "osmosis_control/Hmi_OrderMsg.h"
+#include "osmosis_control/MissionMsg.h"
 
 using namespace std;
 
@@ -92,7 +92,7 @@ public:
 	void run();
 
 	void CallbackGoalReached(const std_msgs::Bool &goal_reached);
-	void CallbackOrder(const osmosis_control::Hmi_OrderMsg &order);
+	void CallbackOrder(const osmosis_control::MissionMsg &order);
 
 }; // end of class
 

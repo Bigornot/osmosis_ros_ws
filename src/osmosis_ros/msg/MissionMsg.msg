@@ -1,0 +1,3 @@
+GoalMsg mission_goal
+string mission_name
+bool doRunwayMission

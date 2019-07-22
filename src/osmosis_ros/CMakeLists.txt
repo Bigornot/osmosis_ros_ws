@@ -59,7 +59,7 @@ find_package(catkin REQUIRED COMPONENTS
    FILES
    TeleopMsg.msg
    GoalMsg.msg
-   Hmi_OrderMsg.msg
+   MissionMsg.msg
  )
 
 ## Generate services in the 'srv' folder

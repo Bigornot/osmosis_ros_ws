@@ -62,7 +62,7 @@ GraphPlanner::GraphPlanner()
 {
 	freq_=10;
 	//set up the publisher for the goal topic
-	target_pub_ = nh_.advertise<osmosis_control::State_and_PointMsg>("target", 1);
+	target_pub_ = nh_.advertise<osmosis_control::GoalMsg>("target", 1);
 	goal_reached_pub_ = nh_.advertise<std_msgs::Bool>("goal_reached", 1);
 	goal_sub_=nh_.subscribe("/goal", 1, &GraphPlanner::callbackGoal, this);
 	odom_sub_=nh_.subscribe("/pose", 1, &GraphPlanner::callbackPose, this);
@@ -78,7 +78,7 @@ void GraphPlanner::callbackTargetReached(const std_msgs::Bool & target_reached)
 	ROS_INFO("Target reached : [%d]",target_reached_);
 }
 
-void GraphPlanner::callbackGoal(const osmosis_control::State_and_PointMsg & thegoal)
+void GraphPlanner::callbackGoal(const osmosis_control::GoalMsg & thegoal)
 {
 	mission_goal_=thegoal;
 
@@ -190,11 +190,11 @@ void GraphPlanner::publishSendTarget()
 	//  {
 	//shell().target.write(plan[target_index]);
 	ROS_INFO("SEND target x: %f y:%f", plan[target_index].x, plan[target_index].y);
-	target_.point=plan[target_index];
+	goal_.point=plan[target_index];
 
-	target_.taxi=mission_goal_.taxi;
+	goal_.taxi=mission_goal_.taxi;
 
-	target_pub_.publish(target_);
+	target_pub_.publish(goal_);
 	//  }
 }
 

@@ -100,8 +100,8 @@ void MissionManager::goalKeyboard()
 {
 	goal_reached_=false;
 
-	ROS_INFO("x= %f",goal_cmd_.goal.x);
-	ROS_INFO("y= %f",goal_cmd_.goal.y);
+	ROS_INFO("x= %f",goal_cmd_.point.x);
+	ROS_INFO("y= %f",goal_cmd_.point.y);
 	ROS_INFO("taxi= %d",goal_cmd_.taxi);
 }
 
@@ -145,8 +145,8 @@ void MissionManager::initMission(string name)
 
 	for(i=0; i<mission_.mission_steps.size();i++)
 	{
-		ROS_INFO("x: %f",mission_.mission_steps[i].goal.x);
-		ROS_INFO("y: %f",mission_.mission_steps[i].goal.y);
+		ROS_INFO("x: %f",mission_.mission_steps[i].point.x);
+		ROS_INFO("y: %f",mission_.mission_steps[i].point.y);
 		ROS_INFO("taxi= %d",mission_.mission_steps[i].taxi);
 	}
 
@@ -169,8 +169,8 @@ void MissionManager::parse(string line)
 			int coma2=line.find(',', coma+1);
 			if(coma2>=0)
 			{
-				order.goal.x=stof(line.substr(2, coma-2));
-				order.goal.y=stof(line.substr(coma+3, coma2-coma-3));
+				order.point.x=stof(line.substr(2, coma-2));
+				order.point.y=stof(line.substr(coma+3, coma2-coma-3));
 				order.taxi=stoi(line.substr(coma2+6,1))!=0;
 
 				mission_.mission_steps.push_back(order);
@@ -278,12 +278,11 @@ void MissionManager::CallbackGoalReached(const std_msgs::Bool &goal_reached)
 	goal_reached_=goal_reached.data;
 }
 
-void MissionManager::CallbackOrder(const osmosis_control::Hmi_OrderMsg &order)
+void MissionManager::CallbackOrder(const osmosis_control::MissionMsg &order)
 {
-	if(order.doMission)
+	if(order.doRunwayMission)
 	{
 		ROS_INFO("\nMISSION\n");
-
 		hmi_mission_=true;
 		hmi_point_=false;
 		mission_name_=order.mission_name;
@@ -292,7 +291,6 @@ void MissionManager::CallbackOrder(const osmosis_control::Hmi_OrderMsg &order)
 	else
 	{
 		ROS_INFO("\nPOINT\n");
-
 		hmi_mission_=false;
 		hmi_point_=true;
 		goal_cmd_=order.mission_goal;
