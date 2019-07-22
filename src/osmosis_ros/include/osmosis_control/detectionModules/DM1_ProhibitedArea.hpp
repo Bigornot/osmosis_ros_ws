@@ -13,26 +13,25 @@
 *
 */
 
-#ifndef OSMOSIS_DM6_LocNotUpdated_HPP
-#define OSMOSIS_DM6_LocNotUpdated_HPP
+#ifndef OSMOSIS_DM1_ProhibitedArea_HPP
+#define OSMOSIS_DM1_ProhibitedArea_HPP
 
 #include <iostream>
+#include <cmath>
 #include <ros/ros.h>
-#include <geometry_msgs/Pose2D.h>
-#include <osmosis_control/DetectionModules/DetectionModule.hpp>
+#include <std_msgs/Bool.h>
+#include <osmosis_control/detectionModules/DetectionModule.hpp>
 
-class DM6_LocNotUpdated : public DetectionModule
+class DM1_ProhibitedArea : public DetectionModule
 {
 private:
-	ros::Subscriber pose_sub_;
-	ros::Time lastUpdate_;
-	ros::Duration timeOut_;
+	ros::Subscriber state_sub_;
 
 public:
-	DM6_LocNotUpdated();
-	void set();
+	DM1_ProhibitedArea();
+	void init();
 	void detect();
-	void DM6_LocNotUpdatedCallback(const geometry_msgs::Pose2D &pose);
+	void DM1_ProhibitedAreaCallback(const std_msgs::Bool & state);
 };
 
-#endif //OSMOSIS_DM6_LocNotUpdated_HPP
+#endif //OSMOSIS_DM1_ProhibitedArea_HPP

@@ -19,7 +19,7 @@
 #include <iostream>
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
-#include <osmosis_control/DetectionModules/DetectionModule.hpp>
+#include <osmosis_control/detectionModules/DetectionModule.hpp>
 
 class DM2_CmdNotUpdated : public DetectionModule
 {
@@ -30,7 +30,7 @@ private:
 
 public:
 	DM2_CmdNotUpdated();
-	void set();
+	void init();
 	void detect();
 	void DM2_CmdNotUpdatedCallback(const geometry_msgs::Twist &cmd_vel);
 };

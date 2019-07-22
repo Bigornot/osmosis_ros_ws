@@ -13,25 +13,26 @@
 *
 */
 
-#ifndef RM1_EMERGENCYSTOP_HPP
-#define RM1_EMERGENCYSTOP_HPP
+#ifndef RM2_CONTROLLEDSTOPHPP
+#define RM2_CONTROLLEDSTOPHPP
 
 #include <iostream>
 #include <ros/ros.h>
+#include <std_msgs/Bool.h>
 #include <geometry_msgs/Twist.h>
-#include <osmosis_control/RecoveryModules/RecoveryModule.hpp>
+#include <osmosis_control/recoveryModules/RecoveryModule.hpp>
 
-class RM1_EmergencyStop : public RecoveryModule
+class RM2_ControlledStop : public RecoveryModule
 {
 private:
-	ros::Publisher pub_;
+	ros::Publisher pub_order_;
 	ros::Publisher pub_cmd_;
 	double pollRate_;
 	double delaySend_;
 	ros::Time start_;
 
 public:
-	RM1_EmergencyStop(int id, vector<int> successors);
+	RM2_ControlledStop(int id, vector<int> successors);
 	void startRecovery();
 	void doRecovery();
 	void stopRecovery();

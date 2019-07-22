@@ -13,26 +13,24 @@
 *
 */
 
-#ifndef RM2_CONTROLLEDSTOPHPP
-#define RM2_CONTROLLEDSTOPHPP
+#ifndef RM4_HPP
+#define RM4_HPP
 
 #include <iostream>
 #include <ros/ros.h>
 #include <std_msgs/Bool.h>
-#include <geometry_msgs/Twist.h>
-#include <osmosis_control/RecoveryModules/RecoveryModule.hpp>
+#include <osmosis_control/recoveryModules/RecoveryModule.hpp>
 
-class RM2_ControlledStop : public RecoveryModule
+class RM4_RespawnNodes : public RecoveryModule
 {
 private:
-	ros::Publisher pub_order_;
-	ros::Publisher pub_cmd_;
-	double pollRate_;
-	double delaySend_;
-	ros::Time start_;
+	ros::V_string nodesToCheck_;
+	ros::V_string nodesToRespawn_;
+	int n_;
+	int n_max_wait_;
 
 public:
-	RM2_ControlledStop(int id, vector<int> successors);
+	RM4_RespawnNodes(int id, vector<int> successors);
 	void startRecovery();
 	void doRecovery();
 	void stopRecovery();

@@ -1,4 +1,4 @@
-#include <osmosis_control/DetectionModules/DM1_ProhibitedArea.hpp>
+#include <osmosis_control/detectionModules/DM1_ProhibitedArea.hpp>
 
 //! ROS node topics publishing and subscribing initialization
 DM1_ProhibitedArea::DM1_ProhibitedArea() : DetectionModule()
@@ -7,7 +7,7 @@ DM1_ProhibitedArea::DM1_ProhibitedArea() : DetectionModule()
  	state_=false;
 }
 
-void DM1_ProhibitedArea::set()
+void DM1_ProhibitedArea::init()
 {
 	
 }
@@ -15,7 +15,7 @@ void DM1_ProhibitedArea::set()
 //compute detection out of zone
 void DM1_ProhibitedArea::detect()
 {
-	// Done in a separate node
+	// Done in another node
 }
 
 //Topic callback

@@ -13,27 +13,24 @@
 *
 */
 
-#ifndef RM3_HPP
-#define RM3_HPP
+#ifndef RM5_SWITCHTOTELEOPHPP
+#define RM5_SWITCHTOTELEOPHPP
 
 #include <iostream>
-#include <cstdlib>
 #include <ros/ros.h>
 #include <std_msgs/Bool.h>
-#include <ros/master.h>
-#include <osmosis_control/RecoveryModules/RecoveryModule.hpp>
+#include <osmosis_control/recoveryModules/RecoveryModule.hpp>
 
-class RM3_RespawnControlNodes : public RecoveryModule
+class RM5_SwitchToTeleop : public RecoveryModule
 {
 private:
-	ros::V_string nodesToCheck_;
-	ros::V_string nodesToRespawn_;
-
-	int n_;
-	int n_max_wait_;
+	ros::Publisher pub_;
+	double pollRate_;
+	double delaySend_;
+	ros::Time start_;
 
 public:
-	RM3_RespawnControlNodes(int id, vector<int> successors);
+	RM5_SwitchToTeleop(int id, vector<int> successors);
 	void startRecovery();
 	void doRecovery();
 	void stopRecovery();

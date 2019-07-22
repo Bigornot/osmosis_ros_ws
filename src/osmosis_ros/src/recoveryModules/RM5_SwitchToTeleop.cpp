@@ -1,4 +1,4 @@
-#include <osmosis_control/RecoveryModules/RM5_SwitchToTeleop.hpp>
+#include <osmosis_control/recoveryModules/RM5_SwitchToTeleop.hpp>
 
 RM5_SwitchToTeleop::RM5_SwitchToTeleop(int id, vector<int> successors) : RecoveryModule(id, successors) 
 {

@@ -1,4 +1,4 @@
-#include <osmosis_control/RecoveryModules/RM4_RespawnNodes.hpp>
+#include <osmosis_control/recoveryModules/RM4_RespawnNodes.hpp>
 
 RM4_RespawnNodes::RM4_RespawnNodes(int id, vector<int> successors) : RecoveryModule(id, successors) 
 {

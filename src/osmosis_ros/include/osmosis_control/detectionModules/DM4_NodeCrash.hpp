@@ -13,24 +13,24 @@
 *
 */
 
-#ifndef OSMOSIS_DM5_NodeCrashControl_HPP
-#define OSMOSIS_DM5_NodeCrashControl_HPP
+#ifndef OSMOSIS_DM4_NodeCrash_HPP
+#define OSMOSIS_DM4_NodeCrash_HPP
 
 #include <iostream>
 #include <ros/ros.h>
 #include <ros/master.h>
-#include <osmosis_control/DetectionModules/DetectionModule.hpp>
+#include <osmosis_control/detectionModules/DetectionModule.hpp>
 
-class DM5_NodeCrashControl : public DetectionModule
+class DM4_NodeCrash : public DetectionModule
 {
 private:
 	ros::V_string aliveNodes_;
 	ros::V_string nodesToCheck_;
 
 public:
-	DM5_NodeCrashControl();
-	void set();
+	DM4_NodeCrash();
+	void init();
 	void detect();
 };
 
-#endif //OSMOSIS_DM5_NodeCrashControl_HPP
+#endif //OSMOSIS_DM4_NodeCrash_HPP

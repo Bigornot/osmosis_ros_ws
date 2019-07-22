@@ -13,30 +13,28 @@
 *
 */
 
-#ifndef OSMOSIS_DM3_WrongCommand_HPP
-#define OSMOSIS_DM3_WrongCommand_HPP
+#ifndef RM1_EMERGENCYSTOP_HPP
+#define RM1_EMERGENCYSTOP_HPP
 
 #include <iostream>
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
-#include <osmosis_control/DetectionModules/DetectionModule.hpp>
+#include <osmosis_control/recoveryModules/RecoveryModule.hpp>
 
-class DM3_WrongCommand : public DetectionModule
+class RM1_EmergencyStop : public RecoveryModule
 {
 private:
-	ros::Subscriber cmd_sub_;
-	geometry_msgs::Twist cmd_;
-	float cmd_linear_x_max_;
-	float cmd_linear_x_min_;
-	float cmd_angular_z_max_;
-	float cmd_angular_z_min_;
+	ros::Publisher pub_;
+	ros::Publisher pub_cmd_;
+	double pollRate_;
+	double delaySend_;
+	ros::Time start_;
 
 public:
-	DM3_WrongCommand();
-	void set();
-	void detect();
-	void DM3_WrongCommandCallback(const geometry_msgs::Twist & cmd_msg);
+	RM1_EmergencyStop(int id, vector<int> successors);
+	void startRecovery();
+	void doRecovery();
+	void stopRecovery();
+};
 
-}; // end of class
-
-#endif //OSMOSIS_DM3_WrongCommand_HPP
+#endif 

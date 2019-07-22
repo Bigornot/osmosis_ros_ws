@@ -1,4 +1,4 @@
-#include <osmosis_control/DetectionModules/DM2_CmdNotUpdated.hpp>
+#include <osmosis_control/detectionModules/DM2_CmdNotUpdated.hpp>
 
 //! ROS node topics publishing and subscribing initialization
 DM2_CmdNotUpdated::DM2_CmdNotUpdated() : DetectionModule()
@@ -9,7 +9,7 @@ DM2_CmdNotUpdated::DM2_CmdNotUpdated() : DetectionModule()
 	timeOut_ = ros::Duration(1);
 }
 
-void DM2_CmdNotUpdated::set()
+void DM2_CmdNotUpdated::init()
 {
 	lastUpdate_=ros::Time::now();
 }

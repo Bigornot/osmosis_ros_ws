@@ -1,4 +1,4 @@
-#include <osmosis_control/DetectionModules/DM3_WrongCommand.hpp>
+#include <osmosis_control/detectionModules/DM3_WrongCommand.hpp>
 
 //! ROS node topics publishing and subscribing initialization
 DM3_WrongCommand::DM3_WrongCommand()
@@ -10,7 +10,7 @@ DM3_WrongCommand::DM3_WrongCommand()
 	cmd_angular_z_min_=-50;
 }
 
-void DM3_WrongCommand::set()
+void DM3_WrongCommand::init()
 {
 }
 

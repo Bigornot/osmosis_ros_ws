@@ -1,4 +1,4 @@
-#include <osmosis_control/DetectionModules/DM6_LocNotUpdated.hpp>
+#include <osmosis_control/detectionModules/DM6_LocNotUpdated.hpp>
 
 //! ROS node topics publishing and subscribing initialization
 DM6_LocNotUpdated::DM6_LocNotUpdated() : DetectionModule()
@@ -11,7 +11,7 @@ DM6_LocNotUpdated::DM6_LocNotUpdated() : DetectionModule()
 	timeOut_ = ros::Duration(1);
 }
 
-void DM6_LocNotUpdated::set()
+void DM6_LocNotUpdated::init()
 {
 	lastUpdate_=ros::Time::now();
 }

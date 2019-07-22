@@ -1,4 +1,4 @@
-#include <osmosis_control/RecoveryModules/RM3_RespawnControlNodes.hpp>
+#include <osmosis_control/recoveryModules/RM3_RespawnControlNodes.hpp>
 
 RM3_RespawnControlNodes::RM3_RespawnControlNodes(int id, vector<int> successors) : RecoveryModule(id, successors) 
 {

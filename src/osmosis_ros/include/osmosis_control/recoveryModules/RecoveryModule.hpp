@@ -27,7 +27,7 @@ public:
 	void run();
 	void start();
 	void stop();
-	void driveRecoveryModule();
+	void recoveryModuleFSM();
 	int getId();
 	vector<int> getSuccessorsId();
 	virtual void doRecovery()=0;

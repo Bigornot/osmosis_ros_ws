@@ -58,9 +58,9 @@ int FTM_Rule::getId()
 	return id_;
 }
 
-void FTM_Rule::setDM()
+void FTM_Rule::initDM()
 {
-	DM_->set();
+	DM_->init();
 }
 
 void FTM_Rule::runDM()

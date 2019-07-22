@@ -1,4 +1,4 @@
-#include <osmosis_control/DetectionModules/DetectionModule.hpp>
+#include <osmosis_control/detectionModules/DetectionModule.hpp>
 
 DetectionModule::DetectionModule ()
 {
@@ -6,7 +6,7 @@ DetectionModule::DetectionModule ()
 	driveState_=IDLE;
 }
 
-void DetectionModule::driveDetectionModule()
+void DetectionModule::detectionModuleFSM()
 {
 	switch(driveState_)
 	{
@@ -25,7 +25,7 @@ void DetectionModule::driveDetectionModule()
 void DetectionModule::run()
 {
 	detect();
-	driveDetectionModule();
+	detectionModuleFSM();
 	ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 }
 

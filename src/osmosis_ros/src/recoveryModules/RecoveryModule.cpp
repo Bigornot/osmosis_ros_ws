@@ -1,4 +1,4 @@
-#include <osmosis_control/RecoveryModules/RecoveryModule.hpp>
+#include <osmosis_control/recoveryModules/RecoveryModule.hpp>
 
 RecoveryModule::RecoveryModule(int id, vector<int> successors)
 {
@@ -8,7 +8,7 @@ RecoveryModule::RecoveryModule(int id, vector<int> successors)
 	state_=false;
 }
 
-void RecoveryModule::driveRecoveryModule()
+void RecoveryModule::recoveryModuleFSM()
 {
 	cout << "ID:" << id_ << " " << state_ << " ";
 	switch(driveState_)
@@ -57,7 +57,7 @@ void RecoveryModule::stop()
 
 void RecoveryModule::run()
 {
-	driveRecoveryModule();
+	recoveryModuleFSM();
 }
 
 int RecoveryModule::getId()

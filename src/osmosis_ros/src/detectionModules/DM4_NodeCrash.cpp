@@ -1,4 +1,4 @@
-#include <osmosis_control/DetectionModules/DM4_NodeCrash.hpp>
+#include <osmosis_control/detectionModules/DM4_NodeCrash.hpp>
 
 //! ROS node topics publishing and subscribing initialization
 DM4_NodeCrash::DM4_NodeCrash() : DetectionModule()
@@ -13,7 +13,7 @@ DM4_NodeCrash::DM4_NodeCrash() : DetectionModule()
 	nodesToCheck_.push_back("/checkProhibitedArea_node");
 }
 
-void DM4_NodeCrash::set()
+void DM4_NodeCrash::init()
 {
 }
 

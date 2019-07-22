@@ -1,4 +1,4 @@
-#include <osmosis_control/RecoveryModules/RM2_ControlledStop.hpp>
+#include <osmosis_control/recoveryModules/RM2_ControlledStop.hpp>
 
 RM2_ControlledStop::RM2_ControlledStop(int id, vector<int> successors) : RecoveryModule(id, successors) 
 {

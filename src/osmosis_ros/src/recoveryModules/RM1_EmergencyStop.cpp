@@ -1,4 +1,4 @@
-#include <osmosis_control/RecoveryModules/RM1_EmergencyStop.hpp>
+#include <osmosis_control/recoveryModules/RM1_EmergencyStop.hpp>
 
 RM1_EmergencyStop::RM1_EmergencyStop(int id, vector<int> successors) : RecoveryModule(id, successors) 
 {

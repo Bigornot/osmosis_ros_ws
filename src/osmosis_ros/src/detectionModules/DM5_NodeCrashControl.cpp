@@ -1,4 +1,4 @@
-#include <osmosis_control/DetectionModules/DM5_NodeCrashControl.hpp>
+#include <osmosis_control/detectionModules/DM5_NodeCrashControl.hpp>
 
 //! ROS node topics publishing and subscribing initialization
 DM5_NodeCrashControl::DM5_NodeCrashControl() : DetectionModule()
@@ -9,7 +9,7 @@ DM5_NodeCrashControl::DM5_NodeCrashControl() : DetectionModule()
 	nodesToCheck_.push_back("/osmosis_control_node");
 }
 
-void DM5_NodeCrashControl::set()
+void DM5_NodeCrashControl::init()
 {
 }
 

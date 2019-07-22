@@ -22,18 +22,18 @@
 #include <algorithm>
 #include <osmosis_control/FTM_Rule.hpp>
 
-#include <osmosis_control/DetectionModules/DM1_ProhibitedArea.hpp>
-#include <osmosis_control/DetectionModules/DM2_CmdNotUpdated.hpp>
-#include <osmosis_control/DetectionModules/DM3_WrongCommand.hpp>
-#include <osmosis_control/DetectionModules/DM4_NodeCrash.hpp>
-#include <osmosis_control/DetectionModules/DM5_NodeCrashControl.hpp>
-#include <osmosis_control/DetectionModules/DM6_LocNotUpdated.hpp>
+#include <osmosis_control/detectionModules/DM1_ProhibitedArea.hpp>
+#include <osmosis_control/detectionModules/DM2_CmdNotUpdated.hpp>
+#include <osmosis_control/detectionModules/DM3_WrongCommand.hpp>
+#include <osmosis_control/detectionModules/DM4_NodeCrash.hpp>
+#include <osmosis_control/detectionModules/DM5_NodeCrashControl.hpp>
+#include <osmosis_control/detectionModules/DM6_LocNotUpdated.hpp>
 
-#include <osmosis_control/RecoveryModules/RM1_EmergencyStop.hpp>
-#include <osmosis_control/RecoveryModules/RM2_ControlledStop.hpp>
-#include <osmosis_control/RecoveryModules/RM3_RespawnControlNodes.hpp>
-#include <osmosis_control/RecoveryModules/RM4_RespawnNodes.hpp>
-#include <osmosis_control/RecoveryModules/RM5_SwitchToTeleop.hpp>
+#include <osmosis_control/recoveryModules/RM1_EmergencyStop.hpp>
+#include <osmosis_control/recoveryModules/RM2_ControlledStop.hpp>
+#include <osmosis_control/recoveryModules/RM3_RespawnControlNodes.hpp>
+#include <osmosis_control/recoveryModules/RM4_RespawnNodes.hpp>
+#include <osmosis_control/recoveryModules/RM5_SwitchToTeleop.hpp>
 
 class FTM_Strategy;
 
@@ -79,7 +79,7 @@ public :
 	FTM_Rule* findLowestCommonDominant(vector<FTM_Rule*> dominant);
 
 	void runRules();
-	void setDMs();
+	void initDMs();
 	void runDMs();
 	void runRMs();
 

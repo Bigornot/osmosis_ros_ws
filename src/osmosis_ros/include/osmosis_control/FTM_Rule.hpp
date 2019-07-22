@@ -23,8 +23,8 @@
 #include "std_msgs/Bool.h"
 #include <vector>
 
-#include <osmosis_control/DetectionModules/DetectionModule.hpp>
-#include <osmosis_control/RecoveryModules/RecoveryModule.hpp>
+#include <osmosis_control/detectionModules/DetectionModule.hpp>
+#include <osmosis_control/recoveryModules/RecoveryModule.hpp>
 
 class FTM_Rule
 {
@@ -52,7 +52,7 @@ public:
 	int getPredecessorId();
 	vector<int> getSuccessorsId();
 
-	void setDM();
+	void initDM();
 	void runDM();
 	int getStateDM();
 	void runRM();

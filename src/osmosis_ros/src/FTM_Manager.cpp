@@ -37,10 +37,10 @@ FTM_Manager::FTM_Manager()
 	freq_=20;
 }
 
-void FTM_Manager::setDMs()
+void FTM_Manager::initDMs()
 {
 	for(int i=0; i<FTM_rules_.size(); i++)
-		FTM_rules_[i]->setDM();
+		FTM_rules_[i]->initDM();
 }
 
 void FTM_Manager::runDMs()
@@ -263,9 +263,11 @@ void FTM_Manager::run()
 {
 	ros::Rate loop_rate(freq_);
 
+	// Sleep for delay_before_start_ in order to wait for ROS to initialize
 	ros::Duration(delay_before_start_).sleep();
 
-	setDMs();
+	// Initialize DMs (watchdog, timeout, etc..)
+	initDMs();
 
 	while(nh_.ok())
 	{
