@@ -32,7 +32,7 @@ private:
 	ros::Time start_;
 
 public:
-	RM2_ControlledStop(int id, vector<int> successors, bool managerCanStop);
+	RM2_ControlledStop(int id, vector<int> successors);
 	void startRecovery();
 	void doRecovery();
 	void stopRecovery();

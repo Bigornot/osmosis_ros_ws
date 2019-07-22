@@ -1,6 +1,6 @@
 #include <osmosis_control/RecoveryModules/RM1_EmergencyStop.hpp>
 
-RM1_EmergencyStop::RM1_EmergencyStop(int id, vector<int> successors, bool managerCanStop) : RecoveryModule(id, successors, managerCanStop) 
+RM1_EmergencyStop::RM1_EmergencyStop(int id, vector<int> successors) : RecoveryModule(id, successors) 
 {
 	pub_=nh_.advertise<std_msgs::Bool>("/do_RM1_EmergencyStop", 100);
 	pub_cmd_=nh_.advertise<geometry_msgs::Twist>("/summit_xl_a/robotnik_base_control/cmd_vel", 100);

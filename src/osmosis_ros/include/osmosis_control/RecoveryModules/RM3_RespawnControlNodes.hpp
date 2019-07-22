@@ -33,7 +33,7 @@ private:
 	int n_max_wait_;
 
 public:
-	RM3_RespawnControlNodes(int id, vector<int> successors, bool managerCanStop);
+	RM3_RespawnControlNodes(int id, vector<int> successors);
 	void startRecovery();
 	void doRecovery();
 	void stopRecovery();

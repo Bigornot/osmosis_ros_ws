@@ -30,7 +30,7 @@ private:
 	int n_max_wait_;
 
 public:
-	RM4_RespawnNodes(int id, vector<int> successors, bool managerCanStop);
+	RM4_RespawnNodes(int id, vector<int> successors);
 	void startRecovery();
 	void doRecovery();
 	void stopRecovery();

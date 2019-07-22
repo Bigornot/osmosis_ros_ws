@@ -1,6 +1,6 @@
 #include <osmosis_control/RecoveryModules/RM3_RespawnControlNodes.hpp>
 
-RM3_RespawnControlNodes::RM3_RespawnControlNodes(int id, vector<int> successors, bool managerCanStop) : RecoveryModule(id, successors, managerCanStop) 
+RM3_RespawnControlNodes::RM3_RespawnControlNodes(int id, vector<int> successors) : RecoveryModule(id, successors) 
 {
 	nodesToCheck_.push_back("/HMI_node");
 	nodesToCheck_.push_back("/graph_planner_node");
