@@ -64,7 +64,7 @@ vector<FTM_Rule*> FTM_Manager::findDominant(vector<FTM_Rule*> rules)
 
 	for (int i=0; i<rules.size(); i++)//for each rules
 	{
-		dominated=findDominated(Rules[i],&dominated);
+		dominated=findDominated(rules[i],&dominated);
 	}
 
 	cout << "Dominated FTM :";
