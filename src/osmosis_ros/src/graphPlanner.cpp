@@ -80,10 +80,10 @@ void GraphPlanner::callbackTargetReached(const std_msgs::Bool & target_reached)
 
 void GraphPlanner::callbackGoal(const osmosis_control::State_and_PointMsg & thegoal)
 {
-	state_and_goal_=thegoal;
+	mission_goal_=thegoal;
 
 	_new_goal=true;
-	ROS_INFO("NEW GOAL : x: [%f], y:[%f]",state_and_goal_.goal.x,state_and_goal_.goal.y);
+	ROS_INFO("NEW GOAL : x: [%f], y:[%f]",mission_goal_.point.x,mission_goal_.point.y);
 }
 
 /*void GraphPlanner::callbackGoalId(const string & thegoal_id)
@@ -142,7 +142,7 @@ void GraphPlanner::compute_plan()
 	auto s = graph.getClosestNode(current);
 	//  logger().info("start node {} {}", s->name, s->point);
 	ROS_INFO("start node %s %f %f", s->name.c_str(), s->point.x,s->point.y);
-	auto g = graph.getClosestNode(state_and_goal_.goal);
+	auto g = graph.getClosestNode(mission_goal_.point);
 	//  logger().info("goal node {} {}", g->name, g->point);
 	ROS_INFO("goal node %s %f %f", g->name.c_str(), g->point.x,g->point.y);
 	auto p = graph.compute_plan(s, g);
@@ -190,11 +190,11 @@ void GraphPlanner::publishSendTarget()
 	//  {
 	//shell().target.write(plan[target_index]);
 	ROS_INFO("SEND target x: %f y:%f", plan[target_index].x, plan[target_index].y);
-	state_and_target_.goal=plan[target_index];
+	target_.point=plan[target_index];
 
-	state_and_target_.taxi=state_and_goal_.taxi;
+	target_.taxi=mission_goal_.taxi;
 
-	target_pub_.publish(state_and_target_);
+	target_pub_.publish(target_);
 	//  }
 }
 

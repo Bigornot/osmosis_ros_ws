@@ -100,8 +100,8 @@ void HMI::goalKeyboard()
 	ROS_INFO("taxi (0,1)= ");
 	cin >> n;
 
-	order_cmd_.state_and_point.taxi = n!=0;
-	order_cmd_.state_and_point.goal = thegoal;
+	order_cmd_.mission_goal.taxi = n!=0;
+	order_cmd_.mission_goal.goal = thegoal;
 }
 
 void HMI::publishOrder()

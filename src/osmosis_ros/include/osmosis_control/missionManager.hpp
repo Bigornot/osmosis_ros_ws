@@ -32,7 +32,7 @@ struct Mission
 {
 	string name;
 	int step;
-	vector<osmosis_control::State_and_PointMsg> mission_steps;
+	vector<osmosis_control::GoalMsg> mission_steps;
 };
 
 class MissionManager
@@ -51,7 +51,7 @@ private:
 	StateMission missionState_;
 	StateMission pointState_;
 
-	osmosis_control::State_and_PointMsg state_and_point_cmd_;
+	osmosis_control::GoalMsg goal_cmd_;
 	Mission mission_;
 	string mission_name_;
 

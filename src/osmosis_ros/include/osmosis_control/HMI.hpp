@@ -23,7 +23,7 @@
 #include <string>
 #include <ros/package.h>
 #include "std_msgs/Bool.h"
-#include "osmosis_control/State_and_PointMsg.h"
+#include "osmosis_control/GoalMsg.h"
 #include "osmosis_control/Hmi_OrderMsg.h"
 
 using namespace std;

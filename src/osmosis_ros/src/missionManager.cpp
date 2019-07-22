@@ -100,14 +100,14 @@ void MissionManager::goalKeyboard()
 {
 	goal_reached_=false;
 
-	ROS_INFO("x= %f",state_and_point_cmd_.goal.x);
-	ROS_INFO("y= %f",state_and_point_cmd_.goal.y);
-	ROS_INFO("taxi= %d",state_and_point_cmd_.taxi);
+	ROS_INFO("x= %f",goal_cmd_.goal.x);
+	ROS_INFO("y= %f",goal_cmd_.goal.y);
+	ROS_INFO("taxi= %d",goal_cmd_.taxi);
 }
 
 void MissionManager::publishMissionGoal()
 {
-	goal_pub_.publish(state_and_point_cmd_);
+	goal_pub_.publish(goal_cmd_);
 }
 
 void MissionManager::endPoint()
@@ -154,12 +154,12 @@ void MissionManager::initMission(string name)
 
 	missionOver_=false;
 	mission_.step=0;
-	state_and_point_cmd_=mission_.mission_steps[mission_.step];
+	goal_cmd_=mission_.mission_steps[mission_.step];
 }
 
 void MissionManager::parse(string line)
 {
-	osmosis_control::State_and_PointMsg order;
+	osmosis_control::GoalMsg order;
 
 	if(line.size()>=14)
 	{
@@ -222,7 +222,7 @@ bool MissionManager::isMissionOver()
 void MissionManager::nextOrder()
 {
 	goal_reached_=false;
-	state_and_point_cmd_=mission_.mission_steps[mission_.step];
+	goal_cmd_=mission_.mission_steps[mission_.step];
 }
 
 void MissionManager::abortMission()
@@ -244,7 +244,7 @@ void MissionManager::endMission()
 MissionManager::MissionManager()
 {
 	//set up the publisher for the goal topic
-	goal_pub_ = nh_.advertise<osmosis_control::State_and_PointMsg>("goal", 1);
+	goal_pub_ = nh_.advertise<osmosis_control::GoalMsg>("goal", 1);
 	hmi_done_pub_ = nh_.advertise<std_msgs::Bool>("hmi_done", 1);
 	goal_reached_sub_ = nh_.subscribe("/goal_reached", 1, &MissionManager::CallbackGoalReached, this);
 	hmi_order_sub_ = nh_.subscribe("/order", 1, &MissionManager::CallbackOrder, this);
@@ -253,7 +253,7 @@ MissionManager::MissionManager()
 	state_=IDLE;
 	missionState_=INIT_MISSION;
 	pointState_=INIT_MISSION;
-	state_and_point_cmd_.taxi=true;
+	goal_cmd_.taxi=true;
 	missionAborted_=false;
 	missionOver_=true;
 	hmi_point_=false;
@@ -295,7 +295,7 @@ void MissionManager::CallbackOrder(const osmosis_control::Hmi_OrderMsg &order)
 
 		hmi_mission_=false;
 		hmi_point_=true;
-		state_and_point_cmd_=order.state_and_point;
+		goal_cmd_=order.mission_goal;
 	}
 }
 

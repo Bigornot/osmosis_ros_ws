@@ -28,7 +28,7 @@
 #include <geometry_msgs/Pose2D.h>
 #include <tf/transform_broadcaster.h>
 #include <std_msgs/Bool.h>
-#include "osmosis_control/State_and_PointMsg.h"
+#include "osmosis_control/GoalMsg.h"
 #include <osmosis_control/common.hpp>
 
 using namespace std;
@@ -52,7 +52,7 @@ private:
 
 	geometry_msgs::Pose2D robot_pose;
 	geometry_msgs::Point obstacle;
-	osmosis_control::State_and_PointMsg state_and_target_;
+	osmosis_control::GoalMsg target_;
 	double obstacle_lw, obstacle_radius;
 	geometry_msgs::Point old_goal_;
 	geometry_msgs::Twist cmd_;
@@ -65,7 +65,7 @@ private:
 
 public:
 
-	void callbackGoal(const osmosis_control::State_and_PointMsg & thegoal);
+	void callbackGoal(const osmosis_control::GoalMsg & thegoal);
 	void callbackScan(const sensor_msgs::LaserScan & thescan);
 	void callbackPose(const geometry_msgs::Pose2D & msg);
 	void publish_is_arrived();

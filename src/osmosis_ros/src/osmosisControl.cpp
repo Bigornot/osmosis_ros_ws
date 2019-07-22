@@ -36,8 +36,8 @@ void OsmosisControl::osmosisControlFSM()
 
 void OsmosisControl::callbackGoal(const osmosis_control::State_and_PointMsg & thegoal)
 {
-	state_and_target_=thegoal;
-	ROS_INFO("GOAL : x: [%f], y:[%f]",state_and_target_.goal.x,state_and_target_.goal.y);
+	target_=thegoal;
+	ROS_INFO("GOAL : x: [%f], y:[%f]",target_.goal.x,target_.goal.y);
 }
 
 void OsmosisControl::callbackScan(const sensor_msgs::LaserScan & thescan)
@@ -67,7 +67,7 @@ OsmosisControl::OsmosisControl()
 	odom_sub_ = nh_.subscribe("/pose", 1, &OsmosisControl::callbackPose, this);
 
 	//initialization of attributes
-	state_and_target_.goal.x = old_goal_.x = state_and_target_.goal.y = old_goal_.y=0;
+	target_.goal.x = old_goal_.x =target_.goal.y = old_goal_.y=0;
 	state_=WAIT_GOAL;
 	freq_=10;
 }
@@ -75,18 +75,18 @@ OsmosisControl::OsmosisControl()
 bool OsmosisControl::new_goal()
 {
 	bool new_goal=false;
-	if (fabs(state_and_target_.goal.x-old_goal_.x)>0.1 || fabs(state_and_target_.goal.y-old_goal_.y)>0.1)
+	if (fabs(target_.goal.x-old_goal_.x)>0.1 || fabs(target_.goal.y-old_goal_.y)>0.1)
 	{
 		new_goal = true;
-		old_goal_=state_and_target_.goal;
+		old_goal_=target_.goal;
 	}
 	return new_goal;
 }
 
 bool OsmosisControl::is_arrived()
 {
-	double xPos = robot_pose.x - state_and_target_.goal.x;
-	double yPos = robot_pose.y - state_and_target_.goal.y;
+	double xPos = robot_pose.x - target_.goal.x;
+	double yPos = robot_pose.y - target_.goal.y;
 	bool is_arrived = false;
 
 	if (sqrt( pow(xPos,2) + pow(yPos,2) ) < 0.2)
@@ -108,10 +108,10 @@ void OsmosisControl::updateMove()
 	geometry_msgs::Twist cmd; //0,0
 
 	// if no obstacle or taxi mode on -> avoid
-	if(!obstacleFromScan(scan_) || state_and_target_.taxi)
+	if(!obstacleFromScan(scan_) || target_.taxi)
 	{
-		double xPos = robot_pose.x - state_and_target_.goal.x;
-		double yPos = robot_pose.y - state_and_target_.goal.y;
+		double xPos = robot_pose.x - target_.goal.x;
+		double yPos = robot_pose.y - target_.goal.y;
 		double wPos = robot_pose.theta;
 		if ( wPos < 0) wPos += 2 * M_PI;
 		double obs_dist = sqrt(pow(obstacle.x,2) + pow(obstacle.y,2));
