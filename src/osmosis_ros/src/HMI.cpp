@@ -10,40 +10,40 @@ void HMI::HMI_FSM()
 			char mode;
 			mode=askMode();
 			if(mode=='P'||mode=='p')
-				state_=POINT;
+				state_=REACH_POINT_MISSION;
 			else if(mode=='M'||mode=='m')
-				state_=MISSION;
+				state_=RUNWAY_MISSION;
 			else
 				ROS_ERROR("Input Error : Please try again.\n");
 			break;
 
-		case POINT:
+		case REACH_POINT_MISSION:
 			switch (pointState_)
 			{
-				case ASKPOINT:
+				case ASK_MISSION:
 					goalKeyboard();
 					publishOrder();
-					pointState_=WAITPOINT;
+					pointState_=WAIT_END_MISSION;
 					break;
 
-				case WAITPOINT:
+				case WAIT_END_MISSION:
 					if (mission_done_)
 					{
 						state_=IDLE;
-						pointState_=ASKPOINT;
+						pointState_=ASK_MISSION;
 					}
 					break;
 			}
 			break;
 
-		case MISSION:
+		case RUNWAY_MISSION:
 			switch (missionState_)
 			{
-				case ASKMISSION:
+				case ASK_MISSION:
 					if(askMission())
 					{
 						publishOrder();
-						missionState_=WAITMISSION;
+						missionState_=WAIT_END_MISSION;
 					}
 					else
 					{
@@ -52,19 +52,18 @@ void HMI::HMI_FSM()
 					}
 					break;
 
-				case WAITMISSION:
+				case WAIT_END_MISSION:
 					if(mission_done_)
 					{
 						ROS_INFO("Mission done !");
-						missionState_=ASKMISSION;
+						missionState_=ASK_MISSION;
 						state_=IDLE;
 					}
 					break;
 			}
 			break;
 
-		default:
-			break;
+		default: break;
 	}
 }
 
@@ -163,8 +162,8 @@ HMI::HMI()
 	orders_pub_ = nh_.advertise<osmosis_control::Hmi_OrderMsg>("order", 1);
 	done_sub_ = nh_.subscribe("/hmi_done", 1, &HMI::CallbackOrderDone, this);
 	state_=IDLE;
-	pointState_=ASKPOINT;
-	missionState_=ASKMISSION;
+	pointState_=ASK_MISSION;
+	missionState_=ASK_MISSION;
 	mission_done_=true;
 }
 

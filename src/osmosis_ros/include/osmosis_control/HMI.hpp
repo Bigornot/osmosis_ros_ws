@@ -37,12 +37,11 @@ private:
 	ros::Publisher orders_pub_;
 	ros::Subscriber done_sub_;
 
-	enum StateDriveHMI{IDLE,POINT,MISSION};
+	enum StateDriveHMI{IDLE,REACH_POINT_MISSION,RUNWAY_MISSION};
 	StateDriveHMI state_;
-	enum StateMission {ASKMISSION,WAITMISSION};
+	enum StateMission {ASK_MISSION,WAIT_END_MISSION};
 	StateMission missionState_;
-	enum StatePoint {ASKPOINT,WAITPOINT};
-	StatePoint pointState_;
+	StateMission pointState_;
 
 	osmosis_control::Hmi_OrderMsg order_cmd_;
 

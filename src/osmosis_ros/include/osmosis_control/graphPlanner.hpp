@@ -32,7 +32,7 @@
 
 using namespace std;
 
-class GraphPlanner 
+class GraphPlanner
 {
 public:
 	GraphPlanner();
@@ -67,15 +67,15 @@ private:
 	geometry_msgs::Point target_;
 	geometry_msgs::Point current;
 
-	osmosis_control::State_and_PointMsg state_and_target_;	
-	osmosis_control::State_and_PointMsg state_and_goal_;	
+	osmosis_control::State_and_PointMsg state_and_target_;
+	osmosis_control::State_and_PointMsg state_and_goal_;
 	Graph graph;
 	std::vector<geometry_msgs::Point> plan;
 	int target_index;
 	bool _new_goal;
 	bool target_reached_;
 
-	enum State {wait_goal,wait_compute_plan,send,follow,goal_done};
+	enum State {WAIT_GOAL,WAIT_COMPUTE_PLAN,SEND,FOLLOW,GOAL_DONE};
 	State state_;
 
 }; // end of class

@@ -35,7 +35,7 @@ bool Localization::run()
 		ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate
 	}
-	
+
 	return true;
 }
 

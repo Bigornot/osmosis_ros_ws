@@ -1,4 +1,4 @@
-#include <osmosis_control/joy_teleop.hpp>
+#include <osmosis_control/joyTeleop.hpp>
 
 //compute drive commands based on keyboard input
 void JoyTeleop::JoyFSM()
@@ -12,6 +12,7 @@ void JoyTeleop::JoyFSM()
 				joy_on();
 			}
 			break;
+			
 		case ACTIVATED:
 		        if(button_pressed_)
 			{
@@ -19,6 +20,7 @@ void JoyTeleop::JoyFSM()
 				joy_off();
 		        }
 			break;
+
 		default: break;
 	}
 }

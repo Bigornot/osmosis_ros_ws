@@ -35,7 +35,7 @@ find_package(catkin REQUIRED COMPONENTS
 ################################################
 
 ## To declare and build messages, services or actions from within this
-## package, follow these steps:
+## package, FOLLOW these steps:
 ## * Let MSG_DEP_SET be the set of packages whose message types you use in
 ##   your messages/services/actions (e.g. std_msgs, actionlib_msgs, ...).
 ## * In the file package.xml:
@@ -91,7 +91,7 @@ find_package(catkin REQUIRED COMPONENTS
 ################################################
 
 ## To declare and build dynamic reconfigure parameters within this
-## package, follow these steps:
+## package, FOLLOW these steps:
 ## * In the file package.xml:
 ##   * add a build_depend and a run_depend tag for "dynamic_reconfigure"
 ## * In this file (CMakeLists.txt):
@@ -158,7 +158,7 @@ add_executable(localization_node src/localization.cpp)
 add_executable(teleop_node src/teleop.cpp)
 add_executable(graph_planner_node src/graphPlanner.cpp src/graph.cpp)
 add_executable(mission_manager_node src/missionManager.cpp)
-add_executable(joy_teleop_node src/joy_teleop.cpp)
+add_executable(joy_teleop_node src/joyTeleop.cpp)
 add_executable(HMI_node src/HMI.cpp)
 
 

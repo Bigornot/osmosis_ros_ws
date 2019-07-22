@@ -45,12 +45,11 @@ private:
 	ros::Subscriber goal_reached_sub_;
 	ros::Subscriber hmi_order_sub_;
 
-	enum StateDriveMission{IDLE,POINT,MISSION};
+	enum StateDriveMission{IDLE,REACH_POINT_MISSION,RUNWAY_MISSION};
 	StateDriveMission state_;
-	enum StateMission {INITMISSION,EXECUTEMISSION};
+	enum StateMission {INIT_MISSION,EXECUTE_MISSION};
 	StateMission missionState_;
-	enum StatePoint {TARGETPOINT,WAITPOINT};
-	StatePoint pointState_;
+	StateMission pointState_;
 
 	osmosis_control::State_and_PointMsg state_and_point_cmd_;
 	Mission mission_;
@@ -78,7 +77,8 @@ private:
 
   void initMission(string name);
 	void parse(string line);
-	bool doMission();
+	void doMission();
+	bool checkNextOrder();
 	bool isMissionOver();
 	void nextOrder();
 	void abortMission();

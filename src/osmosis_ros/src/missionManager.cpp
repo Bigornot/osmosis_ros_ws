@@ -12,32 +12,32 @@ void MissionManager::MissionManagerFSM()
 			if(hmi_mission_)
 			{
 				resetIdle();
-				state_=MISSION;
+				state_=RUNWAY_MISSION;
 			}
 			else if(hmi_point_)
 			{
 				resetIdle();
-				state_=POINT;
+				state_=REACH_POINT_MISSION;
 			}
 			break;
 
-		case POINT:
+		case REACH_POINT_MISSION:
 			switch (pointState_)
 			{
-				case TARGETPOINT:
-					ROS_INFO("POINT TARGETPOINT\n");
+				case INIT_MISSION:
+					ROS_INFO("REACH_POINT_MISSION INIT_MISSION\n");
 					goalKeyboard();
 					publishMissionGoal();
-					pointState_=WAITPOINT;
+					pointState_=EXECUTE_MISSION;
 					break;
 
-				case WAITPOINT:
-					ROS_INFO("POINT WAITPOINT\n");
+				case EXECUTE_MISSION:
+					ROS_INFO("REACH_POINT_MISSION EXECUTE_MISSION\n");
 					if(goal_reached_)
 					{
 						endPoint();
 						publishDone();
-						pointState_=TARGETPOINT;
+						pointState_=INIT_MISSION;
 						state_=IDLE;
 					}
 					break;
@@ -45,26 +45,27 @@ void MissionManager::MissionManagerFSM()
 			break;
 
 
-		case MISSION:
+		case RUNWAY_MISSION:
 			switch (missionState_)
 			{
-				case INITMISSION:
-					ROS_INFO("MISSION INITMISSION\n");
+				case INIT_MISSION:
+					ROS_INFO("RUNWAY_MISSION INIT_MISSION\n");
 					initMission(mission_name_);
 					publishMissionGoal();
-					missionState_=EXECUTEMISSION;
+					missionState_=EXECUTE_MISSION;
 					break;
 
-				case EXECUTEMISSION:
-					ROS_INFO("MISSION EXECUTEMISSION\n");
-					if(doMission())
+				case EXECUTE_MISSION:
+					ROS_INFO("RUNWAY_MISSION EXECUTE_MISSION\n");
+					doMission();
+					if(checkNextOrder())
 						publishMissionGoal();
 
 					if(missionAborted_)
 					{
 						abortMission();
 						publishDone();
-						missionState_=INITMISSION;
+						missionState_=INIT_MISSION;
 						state_=IDLE;
 					}
 
@@ -72,18 +73,16 @@ void MissionManager::MissionManagerFSM()
 					{
 						endMission();
 						publishDone();
-						missionState_=INITMISSION;
+						missionState_=INIT_MISSION;
 						state_=IDLE;
 					}
+
 					break;
 			}
 			break;
 
-		default:
-			ROS_INFO("defaut\n");
-			break;
-
-        }
+		default: break;
+	}
 }
 
 void MissionManager::resetIdle()
@@ -180,17 +179,20 @@ void MissionManager::parse(string line)
 	}
 }
 
-bool MissionManager::doMission()
+void MissionManager::doMission()
 {
-	bool next=false;
-
 	if(ros::Time::now()-timeStartMission_>timeout_)
 	{
 		missionAborted_=true;
 		missionOver_=true;
 	}
+}
 
-	else if(goal_reached_)
+bool MissionManager::checkNextOrder()
+{
+	bool next=false;
+
+	if(goal_reached_)
 	{
 		mission_.step++;
 		if(isMissionOver())
@@ -249,8 +251,8 @@ MissionManager::MissionManager()
 
 	goal_reached_=false;
 	state_=IDLE;
-	missionState_=INITMISSION;
-	pointState_=TARGETPOINT;
+	missionState_=INIT_MISSION;
+	pointState_=INIT_MISSION;
 	state_and_point_cmd_.taxi=true;
 	missionAborted_=false;
 	missionOver_=true;

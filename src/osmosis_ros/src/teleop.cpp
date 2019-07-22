@@ -72,7 +72,7 @@ Teleop::Teleop()
 
 void Teleop::run()
 {
-	ROS_INFO("Type a command and then press enter. Use '1' to activate the telecommand then'+' to move forward, 'l' to turn left, 'r' to turn right, '.' to exit.");
+	ROS_INFO("Type a command and then press enter.\nUse '1' to activate the telecommand\nthen'+' to move forward,\n'l' to turn left,\n'r' to turn right,\n'.' to exit.");
 
 	ros::Rate loop_rate(freq_);
 	while (nh_.ok())
