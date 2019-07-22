@@ -4,7 +4,6 @@
 DM4_NodeCrash::DM4_NodeCrash() : DetectionModule()
 {
 	nodesToCheck_.push_back("/teleop_node");
-	nodesToCheck_.push_back("/emergency_shutdown_node");
 	nodesToCheck_.push_back("/joy_node");
 	nodesToCheck_.push_back("/joy_teleop_node");
 	nodesToCheck_.push_back("/localization_node");
@@ -22,7 +21,7 @@ void DM4_NodeCrash::detect()
 	int i,j;
 	bool found=true;
 
-	ros::master::getNodes(aliveNodes_);	
+	ros::master::getNodes(aliveNodes_);
 	for(i=0; i<nodesToCheck_.size() && found; i++)
 	{
 		found = false;
@@ -39,4 +38,3 @@ void DM4_NodeCrash::detect()
 	else
 		state_=false;
 }
-

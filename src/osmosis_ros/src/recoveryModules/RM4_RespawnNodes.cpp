@@ -1,6 +1,6 @@
 #include <osmosis_control/recoveryModules/RM4_RespawnNodes.hpp>
 
-RM4_RespawnNodes::RM4_RespawnNodes(int id, vector<int> successors) : RecoveryModule(id, successors) 
+RM4_RespawnNodes::RM4_RespawnNodes(int id, vector<int> successors) : RecoveryModule(id, successors)
 {
 	nodesToCheck_.push_back("/teleop_node");
 	nodesToCheck_.push_back("/safety_pilot_node");
@@ -8,7 +8,6 @@ RM4_RespawnNodes::RM4_RespawnNodes(int id, vector<int> successors) : RecoveryMod
 	nodesToCheck_.push_back("/joy_teleop_node");
 	nodesToCheck_.push_back("/joy_node");
 	nodesToCheck_.push_back("/checkProhibitedArea_node");
-	nodesToCheck_.push_back("/emergency_shutdown_node");
 
 	n_=0;
 	n_max_wait_=10;
@@ -17,7 +16,7 @@ RM4_RespawnNodes::RM4_RespawnNodes(int id, vector<int> successors) : RecoveryMod
 void RM4_RespawnNodes::startRecovery()
 {
 	cout << "START RM4" << endl;
-	
+
 	bool found=false;
 	string command;
 	n_=0;
@@ -91,4 +90,3 @@ void RM4_RespawnNodes::doRecovery()
 void RM4_RespawnNodes::stopRecovery()
 {
 }
-
