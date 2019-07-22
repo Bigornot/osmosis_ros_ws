@@ -3,21 +3,21 @@
 DetectionModule::DetectionModule ()
 {
 	state_=false;
-	driveState_=IDLE;
+	drive_state_=IDLE;
 }
 
 void DetectionModule::detectionModuleFSM()
 {
-	switch(driveState_)
+	switch(drive_state_)
 	{
 		case IDLE:
 			if(state_)
-				driveState_=ACTIVE;
+				drive_state_=ACTIVE;
 			break;
 
 		case ACTIVE:
 			if(!state_)
-				driveState_=IDLE;
+				drive_state_=IDLE;
 			break;
 	}
 }
@@ -31,6 +31,5 @@ void DetectionModule::run()
 
 int DetectionModule::getState()
 {
-	return driveState_;
+	return drive_state_;
 }
-

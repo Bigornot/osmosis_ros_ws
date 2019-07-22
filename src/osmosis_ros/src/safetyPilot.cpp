@@ -1,41 +1,15 @@
 #include <osmosis_control/safetyPilot.hpp>
 
-void SafetyPilot::driveSafetyPilot()
+void SafetyPilot::SafetyPilotFSM()
 {
-	if(emergency_stop_)
-		state_=EMERGENCY_STOP;
-	else if(controlled_stop_)
-		state_=CONTROLLED_STOP;
-	else if(switch_to_teleop_)
-		state_=SWITCH_TO_TELEOP;
-
 	switch(state_)
 	{
 		case COMPUTE_CMD:
 			ROS_INFO("COMPUTE_CMD\n");
 			computeCommandCtrlTeleop();
 			break;
-		case  EMERGENCY_STOP:
-			ROS_INFO("EMERGENCY_STOP\n");
-			stop();
-			if(!emergency_stop_)
-				state_=COMPUTE_CMD;
-			break;
-		case CONTROLLED_STOP:
-			ROS_INFO("CONTROLLED_STOP\n");
-			stop();
-			if(!controlled_stop_)
-				state_=COMPUTE_CMD;
-			break;
-		case SWITCH_TO_TELEOP:
-			ROS_INFO("SWITCH_TO_TELEOP\n");
-			base_cmd_=updateCmdWithLaserScan(base_cmd_teleop_.cmd_vel,scan_);
 
-			if(!switch_to_teleop_)
-				state_=COMPUTE_CMD;
-			break;
-		default:
-			break;
+		default: break;
 	}
 }
 
@@ -74,17 +48,13 @@ geometry_msgs::Twist SafetyPilot::updateCmdWithLaserScan(geometry_msgs::Twist cm
 			cmd.linear.y = min(0.0, cmd.linear.y);
 		}
 	}
-	else 
-	{
-		cmd.linear.x = fmin(cmd.linear.x, + max_linear);
-		cmd.linear.y = fmin(cmd.linear.y, + max_linear);
-		cmd.linear.x = fmax(cmd.linear.x, - max_linear);
-		cmd.linear.y = fmax(cmd.linear.y, - max_linear);
-		cmd.angular.x = fmin(cmd.angular.x, + max_angular);
-		cmd.angular.y = fmin(cmd.angular.y, + max_angular);
-		cmd.angular.x = fmax(cmd.angular.x, - max_angular);
-		cmd.angular.y = fmax(cmd.angular.y, - max_angular);
-	}
+
+	cmd.linear.x = fmin(cmd.linear.x, + max_linear);
+	cmd.linear.y = fmin(cmd.linear.y, + max_linear);
+	cmd.linear.x = fmax(cmd.linear.x, - max_linear);
+	cmd.linear.y = fmax(cmd.linear.y, - max_linear);
+	cmd.angular.z = fmin(cmd.angular.z, + max_angular);
+	cmd.angular.z = fmax(cmd.angular.z, - max_angular);
 
 	return cmd;
 }
@@ -124,21 +94,6 @@ void SafetyPilot::callbackTeleop(const osmosis_control::TeleopMsg & teleop_msg)
 	base_cmd_teleop_=teleop_msg;
 }
 
-void SafetyPilot::callbackEmergencyStop(const std_msgs::Bool &stop)
-{
-	emergency_stop_=stop.data;
-}
-
-void SafetyPilot::callbackControlledStop(const std_msgs::Bool &stop)
-{
-	controlled_stop_=stop.data;
-}
-
-void SafetyPilot::callbackSwitchToTeleop(const std_msgs::Bool &switchToTeleop)
-{
-	switch_to_teleop_=switchToTeleop.data;
-}
-
 //! ROS node topics publishing and subscribing initialization
 SafetyPilot::SafetyPilot()
 {
@@ -148,13 +103,6 @@ SafetyPilot::SafetyPilot()
 	cmd_vel_sub_  = nh_.subscribe("cmd_vel_control", 1, &SafetyPilot::callbackCmdVelCtrl, this);
 	scan_sub_  = nh_.subscribe("/summit_xl_a/front_laser/scan", 1, &SafetyPilot::callbackScan, this);
 	cmd_vel_teleop_sub_= nh_.subscribe("cmd_vel_teleop", 1, &SafetyPilot::callbackTeleop, this);
-	emergency_stop_sub_ = nh_.subscribe("/do_RM1_EmergencyStop", 1, &SafetyPilot::callbackEmergencyStop, this);
-	controlled_stop_sub_ = nh_.subscribe("/do_RM2_ControlledStop", 1, &SafetyPilot::callbackControlledStop, this);
-	switch_to_teleop_sub_ = nh_.subscribe("/do_RM5_SwitchToTeleop", 1, &SafetyPilot::callbackSwitchToTeleop, this);
-
-	emergency_stop_=false;
-	controlled_stop_=false;
-	switch_to_teleop_=false;
 }
 
 bool SafetyPilot::run()
@@ -163,7 +111,7 @@ bool SafetyPilot::run()
 	while (nh_.ok())
 	{
 		//computeCommandCtrlTeleop();
-		driveSafetyPilot();
+		SafetyPilotFSM();
 		cmd_vel_pub_.publish(base_cmd_);
 		ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate

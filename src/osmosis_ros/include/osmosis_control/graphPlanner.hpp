@@ -24,7 +24,7 @@
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/Pose2D.h>
 #include <std_msgs/Bool.h>
-#include "osmosis_control/State_and_PointMsg.h"
+#include "osmosis_control/GoalMsg.h"
 #include <ros/package.h>
 
 #include <osmosis_control/graph.hpp>
@@ -32,7 +32,7 @@
 
 using namespace std;
 
-class GraphPlanner 
+class GraphPlanner
 {
 public:
 	GraphPlanner();
@@ -44,11 +44,11 @@ public:
 	bool plan_computed();
 	bool is_arrived();
 	bool plan_done();
-	void done();
-	void send_target();
+	void publishDone();
+	void publishSendTarget();
 	void graphPlannerFSM();
 
-	void callbackGoal(const osmosis_control::State_and_PointMsg & thegoal);
+	void callbackGoal(const osmosis_control::GoalMsg & thegoal);
 	void callbackPose(const geometry_msgs::Pose2D & msg);
 	void callbackTargetReached(const std_msgs::Bool & target_reached);
 	void callbackEmergencyStop(const std_msgs::Bool &stop);
@@ -69,8 +69,8 @@ private:
 	geometry_msgs::Point target_;
 	geometry_msgs::Point current;
 
-	osmosis_control::State_and_PointMsg state_and_target_;	
-	osmosis_control::State_and_PointMsg state_and_goal_;	
+	osmosis_control::GoalMsg goal_;
+	osmosis_control::GoalMsg mission_goal_;
 	Graph graph;
 	std::vector<geometry_msgs::Point> plan;
 	int target_index;
@@ -78,7 +78,7 @@ private:
 	bool target_reached_;
 	bool emergency_stop_;
 
-	enum State {wait_goal,wait_compute_plan,send,follow,goal_done,emergency_stop};
+	enum State {WAIT_GOAL,WAIT_COMPUTE_PLAN,SEND,FOLLOW,GOAL_DONE};
 	State state_;
 
 }; // end of class

@@ -23,9 +23,8 @@
 #include <string>
 #include <ros/package.h>
 #include "std_msgs/Bool.h"
-#include "osmosis_control/State_and_PointMsg.h"
-#include "osmosis_control/Hmi_OrderMsg.h"
-#include "osmosis_control/Hmi_DoneMsg.h"
+#include "osmosis_control/GoalMsg.h"
+#include "osmosis_control/MissionMsg.h"
 
 using namespace std;
 
@@ -35,39 +34,34 @@ private:
 	///////// Attributes /////////
 	ros::NodeHandle nh_;
 	double freq_;
-	ros::Publisher orders_pub_;
-	ros::Subscriber emergency_stop_sub_;
+	ros::Publisher mission_pub_;
 	ros::Subscriber done_sub_;
 
-	enum StateDriveHMI{IDLE,POINT,MISSION, EMERGENCY_STOP};
+	enum StateDriveHMI{IDLE,REACH_POINT_MISSION,RUNWAY_MISSION};
 	StateDriveHMI state_;
-	enum StateMission {ASKMISSION,WAITMISSION};
-	StateMission missionState_;
-	enum StatePoint {ASKPOINT,WAITPOINT};
-	StatePoint pointState_;
+	enum StateMission {ASK_MISSION,WAIT_END_MISSION};
+	StateMission mission_state_;
+
+	osmosis_control::MissionMsg mission_cmd_;
 
 	bool goal_reached_;
-	bool done_mission_;
-	bool done_point_;
-
-	bool emergency_stop_;
+	bool mission_done_;
 
 	/////////  Methods   ////////
-	void driveHMI();
+	void HMI_FSM();
 
-	void ordersDone();
+	void missionDone();
 	char askMode();
 	void goalKeyboard();
 	bool askMission();
 	bool checkMission(std::string name);
+	void publishMission();
 
 public:
 	HMI();
 	void run();
 
-	void CallbackOrderDone(const osmosis_control::Hmi_DoneMsg &done);
-	void CallbackEmergencyStop(const std_msgs::Bool &stop);
-
-}; // end of class
+	void callbackMissionDone(const std_msgs::Bool &done);
+};
 
 #endif

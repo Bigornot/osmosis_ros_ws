@@ -10,62 +10,55 @@ void GraphPlanner::graphPlannerFSM()
 
 	switch (state_)
 	{
-		case wait_goal:
+		case WAIT_GOAL:
 			ROS_INFO("WAIT GOAL\n");
 			if (new_goal())
 			{
 				compute_plan();
-				state_=wait_compute_plan;
+				state_=WAIT_COMPUTE_PLAN;
 			}
 			break;
 
-		case wait_compute_plan:
+		case WAIT_COMPUTE_PLAN:
 			ROS_INFO("WAIT_COMPUTE PLAN\n");
 			if (plan_computed())
 			{
-				state_=send;
+				state_=SEND;
 			}
 			break;
 
-		case send:
+		case SEND:
 			ROS_INFO("SEND\n");
 			target_index ++; // needed to test plan_done()
 			ROS_INFO ("target_index : %d   plan.size(): %u",target_index,(int)plan.size());
 			if (plan_done()==true)
 			{
-				state_=goal_done;
+				state_=GOAL_DONE;
 			}
 			else
 			{
-				send_target();
-				state_=follow;
+				publishSendTarget();
+				state_=FOLLOW;
 			}
 			break;
 
-		case follow:
+		case FOLLOW:
 			ROS_INFO("FOLLOW\n");
 			if (is_arrived())
 			{
-				state_=send;
+				state_=SEND;
 				target_reached_=false; //re-init
 			}
 			else execute_plan();
 			break;
 
-		case goal_done:
+		case GOAL_DONE:
 			ROS_INFO("DONE\n");
-			done();
-			state_=wait_goal;
+			publishDone();
+			state_=WAIT_GOAL;
 			break;
 
-		case emergency_stop:
-			ROS_INFO("EMERGENCY STOP\n");
-			if(!emergency_stop_)
-				state_=wait_goal;
-			break;
-
-		default : state_=wait_goal;
-
+		default: break;
 	}
 }
 
@@ -75,13 +68,12 @@ GraphPlanner::GraphPlanner()
 {
 	freq_=10;
 	//set up the publisher for the goal topic
-	target_pub_ = nh_.advertise<osmosis_control::State_and_PointMsg>("target", 1);
+	target_pub_ = nh_.advertise<osmosis_control::GoalMsg>("target", 1);
 	goal_reached_pub_ = nh_.advertise<std_msgs::Bool>("goal_reached", 1);
-	goal_sub_=nh_.subscribe("/goal", 1, &GraphPlanner::callbackGoal, this);
+	goal_sub_=nh_.subscribe("/mission_goal", 1, &GraphPlanner::callbackGoal, this);
 	odom_sub_=nh_.subscribe("/pose", 1, &GraphPlanner::callbackPose, this);
 	target_reached_sub_=nh_.subscribe("/target_reached", 1, &GraphPlanner::callbackTargetReached, this);
-	emergency_stop_sub_=nh_.subscribe("/do_RM1_EmergencyStop", 1, &GraphPlanner::callbackEmergencyStop, this);
-	state_=wait_goal;
+	state_=WAIT_GOAL;
 	_new_goal=false;
 	target_reached_=false;
 	emergency_stop_=false;
@@ -93,12 +85,11 @@ void GraphPlanner::callbackTargetReached(const std_msgs::Bool & target_reached)
 	ROS_INFO("Target reached : [%d]",target_reached_);
 }
 
-void GraphPlanner::callbackGoal(const osmosis_control::State_and_PointMsg & thegoal)
+void GraphPlanner::callbackGoal(const osmosis_control::GoalMsg & thegoal)
 {
-	state_and_goal_=thegoal;
-
+	mission_goal_=thegoal;
 	_new_goal=true;
-	ROS_INFO("NEW GOAL : x: [%f], y:[%f]",state_and_goal_.goal.x,state_and_goal_.goal.y);
+	ROS_INFO("NEW GOAL : x: [%f], y:[%f]",mission_goal_.point.x,mission_goal_.point.y);
 }
 
 /*void GraphPlanner::callbackGoalId(const string & thegoal_id)
@@ -141,10 +132,10 @@ void GraphPlanner::callbackEmergencyStop(const std_msgs::Bool &stop)
 	}
 }*/
 
-bool GraphPlanner::new_goal() 
+bool GraphPlanner::new_goal()
 {
 	bool newg=false;
-	if (_new_goal) 
+	if (_new_goal)
 	{
 		newg=true;
 		_new_goal=false; // reset for next time
@@ -157,12 +148,12 @@ bool GraphPlanner::new_goal()
 	return ! (_has_goal);
 }*/
 
-void GraphPlanner::compute_plan() 
+void GraphPlanner::compute_plan()
 {
 	auto s = graph.getClosestNode(current);
 	//  logger().info("start node {} {}", s->name, s->point);
 	ROS_INFO("start node %s %f %f", s->name.c_str(), s->point.x,s->point.y);
-	auto g = graph.getClosestNode(state_and_goal_.goal);
+	auto g = graph.getClosestNode(mission_goal_.point);
 	//  logger().info("goal node {} {}", g->name, g->point);
 	ROS_INFO("goal node %s %f %f", g->name.c_str(), g->point.x,g->point.y);
 	auto p = graph.compute_plan(s, g);
@@ -182,12 +173,12 @@ void GraphPlanner::compute_plan()
 		ROS_INFO("%d: (%f , %f)",i, plan[i].x,plan[i].y);
 }
 
-bool GraphPlanner::plan_computed() 
+bool GraphPlanner::plan_computed()
 {
 	return plan.size() > 0;
 }
 
-void GraphPlanner::done() 
+void GraphPlanner::publishDone()
 {
 	std_msgs::Bool target_reached;
 	target_reached.data=true;;
@@ -197,12 +188,12 @@ void GraphPlanner::done()
 	//  _has_goal = false;
 }
 
-bool GraphPlanner::plan_done() 
+bool GraphPlanner::plan_done()
 {
 	return ( target_index >= (int)plan.size() );
 }
 
-void GraphPlanner::send_target()
+void GraphPlanner::publishSendTarget()
 {
 
 	//ROS_INFO ("target_index < plan.size() : %d < %u",target_index,plan.size());
@@ -210,11 +201,11 @@ void GraphPlanner::send_target()
 	//  {
 	//shell().target.write(plan[target_index]);
 	ROS_INFO("SEND target x: %f y:%f", plan[target_index].x, plan[target_index].y);
-	state_and_target_.goal=plan[target_index];
+	goal_.point=plan[target_index];
 
-	state_and_target_.taxi=state_and_goal_.taxi;
+	goal_.taxi=mission_goal_.taxi;
 
-	target_pub_.publish(state_and_target_);
+	target_pub_.publish(goal_);
 	//  }
 }
 
@@ -272,7 +263,7 @@ int main(int argc, char** argv)
 
 	GraphPlanner myGraphPlanner;
 
-	myGraphPlanner.initGraph("test.graph");
+	myGraphPlanner.initGraph("/../../ressources/blagnac.graph");
 	myGraphPlanner.run();
-	//while(1){ROS_INFO("OUT...");}
+	//while(1){ROS_INFO("OUT...");
 }

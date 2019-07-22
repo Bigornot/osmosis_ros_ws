@@ -2,49 +2,49 @@
 #include <osmosis_control/HMI.hpp>
 
 ////////////////////// PRIVATE //////////////////////
-
-void HMI::driveHMI()
+void HMI::HMI_FSM()
 {
-	if(emergency_stop_)
-		state_=EMERGENCY_STOP;
-
 	switch (state_)
 	{
 		case IDLE:
 			char mode;
 			mode=askMode();
 			if(mode=='P'||mode=='p')
-				state_=POINT;
+				state_=REACH_POINT_MISSION;
 			else if(mode=='M'||mode=='m')
-				state_=MISSION;
+				state_=RUNWAY_MISSION;
 			else
 				ROS_ERROR("Input Error : Please try again.\n");
 			break;
 
-		case POINT:
-			switch (pointState_)
+		case REACH_POINT_MISSION:
+			switch (mission_state_)
 			{
-				case ASKPOINT:
+				case ASK_MISSION:
 					goalKeyboard();
-					pointState_=WAITPOINT;
+					publishMission();
+					mission_state_=WAIT_END_MISSION;
 					break;
 
-				case WAITPOINT:
-					if (done_point_)
+				case WAIT_END_MISSION:
+					if (mission_done_)
 					{
 						state_=IDLE;
-						pointState_=ASKPOINT;
+						mission_state_=ASK_MISSION;
 					}
 					break;
 			}
 			break;
 
-		case MISSION:
-			switch (missionState_)
+		case RUNWAY_MISSION:
+			switch (mission_state_)
 			{
-				case ASKMISSION:
+				case ASK_MISSION:
 					if(askMission())
-						missionState_=WAITMISSION;
+					{
+						publishMission();
+						mission_state_=WAIT_END_MISSION;
+					}
 					else
 					{
 						ROS_ERROR("Mission Aborted");
@@ -52,37 +52,24 @@ void HMI::driveHMI()
 					}
 					break;
 
-				case WAITMISSION:
-					if(done_mission_)
+				case WAIT_END_MISSION:
+					if(mission_done_)
 					{
-						cout<<"Mission done !" << endl;
-						missionState_=ASKMISSION;
+						ROS_INFO("Mission done !");
+						mission_state_=ASK_MISSION;
 						state_=IDLE;
 					}
 					break;
 			}
 			break;
 
-		case EMERGENCY_STOP:
-			cout << "EMERGENCY STOP" << endl;
-			ordersDone();
-			if(!emergency_stop_)
-			{
-				missionState_=ASKMISSION;
-				pointState_=ASKPOINT;
-				state_=IDLE;
-			}
-			break;
-
-		default:
-			break;
+		default: break;
 	}
 }
 
-void HMI::ordersDone()
+void HMI::missionDone()
 {
-	done_mission_=true;;
-	done_point_=true;
+	mission_done_=true;
 }
 
 char HMI::askMode()
@@ -90,7 +77,7 @@ char HMI::askMode()
 	char mode;
 	string input;
 
-	cout << endl << "Enter the mode : ('P':Point 'M':mission)" << endl;
+	ROS_INFO("Enter the mode : ('P':Point 'M':mission)");
 	cin >> input;
 	mode=input[0];
 
@@ -100,45 +87,44 @@ char HMI::askMode()
 void HMI::goalKeyboard()
 {
 	geometry_msgs::Point thegoal;
-	osmosis_control::Hmi_OrderMsg order_cmd;
-	osmosis_control::State_and_PointMsg state_and_point_cmd;
 	int n=0;
 
-	order_cmd.doMission=false;
-	done_point_=false;
+	mission_cmd_.doRunwayMission=false;
+	mission_done_=false;
 
-	cout << "Enter a new goal (x,y)" << endl;
-	cout << "x= ";
+	ROS_INFO("Enter a new goal (x,y)");
+	ROS_INFO("x= ");
 	cin >> thegoal.x;
-	cout << "y= ";
+	ROS_INFO("y= ");
 	cin >> thegoal.y;
-	cout << "taxi (0,1)= ";
+	ROS_INFO("taxi (0,1)= ");
 	cin >> n;
-	state_and_point_cmd.taxi = n!=0;
 
-	state_and_point_cmd.goal=thegoal;
-	order_cmd.state_and_point=state_and_point_cmd;
-	orders_pub_.publish(order_cmd);
+	mission_cmd_.mission_goal.taxi = n!=0;
+	mission_cmd_.mission_goal.point = thegoal;
+}
+
+void HMI::publishMission()
+{
+	mission_pub_.publish(mission_cmd_);
 }
 
 bool HMI::askMission()
 {
-	osmosis_control::Hmi_OrderMsg order_cmd;
-	order_cmd.doMission=true;
-	done_mission_=false;
+	mission_cmd_.doRunwayMission=true;
+	mission_done_=false;
 
 	bool ok=false;
 
 	string name;
-	cout << "Enter the mission : " << endl;
+	ROS_INFO("Enter the mission : ");
 	cin >> name;
 
 	if(checkMission(name))
 	{
 		ok=true;
-		done_mission_=false;
-		order_cmd.mission_name=name;
-		orders_pub_.publish(order_cmd);
+		mission_done_=false;
+		mission_cmd_.mission_name=name;
 	}
 	return ok;
 }
@@ -148,10 +134,10 @@ bool HMI::checkMission(string name)
 	bool ok=false;
 	goal_reached_=false;
 
-	cout << "Mission in progress" << endl;
+	ROS_INFO("Mission in progress");
 
 	string filename=ros::package::getPath("osmosis_control");
-	filename.append("/Missions/MISSION_" + name + ".miss");
+	filename.append("/../../ressources/missions/MISSION_" + name + ".miss");
 
 	ifstream fichier(filename, ios::in);
 
@@ -173,15 +159,11 @@ bool HMI::checkMission(string name)
 HMI::HMI()
 {
 	freq_=10;
-	orders_pub_ = nh_.advertise<osmosis_control::Hmi_OrderMsg>("order", 1);
-	done_sub_ = nh_.subscribe("/hmi_done", 1, &HMI::CallbackOrderDone, this);
-	emergency_stop_sub_ = nh_.subscribe("/do_RM1_EmergencyStop", 1, &HMI::CallbackEmergencyStop, this);
+	mission_pub_ = nh_.advertise<osmosis_control::MissionMsg>("mission", 1);
+	done_sub_ = nh_.subscribe("/hmi_done", 1, &HMI::callbackMissionDone, this);
 	state_=IDLE;
-	pointState_=ASKPOINT;
-	missionState_=ASKMISSION;
-	done_point_=true;
-	done_mission_=true;
-	emergency_stop_=false;
+	mission_state_=ASK_MISSION;
+	mission_done_=true;
 }
 
 void HMI::run()
@@ -189,25 +171,18 @@ void HMI::run()
 	ros::Rate loop_rate(freq_); //using 10 makes the robot oscillating trajectories, TBD check with the PF algo ?
 	while (nh_.ok())
 	{
-		driveHMI();
+		HMI_FSM();
 	 	ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate
 	}
 }
 
-void HMI::CallbackOrderDone(const osmosis_control::Hmi_DoneMsg &done)
+void HMI::callbackMissionDone(const std_msgs::Bool &mission_done)
 {
-	done_point_=done.point;
-	done_mission_=done.mission;
-}
-
-void HMI::CallbackEmergencyStop(const std_msgs::Bool &stop)
-{
-	emergency_stop_=stop.data;
+	mission_done_=mission_done.data;
 }
 
 ////////////////////// MAIN //////////////////////
-
 int main(int argc, char** argv)
 {
 	//init the ROS node

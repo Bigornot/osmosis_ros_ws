@@ -3,45 +3,39 @@
 
 ////////////////////// PRIVATE //////////////////////
 
-void MissionManager::driveMissionManager()
+void MissionManager::MissionManagerFSM()
 {
-	if(emergency_stop_)
-	{
-		abortMission();
-		state_=EMERGENCY_STOP;
-	}
-
 	switch (state_)
 	{
 		case IDLE:
 			ROS_INFO("IDLE\n");
-			if(hmi_mission_)
+			if(mission_received_)
 			{
-				resetIdle();
-				state_=MISSION;
-			}
-			else if(hmi_point_)
-			{
-				resetIdle();
-				state_=POINT;
+				mission_received_=false;
+				if(mission_msg_.doRunwayMission)
+					state_=RUNWAY_MISSION;
+				else
+					state_=REACH_POINT_MISSION;
 			}
 			break;
 
-		case POINT:
-			switch (pointState_)
+		case REACH_POINT_MISSION:
+			switch (mission_state_)
 			{
-				case TARGETPOINT:
-					ROS_INFO("POINT TARGETPOINT\n");
+				case INIT_MISSION:
+					ROS_INFO("REACH_POINT_MISSION INIT_MISSION\n");
 					goalKeyboard();
-					pointState_=WAITPOINT;
+					publishMissionGoal();
+					mission_state_=EXECUTE_MISSION;
 					break;
 
-				case WAITPOINT:
-					ROS_INFO("POINT WAITPOINT\n");
+				case EXECUTE_MISSION:
+					ROS_INFO("REACH_POINT_MISSION EXECUTE_MISSION\n");
 					if(goal_reached_)
 					{
 						endPoint();
-						pointState_=TARGETPOINT;
+						publishDone();
+						mission_state_=INIT_MISSION;
 						state_=IDLE;
 					}
 					break;
@@ -49,56 +43,44 @@ void MissionManager::driveMissionManager()
 			break;
 
 
-		case MISSION:
-			switch (missionState_)
+		case RUNWAY_MISSION:
+			switch (mission_state_)
 			{
-				case INITMISSION:
-					ROS_INFO("MISSION INITMISSION\n");
-					initMission(mission_name_);
-					missionState_=EXECUTEMISSION;
+				case INIT_MISSION:
+					ROS_INFO("RUNWAY_MISSION INIT_MISSION\n");
+					initMission(mission_msg_.mission_name);
+					publishMissionGoal();
+					mission_state_=EXECUTE_MISSION;
 					break;
 
-				case EXECUTEMISSION:
-					ROS_INFO("MISSION EXECUTEMISSION\n");
+				case EXECUTE_MISSION:
+					ROS_INFO("RUNWAY_MISSION EXECUTE_MISSION\n");
 					doMission();
+					if(checkNextStep())
+						publishMissionGoal();
+
 					if(missionAborted_)
 					{
 						abortMission();
-						missionState_=INITMISSION;
+						publishDone();
+						mission_state_=INIT_MISSION;
 						state_=IDLE;
 					}
 
 					else if(missionOver_)
 					{
 						endMission();
-						missionState_=INITMISSION;
+						publishDone();
+						mission_state_=INIT_MISSION;
 						state_=IDLE;
 					}
+
 					break;
 			}
 			break;
 
-		case EMERGENCY_STOP:
-			ROS_INFO("EMERGENCY_STOP\n");
-			if(!emergency_stop_)
-			{
-				state_=IDLE;
-				missionState_=INITMISSION;
-				pointState_=WAITPOINT;
-			}
-			break;
-
-		default:
-			ROS_INFO("defaut\n");
-			break;
-
-        }
-}
-
-void MissionManager::resetIdle()
-{
-	hmi_mission_=false;
-	hmi_point_=false;
+		default: break;
+	}
 }
 
 bool MissionManager::isGoalReached()
@@ -109,21 +91,27 @@ bool MissionManager::isGoalReached()
 void MissionManager::goalKeyboard()
 {
 	goal_reached_=false;
-	cout<<"x= " << state_and_point_cmd_.goal.x << " y= " << state_and_point_cmd_.goal.y << " taxi=";
-	if(state_and_point_cmd_.taxi)
-		cout << "true" << endl;
-	else
-		cout << "false" << endl;
 
-	goal_pub_.publish(state_and_point_cmd_);
+	goal_cmd_=mission_msg_.mission_goal;
+
+	ROS_INFO("x= %f",goal_cmd_.point.x);
+	ROS_INFO("y= %f",goal_cmd_.point.y);
+	ROS_INFO("taxi= %d",goal_cmd_.taxi);
+}
+
+void MissionManager::publishMissionGoal()
+{
+	goal_pub_.publish(goal_cmd_);
 }
 
 void MissionManager::endPoint()
 {
-	osmosis_control::Hmi_DoneMsg done;
-	done.mission=false;
-	done.point=true;
-	hmi_done_pub_.publish(done);
+	done_.data=true;
+}
+
+void MissionManager::publishDone()
+{
+	hmi_done_pub_.publish(done_);
 }
 
 void MissionManager::initMission(string name)
@@ -132,7 +120,7 @@ void MissionManager::initMission(string name)
 	missionAborted_=false;
 	missionOver_=false;
 
-	cout << "Init mission" << endl;
+	ROS_INFO("Init mission");
 
 	int i;
 	int taille=mission_.mission_steps.size();
@@ -140,7 +128,7 @@ void MissionManager::initMission(string name)
 		mission_.mission_steps.pop_back();
 
 	string filename=ros::package::getPath("osmosis_control");
-	filename.append("/Missions/MISSION_" + name + ".miss");
+	filename.append("/../../ressources/missions/MISSION_" + name + ".miss");
 
 	ifstream fichier(filename, ios::in);
 	string line;
@@ -151,24 +139,21 @@ void MissionManager::initMission(string name)
 
 	for(i=0; i<mission_.mission_steps.size();i++)
 	{
-		cout<<"x:"<<mission_.mission_steps[i].goal.x << " y:" << mission_.mission_steps[i].goal.y;
-		if(mission_.mission_steps[i].taxi)
-			cout << " taxi=true" << endl;
-		else
-			cout << " taxi=false" << endl;
+		ROS_INFO("x: %f",mission_.mission_steps[i].point.x);
+		ROS_INFO("y: %f",mission_.mission_steps[i].point.y);
+		ROS_INFO("taxi= %d",mission_.mission_steps[i].taxi);
 	}
 
-	timeStartMission_=ros::Time::now();
+	time_start_mission_=ros::Time::now();
 
 	missionOver_=false;
 	mission_.step=0;
-	state_and_point_cmd_=mission_.mission_steps[mission_.step];
-	goal_pub_.publish(state_and_point_cmd_);
+	goal_cmd_=mission_.mission_steps[mission_.step];
 }
 
 void MissionManager::parse(string line)
 {
-	osmosis_control::State_and_PointMsg order;
+	osmosis_control::GoalMsg step;
 
 	if(line.size()>=14)
 	{
@@ -178,11 +163,11 @@ void MissionManager::parse(string line)
 			int coma2=line.find(',', coma+1);
 			if(coma2>=0)
 			{
-				order.goal.x=stof(line.substr(2, coma-2));
-				order.goal.y=stof(line.substr(coma+3, coma2-coma-3));
-				order.taxi=stoi(line.substr(coma2+6,1))!=0;
+				step.point.x=stof(line.substr(2, coma-2));
+				step.point.y=stof(line.substr(coma+3, coma2-coma-3));
+				step.taxi=stoi(line.substr(coma2+6,1))!=0;
 
-				mission_.mission_steps.push_back(order);
+				mission_.mission_steps.push_back(step);
 			}
 		}
 	}
@@ -190,13 +175,18 @@ void MissionManager::parse(string line)
 
 void MissionManager::doMission()
 {
-	if(ros::Time::now()-timeStartMission_>timeout_)
+	if(ros::Time::now()-time_start_mission_>timeout_)
 	{
 		missionAborted_=true;
 		missionOver_=true;
 	}
+}
 
-	else if(goal_reached_)
+bool MissionManager::checkNextStep()
+{
+	bool next=false;
+
+	if(goal_reached_)
 	{
 		mission_.step++;
 		if(isMissionOver())
@@ -204,8 +194,13 @@ void MissionManager::doMission()
 			missionOver_=true;
 		}
 		else
-			sendNextOrder();
+		{
+			next=true;
+			nextStep();
+		}
 	}
+
+	return next;
 }
 
 bool MissionManager::isMissionOver()
@@ -218,11 +213,10 @@ bool MissionManager::isMissionOver()
 	return over;
 }
 
-void MissionManager::sendNextOrder()
+void MissionManager::nextStep()
 {
 	goal_reached_=false;
-	state_and_point_cmd_=mission_.mission_steps[mission_.step];
-	goal_pub_.publish(state_and_point_cmd_);
+	goal_cmd_=mission_.mission_steps[mission_.step];
 }
 
 void MissionManager::abortMission()
@@ -230,20 +224,13 @@ void MissionManager::abortMission()
 	missionAborted_=false;
 	missionOver_=true;
 
-	osmosis_control::Hmi_DoneMsg done;
-	done.mission=true;
-	done.point=false;
-	hmi_done_pub_.publish(done);
+	done_.data=false;
 }
 
 void MissionManager::endMission()
 {
-	osmosis_control::Hmi_DoneMsg done;
-	done.mission=true;
-	done.point=false;
-	hmi_done_pub_.publish(done);
+	done_.data=true;
 }
-
 
 ////////////////////// PUBLIC  //////////////////////
 
@@ -251,23 +238,19 @@ void MissionManager::endMission()
 MissionManager::MissionManager()
 {
 	//set up the publisher for the goal topic
-	goal_pub_ = nh_.advertise<osmosis_control::State_and_PointMsg>("goal", 1);
-	hmi_done_pub_ = nh_.advertise<osmosis_control::Hmi_DoneMsg>("hmi_done", 1);
-	goal_reached_sub_ = nh_.subscribe("/goal_reached", 1, &MissionManager::CallbackGoalReached, this);
-	emergency_stop_sub_ = nh_.subscribe("/do_RM1_EmergencyStop", 1, &MissionManager::CallbackEmergencyStop, this);
-	hmi_order_sub_ = nh_.subscribe("/order", 1, &MissionManager::CallbackOrder, this);
+	goal_pub_ = nh_.advertise<osmosis_control::GoalMsg>("mission_goal", 1);
+	hmi_done_pub_ = nh_.advertise<std_msgs::Bool>("hmi_done", 1);
+	goal_reached_sub_ = nh_.subscribe("/goal_reached", 1, &MissionManager::callbackGoalReached, this);
+	hmi_mission_sub_ = nh_.subscribe("/mission", 1, &MissionManager::callbackMission, this);
 
-	emergency_stop_=false;
 	goal_reached_=false;
 	state_=IDLE;
-	missionState_=INITMISSION;
-	pointState_=TARGETPOINT;
-	state_and_point_cmd_.taxi=true;
+	mission_state_=INIT_MISSION;
+	goal_cmd_.taxi=true;
 	missionAborted_=false;
 	missionOver_=true;
-	hmi_point_=false;
-	hmi_mission_=false;
-	timeStartMission_=ros::Time::now();
+	mission_received_=false;
+	time_start_mission_=ros::Time::now();
 	timeout_=ros::Duration(30*60); // Timeout after the mission is aborted
 }
 
@@ -275,44 +258,22 @@ void MissionManager::run()
 {
 	ros::Rate loop_rate(10); //using 10 makes the robot oscillating trajectories, TBD check with the PF algo ?
 	while (nh_.ok())
-	    {
-		driveMissionManager();
-	 	ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
+	{
+		MissionManagerFSM();
+		ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate
-	    }
+	}
 }
 
-void MissionManager::CallbackGoalReached(const std_msgs::Bool &goal_reached)
+void MissionManager::callbackGoalReached(const std_msgs::Bool &goal_reached)
 {
 	goal_reached_=goal_reached.data;
 }
 
-void MissionManager::CallbackEmergencyStop(const std_msgs::Bool &stop)
+void MissionManager::callbackMission(const osmosis_control::MissionMsg &mission)
 {
-	missionAborted_=true;
-	missionOver_=true;
-	emergency_stop_=stop.data;
-}
-
-void MissionManager::CallbackOrder(const osmosis_control::Hmi_OrderMsg &order)
-{
-	if(order.doMission)
-	{
-		ROS_INFO("\nMISSION\n");
-
-		hmi_mission_=true;
-		hmi_point_=false;
-		mission_name_=order.mission_name;
-	}
-
-	else
-	{
-		ROS_INFO("\nPOINT\n");
-
-		hmi_mission_=false;
-		hmi_point_=true;
-		state_and_point_cmd_=order.state_and_point;
-	}
+	mission_received_=true;
+	mission_msg_=mission;
 }
 
 

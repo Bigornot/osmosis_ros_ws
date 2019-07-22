@@ -14,30 +14,43 @@
  *
  */
 
-#ifndef OSMOSIS_EMERGENCY_SHUTDOWN_HPP
-#define OSMOSIS_EMERGENCY_SHUTDOWN_HPP
+#ifndef OSMOSIS_JOY_TELEOP_HPP
+#define OSMOSIS_JOY_TELEOP_HPP
 
 #include <iostream>
 #include <ros/ros.h>
-#include <string>
-#include <ros/package.h>
-#include "std_msgs/Bool.h"
+#include <geometry_msgs/Twist.h>
+#include "osmosis_control/TeleopMsg.h"
+#include <sensor_msgs/Joy.h>
+#include <vector>
 
 using namespace std;
 
-class EmergencyShutdown
+class JoyTeleop
 {
 private:
 	ros::NodeHandle nh_;
-	ros::Publisher emergency_pub_;
-	enum StateDriveEmergency{IDLE,EMERGENCYHIT,EMERGENCY};
-	StateDriveEmergency state_;
-	std_msgs::Bool emergency_;
+	double freq_;
+
+	ros::Publisher cmd_joy_teleop_pub_;
+	ros::Subscriber cmd_joystick_sub_;
+
+	osmosis_control::TeleopMsg joy_teleop_cmd_;
+	sensor_msgs::Joy joy_msg_;
+	enum StateTeleop {DESACTIVATED, ACTIVATED};
+	StateTeleop state_;
+	bool button_pressed_;
+	bool pub_on_;
+
+	void joy_on();
+	void joy_off();
+	void JoyFSM();
 
 public:
-	EmergencyShutdown();
+	JoyTeleop();
+	void teleopCallbackJoy(const sensor_msgs::Joy & joy_msg);
 	void run();
-	void driveEmergencyShutdown();
+
 }; // end of class
 
 #endif

@@ -24,8 +24,7 @@
 #include <string>
 #include <ros/package.h>
 #include "std_msgs/Bool.h"
-#include "osmosis_control/Hmi_OrderMsg.h"
-#include "osmosis_control/Hmi_DoneMsg.h"
+#include "osmosis_control/MissionMsg.h"
 
 using namespace std;
 
@@ -33,7 +32,7 @@ struct Mission
 {
 	string name;
 	int step;
-	vector<osmosis_control::State_and_PointMsg> mission_steps;
+	vector<osmosis_control::GoalMsg> mission_steps;
 };
 
 class MissionManager
@@ -44,54 +43,54 @@ private:
 	ros::Publisher goal_pub_;
 	ros::Publisher hmi_done_pub_;
 	ros::Subscriber goal_reached_sub_;
-	ros::Subscriber emergency_stop_sub_;
-	ros::Subscriber hmi_order_sub_;
+	ros::Subscriber hmi_mission_sub_;
 
-	enum StateDriveMission{IDLE,POINT,MISSION, EMERGENCY_STOP};
+	enum StateDriveMission{IDLE,REACH_POINT_MISSION,RUNWAY_MISSION};
 	StateDriveMission state_;
-	enum StateMission {INITMISSION,EXECUTEMISSION};
-	StateMission missionState_;
-	enum StatePoint {TARGETPOINT,WAITPOINT};
-	StatePoint pointState_;
-
-	osmosis_control::State_and_PointMsg state_and_point_cmd_;
+	enum StateMission {INIT_MISSION,EXECUTE_MISSION};
+	StateMission mission_state_;
+	
 	Mission mission_;
-	string mission_name_;
-	bool emergency_stop_;
+	osmosis_control::MissionMsg mission_msg_;
+	bool mission_received_=true;
+
+	osmosis_control::GoalMsg goal_cmd_;
 
 	bool goal_reached_;
 	bool missionOver_;
 	bool missionAborted_;
-	bool hmi_point_;
-	bool hmi_mission_;
 
-	ros::Time timeStartMission_;
+	ros::Time time_start_mission_;
 	ros::Duration timeout_;
 
-	/////////  Methods   ////////
-	void driveMissionManager();
+	std_msgs::Bool done_;
 
-	void resetIdle();
+	/////////  Methods   ////////
+	void MissionManagerFSM();
+
 	bool isGoalReached();
 
 	void goalKeyboard();
 	void endPoint();
 
-        void initMission(string name);
+  void initMission(string name);
 	void parse(string line);
 	void doMission();
+	bool checkNextStep();
 	bool isMissionOver();
-	void sendNextOrder();
+	void nextStep();
 	void abortMission();
 	void endMission();
+
+	void publishMissionGoal();
+	void publishDone();
 
 public:
 	MissionManager();
 	void run();
 
-	void CallbackGoalReached(const std_msgs::Bool &goal_reached);
-	void CallbackEmergencyStop(const std_msgs::Bool &stop);
-	void CallbackOrder(const osmosis_control::Hmi_OrderMsg &order);
+	void callbackGoalReached(const std_msgs::Bool &goal_reached);
+	void callbackMission(const osmosis_control::MissionMsg &mission);
 
 }; // end of class
 

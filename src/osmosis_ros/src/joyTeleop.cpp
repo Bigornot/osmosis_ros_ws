@@ -1,7 +1,7 @@
-#include <osmosis_control/joy_teleop.hpp>
+#include <osmosis_control/joyTeleop.hpp>
 
 //compute drive commands based on keyboard input
-void JoyTeleop::driveJoy()
+void JoyTeleop::JoyFSM()
 {
 	switch (state_)
 	{
@@ -12,6 +12,7 @@ void JoyTeleop::driveJoy()
 				joy_on();
 			}
 			break;
+			
 		case ACTIVATED:
 		        if(button_pressed_)
 			{
@@ -19,6 +20,7 @@ void JoyTeleop::driveJoy()
 				joy_off();
 		        }
 			break;
+
 		default: break;
 	}
 }
@@ -28,37 +30,34 @@ void JoyTeleop::joy_on()
 	joy_teleop_cmd_.is_active=true;
 	button_pressed_=false;
 	pub_on_=true;
-	cout << "Activation de la manette" << endl;
+	ROS_INFO("Controller Activation");
 }
 
 void JoyTeleop::joy_off()
 {
 	joy_teleop_cmd_.is_active=false;
 	button_pressed_=false;
-	cout << "Desactivation de la manette" << endl;
+	ROS_INFO("Controller deactivation");
 }
 
 void JoyTeleop::teleopCallbackJoy(const sensor_msgs::Joy & joy_msg)
 {
-	// detection du front montant
+	// rising edge detection
 	if(joy_msg_.buttons[7]==0 && joy_msg.buttons[7]==1)
 		button_pressed_=true;
 
-        joy_msg_=joy_msg;
+	joy_msg_=joy_msg;
 
 	if(state_==ACTIVATED)
 	{
 		geometry_msgs::Twist base_cmd;
 		float axe1, axe2;
-		int button1;
 
 		axe1=joy_msg_.axes[1];
 		axe2=joy_msg_.axes[3];
 
-		button1=joy_msg_.buttons[5];
-
-		base_cmd.linear.x=3*axe1*(1+button1);
-		base_cmd.angular.z=7*axe2;
+		base_cmd.linear.x=axe1;//according to safety_pilot, max_linear=1
+		base_cmd.angular.z=axe2;//and max_angular=1
 
 		joy_teleop_cmd_.cmd_vel.linear.x=base_cmd.linear.x;
 		joy_teleop_cmd_.cmd_vel.angular.z=base_cmd.angular.z;
@@ -92,19 +91,17 @@ JoyTeleop::JoyTeleop()
 
 void JoyTeleop::run()
 {
-	cout << "Si tout se passe bien on peut desormais activer la manette\n";
-
+	ROS_INFO("You should now be able to activate the controller (with 'start')");
 	ros::Rate loop_rate(freq_);
 	while (nh_.ok())
 	{
-		driveJoy();
+		JoyFSM();
 		if(pub_on_)
 		{
 			cmd_joy_teleop_pub_.publish(joy_teleop_cmd_);
 			if(state_==DESACTIVATED)
 				pub_on_=false;
 		}
-		
 	 	ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate
 	}
@@ -115,7 +112,6 @@ int main(int argc, char** argv)
 {
 	//init the ROS node
 	ros::init(argc, argv, "joy_teleop_node");
-	cout << "JOY" << endl;
 
 	JoyTeleop myJoyTeleop;
 	myJoyTeleop.run();

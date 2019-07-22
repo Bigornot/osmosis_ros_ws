@@ -2,7 +2,7 @@
 
 RecoveryModule::RecoveryModule(int id, vector<int> successors)
 {
-	driveState_=IDLE;
+	drive_state_=IDLE;
 	id_=id;
 	successors_=successors;
 	state_=false;
@@ -11,14 +11,14 @@ RecoveryModule::RecoveryModule(int id, vector<int> successors)
 void RecoveryModule::recoveryModuleFSM()
 {
 	cout << "ID:" << id_ << " " << state_ << " ";
-	switch(driveState_)
+	switch(drive_state_)
 	{
 		case IDLE:
 			cout << "IDLE" << endl;
 			if(state_)
 			{
 				startRecovery();
-				driveState_=ACTIVATED;
+				drive_state_=ACTIVATED;
 			}
 			break;
 
@@ -27,21 +27,21 @@ void RecoveryModule::recoveryModuleFSM()
 			if(!state_)
 			{
 				stopRecovery();
-				driveState_=IDLE;
+				drive_state_=IDLE;
 			}
 			else
 				doRecovery();
 			break;
 
 		default:
-			driveState_=IDLE;
+			drive_state_=IDLE;
 			break;
 	}
 }
 
 int RecoveryModule::getState()
 {
-	return driveState_;
+	return drive_state_;
 }
 
 void RecoveryModule::start()

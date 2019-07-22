@@ -12,7 +12,7 @@ class DetectionModule
 {
 private :
 	enum driveState{IDLE, ACTIVE};
-	driveState driveState_;
+	driveState drive_state_;
 
 protected:
 	ros::NodeHandle nh_;
@@ -22,7 +22,7 @@ public :
 	DetectionModule();
 	void detectionModuleFSM();
 	virtual void init()=0; // Executed when the FTM starts (after startDelay)
-	void run(); 
+	void run();
 	virtual void detect()=0; //method for the condition of the detection
 	int getState();
 };

@@ -2,7 +2,7 @@
 
 
 //compute drive commands based on keyboard input
-void Teleop::driveKeyboard()
+void Teleop::KeyboardFSM()
 {
 	geometry_msgs::Twist base_cmd;
 	char cmd[50];
@@ -13,7 +13,7 @@ void Teleop::driveKeyboard()
 		case DESACTIVATED:
 			if(cmd[0]!='1' && cmd[0]!='+' && cmd[0]!='l' && cmd[0]!='r' && cmd[0]!='.')
 			{
-				cout << "unknown command:" << cmd << "\n";
+				ROS_INFO("unknown command: %s",cmd);
 				//continue;
 			}
 			else if (cmd[0]=='1')
@@ -24,7 +24,12 @@ void Teleop::driveKeyboard()
 			break;
 
 		case ACTIVATED:
-			//move forward
+			//move forward*
+			if(cmd[0]!='1' && cmd[0]!='+' && cmd[0]!='l' && cmd[0]!='r' && cmd[0]!='.')
+			{
+				ROS_INFO("unknown command: %s",cmd);
+				//continue;
+			}
 			if(cmd[0]=='+') base_cmd.linear.x = 0.25;
 
 			//turn left (yaw) and drive forward at the same time
@@ -59,8 +64,6 @@ Teleop::Teleop()
 {
 	freq_=10;
 	cmd_teleop_pub_ = nh_.advertise<osmosis_control::TeleopMsg>("/cmd_vel_teleop", 1);
-	//  cmd_joystick_sub_= nh_.subscribe("xxxxjoy", 1, &Teleopxxx::teleopCallbackJoystick, this);
-
 	teleop_cmd_.is_active=false;
 	teleop_cmd_.cmd_vel.linear.x=teleop_cmd_.cmd_vel.linear.y=teleop_cmd_.cmd_vel.angular.z=0;
 	state_=DESACTIVATED;
@@ -69,17 +72,13 @@ Teleop::Teleop()
 
 void Teleop::run()
 {
-	cout << "Type a command and then press enter.  "
-	"Use '1' to activate the telecommand then'+' to move forward, 'l' to turn left, "
-	"'r' to turn right, '.' to exit.\n";
+	ROS_INFO("Type a command and then press enter.\nUse '1' to activate the telecommand\nthen'+' to move forward,\n'l' to turn left,\n'r' to turn right,\n'.' to exit.");
 
 	ros::Rate loop_rate(freq_);
 	while (nh_.ok())
 	{
-		cout <<".";
-		driveKeyboard();
+		KeyboardFSM();
 		cmd_teleop_pub_.publish(teleop_cmd_);
-		//ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate
 	}
 }

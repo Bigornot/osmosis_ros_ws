@@ -1,45 +1,32 @@
 import matplotlib.image as mpimg
 import numpy as np
+import json
 
-file=open("file.txt","r")
-ligne=[]
+graph=open("../../ressources/blagnac.graph","r")
+data=""
+for l in graph:
+	data=data+l
+
+obj=json.loads(data)
+graph.close()
+
 LX=[]
 LY=[]
 LN1=[]
 LN2=[]
 
-for l in file:
-	ligne.append(l)
-
-l1=ligne[0]
-l2=ligne[1]
-l3=ligne[2]
-l4=ligne[3]
-
-for el in l1.split(' '):
-	LX.append(el)
-
-for el in l2.split(' '):
-	LY.append(el)
-
-for el in l3.split(' '):
-	LN1.append(el)
-
-for el in l4.split(' '):
-	LN2.append(el)
-
-del LX[-1]
-del LY[-1]
-del LN1[-1]
-del LN2[-1]
-
-file.close()
+for node in obj["nodes"]:
+	LX.append(node["x"])
+	LY.append(node["y"])
+for edge in obj["edges"]:
+	LN1.append(int(edge[0][1:]))
+	LN2.append(int(edge[1][1:]))
 
 for i in range(len(LX)):
 	"""Conversion from coordinate to pixels
 	You will have to change those formulas if you change the image,
 	as resolution might not be the same. We also used a little arbitrary shift
-	to reach a better precision"""
+	to reach a better precision on the blagnac image"""
 	LX[i]=int((float(LX[i])+80)*(828/160)*1.04)
 for i in range(len(LY)):
 	LY[i]=int((80-float(LY[i]))*(740/160)*1.15)
@@ -57,15 +44,14 @@ LN1 : [edge1_starting_node, edge2_starting_node, ... ](id of node)
 LN2 : [edge1_arrival_node, edge2_arrival_node, ... ](id of node)"""
 
 
-"""First we draw the graph on the image"""
-
-image=mpimg.imread("blagnac.jpg")
+#Then we draw the graph on the image
+image=mpimg.imread("../../ressources/blagnac.jpg")
 
 #let's place the nodes on the image
 for i in range(len(LX)):
-	for taillex in range(10):
-		for tailley in range(10):
-			image[LY[i]-5+taillex][LX[i]-5+tailley]=(0, 0, 0)
+	for sizex in range(10):
+		for sizey in range(10):
+			image[LY[i]-5+sizex][LX[i]-5+sizey]=(0, 0, 0)
 
 #and let's trace the edges
 for i in range(len(LN1)):
@@ -83,20 +69,19 @@ for i in range(len(LN1)):
 	for x in X:
 		y=int(a*(x+min(LX[LN1[i]],LX[LN2[i]]))+b)
 		image[y][x+min(LX[LN1[i]],LX[LN2[i]])]=(0, 0, 0)
+
 	Y=range(abs(LY[LN2[i]]-LY[LN1[i]]))
 	for y in Y:
-			x=int((y+min(LY[LN1[i]],LY[LN2[i]]) - b)/a  )
-			image[y+min(LY[LN1[i]],LY[LN2[i]])][x]=(0, 0, 0)
+		x=int((y+min(LY[LN1[i]],LY[LN2[i]]) - b)/a  )
+		image[y+min(LY[LN1[i]],LY[LN2[i]])][x]=(0, 0, 0)
 
-mpimg.imsave("blagnac_graph.jpg",image)
-
-
+mpimg.imsave("../osmosis_simulation/models/blagnac.jpg",image)
 
 
 """same operations to deaw the 'abstract' map of the airport (green and red)"""
 
 
-image=mpimg.imread("blagnac.jpg")
+image=mpimg.imread("../../ressources/blagnac.jpg")
 
 for i in range(len(image)):
 	for j in range(len(image[0])):
@@ -147,4 +132,4 @@ for i in range(len(LN1)):
 							image[y+min(LY[LN1[i]],LY[LN2[i]])][x-l]=(0, 255, 0)
 							image[y+min(LY[LN1[i]],LY[LN2[i]])][x+l]=(0, 255, 0)
 
-mpimg.imsave("blagnac_area.jpg",image)
+mpimg.imsave("../../ressources/blagnac_area.jpg",image)

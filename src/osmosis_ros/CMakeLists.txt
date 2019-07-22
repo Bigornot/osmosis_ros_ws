@@ -35,7 +35,7 @@ find_package(catkin REQUIRED COMPONENTS
 ################################################
 
 ## To declare and build messages, services or actions from within this
-## package, follow these steps:
+## package, FOLLOW these steps:
 ## * Let MSG_DEP_SET be the set of packages whose message types you use in
 ##   your messages/services/actions (e.g. std_msgs, actionlib_msgs, ...).
 ## * In the file package.xml:
@@ -58,9 +58,8 @@ find_package(catkin REQUIRED COMPONENTS
  add_message_files(
    FILES
    TeleopMsg.msg
-   State_and_PointMsg.msg
-   Hmi_OrderMsg.msg
-   Hmi_DoneMsg.msg
+   GoalMsg.msg
+   MissionMsg.msg
  )
 
 ## Generate services in the 'srv' folder
@@ -92,7 +91,7 @@ find_package(catkin REQUIRED COMPONENTS
 ################################################
 
 ## To declare and build dynamic reconfigure parameters within this
-## package, follow these steps:
+## package, FOLLOW these steps:
 ## * In the file package.xml:
 ##   * add a build_depend and a run_depend tag for "dynamic_reconfigure"
 ## * In this file (CMakeLists.txt):
@@ -159,8 +158,7 @@ add_executable(localization_node src/localization.cpp)
 add_executable(teleop_node src/teleop.cpp)
 add_executable(graph_planner_node src/graphPlanner.cpp src/graph.cpp)
 add_executable(mission_manager_node src/missionManager.cpp)
-add_executable(joy_teleop_node src/joy_teleop.cpp)
-add_executable(emergency_shutdown_node src/emergency_shutdown.cpp)
+add_executable(joy_teleop_node src/joyTeleop.cpp)
 add_executable(HMI_node src/HMI.cpp)
 add_executable(FTM_Manager_node src/FTM_Manager.cpp src/FTM_Rule.cpp
 
@@ -184,12 +182,12 @@ src/recoveryModules/RM5_SwitchToTeleop.cpp)
 
 add_dependencies(osmosis_control_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(safety_pilot_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(localization_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(teleop_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(graph_planner_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(mission_manager_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(joy_teleop_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(HMI_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(FTM_Manager_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -210,12 +208,10 @@ target_link_libraries(teleop_node ${catkin_LIBRARIES})
 target_link_libraries(graph_planner_node ${catkin_LIBRARIES} -ljsoncpp)
 target_link_libraries(mission_manager_node ${catkin_LIBRARIES})
 target_link_libraries(joy_teleop_node ${catkin_LIBRARIES})
-target_link_libraries(emergency_shutdown_node ${catkin_LIBRARIES})
 target_link_libraries(HMI_node ${catkin_LIBRARIES})
-target_link_libraries(FTM_Manager_node ${catkin_LIBRARIES})
 
 
- #target_link_libraries(json  ${catkin_LIBRARIES}  ${JSONCPP_LIBRARIES})
+#target_link_libraries(json  ${catkin_LIBRARIES}  ${JSONCPP_LIBRARIES})
 #############
 ## Install ##
 #############

@@ -12,11 +12,11 @@ class RecoveryModule
 {
 private:
 	enum driveState{IDLE, ACTIVATED};
-	driveState driveState_;
+	driveState drive_state_;
 
 	int id_;
 	vector<int> successors_;
-	
+
 protected:
 	ros::NodeHandle nh_;
 	bool state_;
