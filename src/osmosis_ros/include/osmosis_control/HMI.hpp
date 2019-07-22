@@ -61,7 +61,7 @@ public:
 	HMI();
 	void run();
 
-	void CallbackMissionDone(const std_msgs::Bool &done);
+	void callbackMissionDone(const std_msgs::Bool &done);
 };
 
 #endif

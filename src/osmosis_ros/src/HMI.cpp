@@ -160,7 +160,7 @@ HMI::HMI()
 {
 	freq_=10;
 	mission_pub_ = nh_.advertise<osmosis_control::MissionMsg>("mission", 1);
-	done_sub_ = nh_.subscribe("/hmi_done", 1, &HMI::CallbackMissionDone, this);
+	done_sub_ = nh_.subscribe("/hmi_done", 1, &HMI::callbackMissionDone, this);
 	state_=IDLE;
 	mission_state_=ASK_MISSION;
 	mission_done_=true;
@@ -177,7 +177,7 @@ void HMI::run()
 	}
 }
 
-void HMI::CallbackMissionDone(const std_msgs::Bool &mission_done)
+void HMI::callbackMissionDone(const std_msgs::Bool &mission_done)
 {
 	mission_done_=mission_done.data;
 }

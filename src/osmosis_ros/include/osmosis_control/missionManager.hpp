@@ -89,8 +89,8 @@ public:
 	MissionManager();
 	void run();
 
-	void CallbackGoalReached(const std_msgs::Bool &goal_reached);
-	void CallbackMission(const osmosis_control::MissionMsg &mission);
+	void callbackGoalReached(const std_msgs::Bool &goal_reached);
+	void callbackMission(const osmosis_control::MissionMsg &mission);
 
 }; // end of class
 

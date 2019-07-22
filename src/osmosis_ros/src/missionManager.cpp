@@ -240,8 +240,8 @@ MissionManager::MissionManager()
 	//set up the publisher for the goal topic
 	goal_pub_ = nh_.advertise<osmosis_control::GoalMsg>("mission_goal", 1);
 	hmi_done_pub_ = nh_.advertise<std_msgs::Bool>("hmi_done", 1);
-	goal_reached_sub_ = nh_.subscribe("/goal_reached", 1, &MissionManager::CallbackGoalReached, this);
-	hmi_mission_sub_ = nh_.subscribe("/mission", 1, &MissionManager::CallbackMission, this);
+	goal_reached_sub_ = nh_.subscribe("/goal_reached", 1, &MissionManager::callbackGoalReached, this);
+	hmi_mission_sub_ = nh_.subscribe("/mission", 1, &MissionManager::callbackMission, this);
 
 	goal_reached_=false;
 	state_=IDLE;
@@ -265,12 +265,12 @@ void MissionManager::run()
 	}
 }
 
-void MissionManager::CallbackGoalReached(const std_msgs::Bool &goal_reached)
+void MissionManager::callbackGoalReached(const std_msgs::Bool &goal_reached)
 {
 	goal_reached_=goal_reached.data;
 }
 
-void MissionManager::CallbackMission(const osmosis_control::MissionMsg &mission)
+void MissionManager::callbackMission(const osmosis_control::MissionMsg &mission)
 {
 	mission_received_=true;
 	mission_msg_=mission;
