@@ -40,8 +40,7 @@ private:
 	enum StateDriveHMI{IDLE,REACH_POINT_MISSION,RUNWAY_MISSION};
 	StateDriveHMI state_;
 	enum StateMission {ASK_MISSION,WAIT_END_MISSION};
-	StateMission missionState_;
-	StateMission pointState_;
+	StateMission mission_state_;
 
 	osmosis_control::MissionMsg mission_cmd_;
 

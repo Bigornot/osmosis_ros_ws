@@ -9,26 +9,24 @@ void MissionManager::MissionManagerFSM()
 	{
 		case IDLE:
 			ROS_INFO("IDLE\n");
-			if(hmi_mission_)
+			if(mission_received_)
 			{
-				resetIdle();
-				state_=RUNWAY_MISSION;
-			}
-			else if(hmi_point_)
-			{
-				resetIdle();
-				state_=REACH_POINT_MISSION;
+				mission_received_=false;
+				if(mission_msg_.doRunwayMission)
+					state_=RUNWAY_MISSION;
+				else
+					state_=REACH_POINT_MISSION;
 			}
 			break;
 
 		case REACH_POINT_MISSION:
-			switch (pointState_)
+			switch (mission_state_)
 			{
 				case INIT_MISSION:
 					ROS_INFO("REACH_POINT_MISSION INIT_MISSION\n");
 					goalKeyboard();
 					publishMissionGoal();
-					pointState_=EXECUTE_MISSION;
+					mission_state_=EXECUTE_MISSION;
 					break;
 
 				case EXECUTE_MISSION:
@@ -37,7 +35,7 @@ void MissionManager::MissionManagerFSM()
 					{
 						endPoint();
 						publishDone();
-						pointState_=INIT_MISSION;
+						mission_state_=INIT_MISSION;
 						state_=IDLE;
 					}
 					break;
@@ -46,13 +44,13 @@ void MissionManager::MissionManagerFSM()
 
 
 		case RUNWAY_MISSION:
-			switch (missionState_)
+			switch (mission_state_)
 			{
 				case INIT_MISSION:
 					ROS_INFO("RUNWAY_MISSION INIT_MISSION\n");
-					initMission(mission_name_);
+					initMission(mission_msg_.mission_name);
 					publishMissionGoal();
-					missionState_=EXECUTE_MISSION;
+					mission_state_=EXECUTE_MISSION;
 					break;
 
 				case EXECUTE_MISSION:
@@ -65,7 +63,7 @@ void MissionManager::MissionManagerFSM()
 					{
 						abortMission();
 						publishDone();
-						missionState_=INIT_MISSION;
+						mission_state_=INIT_MISSION;
 						state_=IDLE;
 					}
 
@@ -73,7 +71,7 @@ void MissionManager::MissionManagerFSM()
 					{
 						endMission();
 						publishDone();
-						missionState_=INIT_MISSION;
+						mission_state_=INIT_MISSION;
 						state_=IDLE;
 					}
 
@@ -85,12 +83,6 @@ void MissionManager::MissionManagerFSM()
 	}
 }
 
-void MissionManager::resetIdle()
-{
-	hmi_mission_=false;
-	hmi_point_=false;
-}
-
 bool MissionManager::isGoalReached()
 {
 	return goal_reached_;
@@ -99,6 +91,8 @@ bool MissionManager::isGoalReached()
 void MissionManager::goalKeyboard()
 {
 	goal_reached_=false;
+	
+	goal_cmd_=mission_msg_.mission_goal;
 
 	ROS_INFO("x= %f",goal_cmd_.point.x);
 	ROS_INFO("y= %f",goal_cmd_.point.y);
@@ -150,7 +144,7 @@ void MissionManager::initMission(string name)
 		ROS_INFO("taxi= %d",mission_.mission_steps[i].taxi);
 	}
 
-	timeStartMission_=ros::Time::now();
+	time_start_mission_=ros::Time::now();
 
 	missionOver_=false;
 	mission_.step=0;
@@ -181,7 +175,7 @@ void MissionManager::parse(string line)
 
 void MissionManager::doMission()
 {
-	if(ros::Time::now()-timeStartMission_>timeout_)
+	if(ros::Time::now()-time_start_mission_>timeout_)
 	{
 		missionAborted_=true;
 		missionOver_=true;
@@ -251,14 +245,12 @@ MissionManager::MissionManager()
 
 	goal_reached_=false;
 	state_=IDLE;
-	missionState_=INIT_MISSION;
-	pointState_=INIT_MISSION;
+	mission_state_=INIT_MISSION;
 	goal_cmd_.taxi=true;
 	missionAborted_=false;
 	missionOver_=true;
-	hmi_point_=false;
-	hmi_mission_=false;
-	timeStartMission_=ros::Time::now();
+	mission_received_=false;
+	time_start_mission_=ros::Time::now();
 	timeout_=ros::Duration(30*60); // Timeout after the mission is aborted
 }
 
@@ -266,11 +258,11 @@ void MissionManager::run()
 {
 	ros::Rate loop_rate(10); //using 10 makes the robot oscillating trajectories, TBD check with the PF algo ?
 	while (nh_.ok())
-	    {
+	{
 		MissionManagerFSM();
-	 	ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
+		ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate
-	    }
+	}
 }
 
 void MissionManager::CallbackGoalReached(const std_msgs::Bool &goal_reached)
@@ -280,21 +272,8 @@ void MissionManager::CallbackGoalReached(const std_msgs::Bool &goal_reached)
 
 void MissionManager::CallbackMission(const osmosis_control::MissionMsg &mission)
 {
-	if(mission.doRunwayMission)
-	{
-		ROS_INFO("\nRUNWAY MISSION\n");
-		hmi_mission_=true;
-		hmi_point_=false;
-		mission_name_=mission.mission_name;
-	}
-
-	else
-	{
-		ROS_INFO("\nREACH POINT MISSION\n");
-		hmi_mission_=false;
-		hmi_point_=true;
-		goal_cmd_=mission.mission_goal;
-	}
+	mission_received_=true;
+	mission_msg_=mission;
 }
 
 

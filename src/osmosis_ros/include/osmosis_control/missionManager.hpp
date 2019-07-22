@@ -48,20 +48,19 @@ private:
 	enum StateDriveMission{IDLE,REACH_POINT_MISSION,RUNWAY_MISSION};
 	StateDriveMission state_;
 	enum StateMission {INIT_MISSION,EXECUTE_MISSION};
-	StateMission missionState_;
-	StateMission pointState_;
+	StateMission mission_state_;
+	
+	Mission mission_;
+	osmosis_control::MissionMsg mission_msg_;
+	bool mission_received_=true;
 
 	osmosis_control::GoalMsg goal_cmd_;
-	Mission mission_;
-	string mission_name_;
 
 	bool goal_reached_;
 	bool missionOver_;
 	bool missionAborted_;
-	bool hmi_point_;
-	bool hmi_mission_;
 
-	ros::Time timeStartMission_;
+	ros::Time time_start_mission_;
 	ros::Duration timeout_;
 
 	std_msgs::Bool done_;
@@ -69,7 +68,6 @@ private:
 	/////////  Methods   ////////
 	void MissionManagerFSM();
 
-	void resetIdle();
 	bool isGoalReached();
 
 	void goalKeyboard();

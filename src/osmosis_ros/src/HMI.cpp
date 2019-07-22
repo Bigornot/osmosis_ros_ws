@@ -18,32 +18,32 @@ void HMI::HMI_FSM()
 			break;
 
 		case REACH_POINT_MISSION:
-			switch (pointState_)
+			switch (mission_state_)
 			{
 				case ASK_MISSION:
 					goalKeyboard();
 					publishMission();
-					pointState_=WAIT_END_MISSION;
+					mission_state_=WAIT_END_MISSION;
 					break;
 
 				case WAIT_END_MISSION:
 					if (mission_done_)
 					{
 						state_=IDLE;
-						pointState_=ASK_MISSION;
+						mission_state_=ASK_MISSION;
 					}
 					break;
 			}
 			break;
 
 		case RUNWAY_MISSION:
-			switch (missionState_)
+			switch (mission_state_)
 			{
 				case ASK_MISSION:
 					if(askMission())
 					{
 						publishMission();
-						missionState_=WAIT_END_MISSION;
+						mission_state_=WAIT_END_MISSION;
 					}
 					else
 					{
@@ -56,7 +56,7 @@ void HMI::HMI_FSM()
 					if(mission_done_)
 					{
 						ROS_INFO("Mission done !");
-						missionState_=ASK_MISSION;
+						mission_state_=ASK_MISSION;
 						state_=IDLE;
 					}
 					break;
@@ -162,8 +162,7 @@ HMI::HMI()
 	mission_pub_ = nh_.advertise<osmosis_control::MissionMsg>("mission", 1);
 	done_sub_ = nh_.subscribe("/hmi_done", 1, &HMI::CallbackMissionDone, this);
 	state_=IDLE;
-	pointState_=ASK_MISSION;
-	missionState_=ASK_MISSION;
+	mission_state_=ASK_MISSION;
 	mission_done_=true;
 }
 
