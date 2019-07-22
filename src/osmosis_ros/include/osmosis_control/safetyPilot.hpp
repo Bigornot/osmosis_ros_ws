@@ -44,7 +44,6 @@ private:
 	ros::Subscriber cmd_vel_sub_;
 	ros::Subscriber scan_sub_;
 	ros::Subscriber cmd_vel_teleop_sub_;
-	ros::Subscriber emergency_stop_sub_;
 	ros::Subscriber controlled_stop_sub_;
 	ros::Subscriber switch_to_teleop_sub_;
 
