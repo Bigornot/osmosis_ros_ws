@@ -32,8 +32,8 @@ FTM_Manager::FTM_Manager()
 
 	strategy_=new FTM_SafetyFirst();
 
-	timeStart_ = ros::Time::now();
-	delayBeforeStart_ = 2;
+	time_start_ = ros::Time::now();
+	delay_before_start_ = 2;
 	freq_=20;
 }
 
@@ -57,12 +57,12 @@ void FTM_Manager::runRMs()
 		RMs[i]->runRM();
 }
 
-vector<FTM_Rule*> FTM_Manager::findDominant(vector<FTM_Rule*> Rules)
+vector<FTM_Rule*> FTM_Manager::findDominant(vector<FTM_Rule*> rules)
 {
 	vector<FTM_Rule*> dominated;
 	vector<FTM_Rule*> dominant;
 
-	for (int i=0; i<Rules.size(); i++)//for each rules
+	for (int i=0; i<rules.size(); i++)//for each rules
 	{
 		dominated=findDominated(Rules[i],&dominated);
 	}
@@ -72,17 +72,17 @@ vector<FTM_Rule*> FTM_Manager::findDominant(vector<FTM_Rule*> Rules)
 		cout << " " << dominated[i]->getId();
 	cout << endl;
 
-	for (int i=0; i<Rules.size(); i++)//for each rules
+	for (int i=0; i<rules.size(); i++)//for each rules
 	{
-		if(!findRule(dominated, Rules[i]) && !findRule(dominant, Rules[i]))
-			dominant.push_back(Rules[i]);
+		if(!findRule(dominated, rules[i]) && !findRule(dominant, rules[i]))
+			dominant.push_back(rules[i]);
 	}
 	return dominant;
 }
 
-vector<FTM_Rule*> FTM_Manager::findDominated(FTM_Rule* Dominant_rule, vector<FTM_Rule*>* dominated)
+vector<FTM_Rule*> FTM_Manager::findDominated(FTM_Rule* dominant_rule, vector<FTM_Rule*>* dominated)
 {
-	vector<int> successorsId = Dominant_rule->getSuccessorsId();
+	vector<int> successorsId = dominant_rule->getSuccessorsId();
 	for (int i=0; i<successorsId.size(); i++)
 	{
 		for(int j=0; j<FTM_rules_.size(); j++)
@@ -97,17 +97,17 @@ vector<FTM_Rule*> FTM_Manager::findDominated(FTM_Rule* Dominant_rule, vector<FTM
 	return *dominated;
 }
 
-vector<FTM_Rule*> FTM_Manager::findDominantRecovery(vector<FTM_Rule*> Rules)
+vector<FTM_Rule*> FTM_Manager::findDominantRecovery(vector<FTM_Rule*> rules)
 {
 	vector<FTM_Rule*> dominated;
 	vector<FTM_Rule*> dominant;
 	vector<FTM_Rule*> checked;
 
-	checked=checkSameRM(Rules);
+	checked=checkSameRM(rules);
 
-	for (int i=0; i<Rules.size(); i++)//for each rules
+	for (int i=0; i<rules.size(); i++)//for each rules
 	{
-		dominated=findDominatedRecovery(Rules[i],&dominated);
+		dominated=findDominatedRecovery(rules[i],&dominated);
 	}
 
 	cout << "Dominated RM :";
@@ -115,17 +115,17 @@ vector<FTM_Rule*> FTM_Manager::findDominantRecovery(vector<FTM_Rule*> Rules)
 		cout << " " << dominated[i]->getRMId();
 	cout << endl;
 
-	for (int i=0; i<Rules.size(); i++)//for each rules
+	for (int i=0; i<rules.size(); i++)//for each rules
 	{
-		if(!findRule(dominated, Rules[i]) && !findRM(dominant, Rules[i]))
-			dominant.push_back(Rules[i]);
+		if(!findRule(dominated, rules[i]) && !findRM(dominant, rules[i]))
+			dominant.push_back(rules[i]);
 	}
 	return dominant;
 }
 
-vector<FTM_Rule*>  FTM_Manager::findDominatedRecovery(FTM_Rule* Dominant_rule, vector<FTM_Rule*>* dominated)
+vector<FTM_Rule*>  FTM_Manager::findDominatedRecovery(FTM_Rule* dominant_rule, vector<FTM_Rule*>* dominated)
 {
-	vector<int> successorsId = Dominant_rule->getRMSuc();
+	vector<int> successorsId = dominant_rule->getRMSuc();
 	for (int i=0; i<successorsId.size(); i++)
 	{
 		for(int j=0; j<FTM_rules_.size(); j++)
@@ -145,26 +145,26 @@ FTM_Rule* FTM_Manager::findLowestCommonDominant(vector<FTM_Rule*> dominant)
 	return recursiveLowestCommonDominant(dominant)[0];
 }
 
-vector<FTM_Rule*> FTM_Manager::recursiveLowestCommonDominant(vector<FTM_Rule*> recursiveDominant)
+vector<FTM_Rule*> FTM_Manager::recursiveLowestCommonDominant(vector<FTM_Rule*> recursive_dominant)
 {
-	if (recursiveDominant.size()==1)
-		return recursiveDominant;
+	if (recursive_dominant.size()==1)
+		return recursive_dominant;
 
 	else
 	{
-		vector<FTM_Rule*> tempRecursiveDominant;
-		for (int i=0; i<recursiveDominant.size(); i++)
+		vector<FTM_Rule*> temprecursive_dominant;
+		for (int i=0; i<recursive_dominant.size(); i++)
 		{
 			for (int j=0; j<FTM_rules_.size(); j++)
 			{
-				if (recursiveDominant[i]->getPredecessorId()==FTM_rules_[j]->getId() && !findRule(tempRecursiveDominant, FTM_rules_[j]))
+				if (recursive_dominant[i]->getPredecessorId()==FTM_rules_[j]->getId() && !findRule(temprecursive_dominant, FTM_rules_[j]))
 				{
-					tempRecursiveDominant.push_back(FTM_rules_[j]);
+					temprecursive_dominant.push_back(FTM_rules_[j]);
 				}
 			}
 		}
-		recursiveDominant=findDominant(tempRecursiveDominant);
-		return recursiveLowestCommonDominant(recursiveDominant);
+		recursive_dominant=findDominant(temprecursive_dominant);
+		return recursiveLowestCommonDominant(recursive_dominant);
 	}
 }
 
@@ -203,51 +203,51 @@ void FTM_Manager::doRecovery(vector<FTM_Rule*> activated_rules)
 	}
 }
 
-vector<FTM_Rule*> FTM_Manager::checkSameRM(vector<FTM_Rule*> Rules)
+vector<FTM_Rule*> FTM_Manager::checkSameRM(vector<FTM_Rule*> rules)
 {
-	vector<FTM_Rule*> back_Rules=Rules;
-	Rules.clear();
+	vector<FTM_Rule*> back_rules=rules;
+	rules.clear();
 
-	for(int i=0; i<back_Rules.size(); i++)
+	for(int i=0; i<back_rules.size(); i++)
 	{
-		if(!findRM(Rules, back_Rules[i]) && !findRule(Rules,back_Rules[i]))
-			Rules.push_back(back_Rules[i]);
+		if(!findRM(rules, back_rules[i]) && !findRule(rules,back_rules[i]))
+			rules.push_back(back_rules[i]);
 	}
-	return Rules;
+	return rules;
 }
 
-vector<FTM_Rule*> FTM_Manager::getTriggeredFTM()
+vector<FTM_Rule*> FTM_Manager::getActiveOrRecoveryRules()
 {
-	Triggered_rules_.clear();
+	active_or_recovery_rules_.clear();
 
 	for(int i=0; i<FTM_rules_.size(); i++)
 	{
 		// If the rule is ACTIVE or in RECOVERY
 		if(FTM_rules_[i]->getState())
 		{
-			Triggered_rules_.push_back(FTM_rules_[i]);
+			active_or_recovery_rules_.push_back(FTM_rules_[i]);
 		}
 	}
 	cout << endl;
 
-	return Triggered_rules_;
+	return active_or_recovery_rules_;
 }
 
-void FTM_Manager::debugDisplayFTMid(vector<FTM_Rule*> vector)
+void FTM_Manager::debugDisplayRulesId(vector<FTM_Rule*> rules)
 {
-	for (int i=0; i<vector.size();i++)
+	for (int i=0; i<rules.size();i++)
 	{
-		cout<<vector[i]->getId()<<" ";
+		cout<<rules[i]->getId()<<" ";
 	}
 	cout<<endl;
 	cout<<endl;
 }
 
-void FTM_Manager::debugDisplayRMid(vector<FTM_Rule*> vector)
+void FTM_Manager::debugDisplayRMId(vector<FTM_Rule*> rules)
 {
-	for (int i=0; i<vector.size();i++)
+	for (int i=0; i<rules.size();i++)
 	{
-		cout<<vector[i]->getRMId()<<" ";
+		cout<<rules[i]->getRMId()<<" ";
 	}
 	cout<<endl;
 	cout<<endl;
@@ -263,7 +263,7 @@ void FTM_Manager::run()
 {
 	ros::Rate loop_rate(freq_);
 
-	ros::Duration(delayBeforeStart_).sleep();
+	ros::Duration(delay_before_start_).sleep();
 
 	setDMs();
 

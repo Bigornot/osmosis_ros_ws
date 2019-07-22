@@ -40,7 +40,7 @@ class FTM_Strategy;
 class FTM_Manager
 {
 private :
-  ros::NodeHandle nh_;
+	ros::NodeHandle nh_;
 	double freq_;
 	vector<FTM_Rule*> FTM_rules_;
 
@@ -57,22 +57,22 @@ private :
 	RM4_RespawnNodes* RM4_respawn_nodes_;
 	RM5_SwitchToTeleop* RM5_switch_to_teleop_;
 
-	vector<FTM_Rule*> Triggered_rules_;
-
-	vector<FTM_Rule*> findDominated(FTM_Rule* Dominant_rule, vector<FTM_Rule*>* dominated);
-	vector<FTM_Rule*> findDominatedRecovery(FTM_Rule* Dominant_rule, vector<FTM_Rule*>* dominated);
-	vector<FTM_Rule*> recursiveLowestCommonDominant(vector<FTM_Rule*> recursiveDominant);
-	bool findRM(vector<FTM_Rule*> rules, FTM_Rule* rule);
-	bool findRule(vector<FTM_Rule*> rules, FTM_Rule* rule);
-	vector<FTM_Rule*> checkSameRM(vector<FTM_Rule*> Rules);
+	vector<FTM_Rule*> active_or_recovery_rules_;
 
 	FTM_Strategy* strategy_;
-	double delayBeforeStart_;
-	ros::Time timeStart_;
+	double delay_before_start_;
+	ros::Time time_start_;
 
+	vector<FTM_Rule*> findDominated(FTM_Rule* dominant_rule, vector<FTM_Rule*>* dominated);
+	vector<FTM_Rule*> findDominatedRecovery(FTM_Rule* dominant_rule, vector<FTM_Rule*>* dominated);
+	vector<FTM_Rule*> recursiveLowestCommonDominant(vector<FTM_Rule*> recursive_dominant);
+	bool findRM(vector<FTM_Rule*> rules, FTM_Rule* rule);
+	bool findRule(vector<FTM_Rule*> rules, FTM_Rule* rule);
+	vector<FTM_Rule*> checkSameRM(vector<FTM_Rule*> rules);
+	
 public :
 	FTM_Manager();
-	vector<FTM_Rule*> getTriggeredFTM();
+	vector<FTM_Rule*> getActiveOrRecoveryRules();
 	void doRecovery(vector<FTM_Rule*> activated_rules);
 	vector<FTM_Rule*> findDominant(vector<FTM_Rule*> Rules);
 	vector<FTM_Rule*> findDominantRecovery(vector<FTM_Rule*> Rules);
@@ -83,11 +83,13 @@ public :
 	void runDMs();
 	void runRMs();
 
-	void debugDisplayFTMid(vector<FTM_Rule*> Vector);
-	void debugDisplayRMid(vector<FTM_Rule*> Vector);
+	void debugDisplayRulesId(vector<FTM_Rule*> rules);
+	void debugDisplayRMId(vector<FTM_Rule*> rules);
 
 	void run();
 };
+
+/////////////////////////////////////////////////////////////////
 
 class FTM_Strategy
 {
@@ -101,10 +103,12 @@ public :
 	virtual void execute(FTM_Manager* myManager)=0;
 };
 
+/////////////////////////////////////////////////////////////////
+
 class FTM_SafetyFirst : public FTM_Strategy
 {
 private:
-  vector<FTM_Rule*> triggered_rules_;
+	vector<FTM_Rule*> active_or_recovery_rules_;
 	vector<FTM_Rule*> dominant_;
 	vector<FTM_Rule*> dominant_recov_;
 	FTM_Rule* common_dominant_;
