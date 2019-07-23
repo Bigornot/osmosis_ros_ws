@@ -59,15 +59,7 @@ void MissionManager::MissionManagerFSM()
 					if(checkNextStep())
 						publishMissionGoal();
 
-					if(mission_aborted_)
-					{
-						abortMission();
-						publishDone();
-						mission_state_=INIT_MISSION;
-						state_=IDLE;
-					}
-
-					else if(mission_over_)
+					if(mission_over_)
 					{
 						endMission();
 						publishDone();
@@ -107,7 +99,6 @@ void MissionManager::endPoint()
 void MissionManager::initMission(string name)
 {
 	goal_reached_=false;
-	mission_aborted_=false;
 	mission_over_=false;
 
 	ROS_INFO("Init mission");
@@ -166,10 +157,7 @@ void MissionManager::parse(string line)
 void MissionManager::doMission()
 {
 	if(ros::Time::now()-time_start_mission_>timeout_)
-	{
-		mission_aborted_=true;
 		mission_over_=true;
-	}
 }
 
 bool MissionManager::checkNextStep()
@@ -209,14 +197,6 @@ void MissionManager::nextStep()
 	goal_cmd_=mission_.mission_steps[mission_.step];
 }
 
-void MissionManager::abortMission()
-{
-	mission_aborted_=false;
-	mission_over_=true;
-
-	done_.data=false;
-}
-
 void MissionManager::endMission()
 {
 	done_.data=true;
@@ -248,11 +228,9 @@ MissionManager::MissionManager()
 	state_=IDLE;
 	mission_state_=INIT_MISSION;
 	goal_cmd_.taxi=true;
-	mission_aborted_=false;
 	mission_over_=true;
 	mission_received_=false;
 	time_start_mission_=ros::Time::now();
-	timeout_=ros::Duration(30*60); // Timeout after the mission is aborted
 }
 
 void MissionManager::run()

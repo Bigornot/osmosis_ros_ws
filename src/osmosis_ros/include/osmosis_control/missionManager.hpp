@@ -58,7 +58,6 @@ private:
 
 	bool goal_reached_;
 	bool mission_over_;
-	bool mission_aborted_;
 
 	ros::Time time_start_mission_;
 	ros::Duration timeout_;
