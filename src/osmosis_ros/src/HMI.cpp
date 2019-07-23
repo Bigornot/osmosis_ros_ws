@@ -8,6 +8,8 @@ void HMI::HMI_FSM()
 	switch (state_)
 	{
 		case IDLE:
+			if(emergency_stop_)
+				state_=EMERGENCY_STOP;
 			char mode;
 			mode=askMode();
 			if(mode=='P'||mode=='p')
@@ -21,13 +23,17 @@ void HMI::HMI_FSM()
 		case REACH_POINT_MISSION:
 			switch (mission_state_)
 			{
-				case ASK_MISSION:
+				case ASK_MISSION:	
+					if(emergency_stop_)
+						state_=EMERGENCY_STOP;
 					goalKeyboard();
 					publishMission();
 					mission_state_=WAIT_END_MISSION;
 					break;
 
 				case WAIT_END_MISSION:
+					if(emergency_stop_)
+						state_=EMERGENCY_STOP;
 					if (mission_done_)
 					{
 						state_=IDLE;
@@ -41,6 +47,8 @@ void HMI::HMI_FSM()
 			switch (mission_state_)
 			{
 				case ASK_MISSION:
+					if(emergency_stop_)
+						state_=EMERGENCY_STOP;
 					if(askMission())
 					{
 						publishMission();
@@ -53,7 +61,9 @@ void HMI::HMI_FSM()
 					}
 					break;
 
-				case WAIT_END_MISSION:
+				case WAIT_END_MISSION:	
+					if(emergency_stop_)
+						state_=EMERGENCY_STOP;
 					if(mission_done_)
 					{
 						ROS_INFO("Mission done !");
@@ -61,6 +71,16 @@ void HMI::HMI_FSM()
 						state_=IDLE;
 					}
 					break;
+			}
+			break;
+
+		case EMERGENCY_STOP:
+			ROS_INFO("EMERGENCY_STOP");
+			mission_done_=true;
+			if(!emergency_stop_)
+			{
+				state_=IDLE;
+				mission_state_=ASK_MISSION;
 			}
 			break;
 
@@ -165,6 +185,7 @@ HMI::HMI()
 	state_=IDLE;
 	mission_state_=ASK_MISSION;
 	mission_done_=true;
+	emergency_stop_=false;
 }
 
 void HMI::run()
@@ -181,6 +202,11 @@ void HMI::run()
 void HMI::callbackMissionDone(const std_msgs::Bool &mission_done)
 {
 	mission_done_=mission_done.data;
+}
+
+void HMI::callbackEmergencyStop(const std_msgs::Bool &emergency_stop)
+{
+	emergency_stop_=emergency_stop.data;
 }
 
 

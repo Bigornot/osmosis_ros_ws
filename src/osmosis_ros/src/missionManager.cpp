@@ -80,6 +80,16 @@ void MissionManager::MissionManagerFSM()
 			}
 			break;
 
+		case EMERGENCY_STOP:
+			ROS_INFO("EMERGENCY_STOP");
+			abortMission();
+			if(!emergency_stop_)
+			{
+				mission_state_=INIT_MISSION;
+				state_=IDLE;
+			}
+			break;
+
 		default: break;
 	}
 }
@@ -253,7 +263,7 @@ MissionManager::MissionManager()
 	missionOver_=true;
 	mission_received_=false;
 	time_start_mission_=ros::Time::now();
-	timeout_=ros::Duration(30*60); // Timeout after the mission is aborted
+	timeout_=ros::Duration(20); // Timeout after the mission is aborted
 }
 
 void MissionManager::run()
