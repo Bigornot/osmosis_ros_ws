@@ -59,7 +59,7 @@ void MissionManager::MissionManagerFSM()
 					if(checkNextStep())
 						publishMissionGoal();
 
-					if(missionAborted_)
+					if(mission_aborted_)
 					{
 						abortMission();
 						publishDone();
@@ -67,7 +67,7 @@ void MissionManager::MissionManagerFSM()
 						state_=IDLE;
 					}
 
-					else if(missionOver_)
+					else if(mission_over_)
 					{
 						endMission();
 						publishDone();
@@ -91,7 +91,7 @@ bool MissionManager::isGoalReached()
 void MissionManager::goalKeyboard()
 {
 	goal_reached_=false;
-	
+
 	goal_cmd_=mission_msg_.mission_goal;
 
 	ROS_INFO("x= %f",goal_cmd_.point.x);
@@ -107,8 +107,8 @@ void MissionManager::endPoint()
 void MissionManager::initMission(string name)
 {
 	goal_reached_=false;
-	missionAborted_=false;
-	missionOver_=false;
+	mission_aborted_=false;
+	mission_over_=false;
 
 	ROS_INFO("Init mission");
 
@@ -136,7 +136,7 @@ void MissionManager::initMission(string name)
 
 	time_start_mission_=ros::Time::now();
 
-	missionOver_=false;
+	mission_over_=false;
 	mission_.step=0;
 	goal_cmd_=mission_.mission_steps[mission_.step];
 }
@@ -167,8 +167,8 @@ void MissionManager::doMission()
 {
 	if(ros::Time::now()-time_start_mission_>timeout_)
 	{
-		missionAborted_=true;
-		missionOver_=true;
+		mission_aborted_=true;
+		mission_over_=true;
 	}
 }
 
@@ -181,7 +181,7 @@ bool MissionManager::checkNextStep()
 		mission_.step++;
 		if(isMissionOver())
 		{
-			missionOver_=true;
+			mission_over_=true;
 		}
 		else
 		{
@@ -211,8 +211,8 @@ void MissionManager::nextStep()
 
 void MissionManager::abortMission()
 {
-	missionAborted_=false;
-	missionOver_=true;
+	mission_aborted_=false;
+	mission_over_=true;
 
 	done_.data=false;
 }
@@ -248,8 +248,8 @@ MissionManager::MissionManager()
 	state_=IDLE;
 	mission_state_=INIT_MISSION;
 	goal_cmd_.taxi=true;
-	missionAborted_=false;
-	missionOver_=true;
+	mission_aborted_=false;
+	mission_over_=true;
 	mission_received_=false;
 	time_start_mission_=ros::Time::now();
 	timeout_=ros::Duration(30*60); // Timeout after the mission is aborted
