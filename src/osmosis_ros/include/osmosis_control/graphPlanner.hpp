@@ -45,10 +45,9 @@ private:
 	ros::Subscriber goal_sub_;
 	ros::Subscriber target_reached_sub_;
 	ros::Subscriber odom_sub_;
-	geometry_msgs::Point target_;
 	geometry_msgs::Point current;
 
-	osmosis_control::GoalMsg goal_;
+	osmosis_control::GoalMsg target_;
 	osmosis_control::GoalMsg mission_goal_;
 	Graph graph;
 	std::vector<geometry_msgs::Point> plan;

@@ -138,11 +138,11 @@ void GraphPlanner::publishSendTarget()
 	//  {
 	//shell().target.write(plan[target_index]);
 	ROS_INFO("SEND target x: %f y:%f", plan[target_index].x, plan[target_index].y);
-	goal_.point=plan[target_index];
+	target_.point=plan[target_index];
 
-	goal_.taxi=mission_goal_.taxi;
+	target_.taxi=mission_goal_.taxi;
 
-	target_pub_.publish(goal_);
+	target_pub_.publish(target_);
 	//  }
 }
 
