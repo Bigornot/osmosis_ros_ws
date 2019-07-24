@@ -51,10 +51,10 @@ private:
 	ros::Subscriber scan_sub_;
 	ros::Subscriber goal_sub_;
 
-	geometry_msgs::Pose2D robot_pose;
-	geometry_msgs::Point obstacle;
+	geometry_msgs::Pose2D robot_pose_;
+	geometry_msgs::Point obstacle_;
 	osmosis_control::GoalMsg target_;
-	double obstacle_lw, obstacle_radius;
+	double obstacle_lw_, obstacle_radius_;
 	geometry_msgs::Point old_goal_;
 	geometry_msgs::Twist cmd_;
 

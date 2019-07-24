@@ -38,7 +38,7 @@ private:
 	ros::Publisher pose_pub_;
 	ros::Subscriber odom_sub_;
 	nav_msgs::Odometry odom_;
-	geometry_msgs::Pose2D robot_pose;
+	geometry_msgs::Pose2D robot_pose_;
 public:
 	void localizationCallbackOdom(const nav_msgs::Odometry::ConstPtr& msg);
 	bool run();
