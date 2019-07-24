@@ -8,8 +8,6 @@ void HMI::HMI_FSM()
 	switch (state_)
 	{
 		case IDLE:
-			if(emergency_stop_)
-				state_=EMERGENCY_STOP;
 			char mode;
 			mode=askMode();
 			if(mode=='P'||mode=='p')
@@ -18,27 +16,30 @@ void HMI::HMI_FSM()
 				state_=RUNWAY_MISSION;
 			else
 				ROS_ERROR("Input Error : Please try again.\n");
+
+			if(emergency_stop_)
+				state_=EMERGENCY_STOP;
 			break;
 
 		case REACH_POINT_MISSION:
 			switch (mission_state_)
 			{
 				case ASK_MISSION:	
-					if(emergency_stop_)
-						state_=EMERGENCY_STOP;
 					goalKeyboard();
 					publishMission();
-					mission_state_=WAIT_END_MISSION;
+					mission_state_=WAIT_END_MISSION;	
+					if(emergency_stop_)
+						state_=EMERGENCY_STOP;
 					break;
 
 				case WAIT_END_MISSION:
-					if(emergency_stop_)
-						state_=EMERGENCY_STOP;
 					if (mission_done_)
 					{
 						state_=IDLE;
 						mission_state_=ASK_MISSION;
-					}
+					}	
+					if(emergency_stop_)
+						state_=EMERGENCY_STOP;
 					break;
 			}
 			break;
@@ -47,8 +48,6 @@ void HMI::HMI_FSM()
 			switch (mission_state_)
 			{
 				case ASK_MISSION:
-					if(emergency_stop_)
-						state_=EMERGENCY_STOP;
 					if(askMission())
 					{
 						publishMission();
@@ -58,25 +57,27 @@ void HMI::HMI_FSM()
 					{
 						ROS_ERROR("Mission Aborted");
 						state_=IDLE;
-					}
+					}	
+					if(emergency_stop_)
+						state_=EMERGENCY_STOP;
 					break;
 
 				case WAIT_END_MISSION:	
-					if(emergency_stop_)
-						state_=EMERGENCY_STOP;
 					if(mission_done_)
 					{
 						ROS_INFO("Mission done !");
 						mission_state_=ASK_MISSION;
 						state_=IDLE;
 					}
+					if(emergency_stop_)
+						state_=EMERGENCY_STOP;
+
 					break;
 			}
 			break;
 
 		case EMERGENCY_STOP:
 			ROS_INFO("EMERGENCY_STOP");
-			mission_done_=true;
 			if(!emergency_stop_)
 			{
 				state_=IDLE;
@@ -182,6 +183,7 @@ HMI::HMI()
 	freq_=10;
 	mission_pub_ = nh_.advertise<osmosis_control::MissionMsg>("mission", 1);
 	done_sub_ = nh_.subscribe("/hmi_done", 1, &HMI::callbackMissionDone, this);
+	emergency_stop_sub_ = nh_.subscribe("/do_emergency_stop", 1, &HMI::callbackEmergencyStop, this);
 	state_=IDLE;
 	mission_state_=ASK_MISSION;
 	mission_done_=true;

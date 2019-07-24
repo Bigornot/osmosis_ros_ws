@@ -5,7 +5,6 @@
 
 void RecoveryModule::recoveryModuleFSM()
 {
-	cout << "ID:" << id_ << " " << state_ << " ";
 	switch(drive_state_)
 	{
 		case IDLE:
@@ -63,6 +62,7 @@ void RecoveryModule::stop()
 
 void RecoveryModule::run()
 {
+	debugShowState();
 	recoveryModuleFSM();
 }
 
@@ -74,4 +74,9 @@ int RecoveryModule::getId()
 vector<int> RecoveryModule::getSuccessorsId()
 {
 	return successors_;
+}
+
+void RecoveryModule::debugShowState()
+{
+	cout << "ID:" << id_ << " " << state_ << " ";
 }

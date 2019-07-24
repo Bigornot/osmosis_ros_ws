@@ -5,7 +5,7 @@
 
 RM5_SwitchToTeleop::RM5_SwitchToTeleop(int id, vector<int> successors) : RecoveryModule(id, successors) 
 {
-	pub_=nh_.advertise<std_msgs::Bool>("/do_RM5_SwitchToTeleop", 100);
+	pub_=nh_.advertise<std_msgs::Bool>("/do_switch_to_teleop", 100);
 	pollRate_=100;
 	delaySend_=0.1;
 	start_=ros::Time::now();

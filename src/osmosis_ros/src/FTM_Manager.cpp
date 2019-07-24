@@ -25,6 +25,7 @@ void FTM_Manager::runRMs()
 {
 	vector<FTM_Rule*> RMs = checkSameRM(FTM_rules_);
 
+	cout << "Run RM, RM state :" << endl;
 	for(int i=0; i<RMs.size(); i++)
 		RMs[i]->runRM();
 }

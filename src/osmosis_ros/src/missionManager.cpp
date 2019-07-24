@@ -18,6 +18,8 @@ void MissionManager::MissionManagerFSM()
 				else
 					state_=REACH_POINT_MISSION;
 			}
+			if(emergency_stop_)
+				state_=EMERGENCY_STOP;
 			break;
 
 		case REACH_POINT_MISSION:
@@ -28,6 +30,8 @@ void MissionManager::MissionManagerFSM()
 					goalKeyboard();
 					publishMissionGoal();
 					mission_state_=EXECUTE_MISSION;
+					if(emergency_stop_)
+						state_=EMERGENCY_STOP;
 					break;
 
 				case EXECUTE_MISSION:
@@ -39,6 +43,8 @@ void MissionManager::MissionManagerFSM()
 						mission_state_=INIT_MISSION;
 						state_=IDLE;
 					}
+					if(emergency_stop_)
+						state_=EMERGENCY_STOP;
 					break;
 			}
 			break;
@@ -52,6 +58,8 @@ void MissionManager::MissionManagerFSM()
 					initMission(mission_msg_.mission_name);
 					publishMissionGoal();
 					mission_state_=EXECUTE_MISSION;
+					if(emergency_stop_)
+						state_=EMERGENCY_STOP;
 					break;
 
 				case EXECUTE_MISSION:
@@ -59,29 +67,21 @@ void MissionManager::MissionManagerFSM()
 					if(checkNextStep())
 						publishMissionGoal();
 
-					if(mission_aborted_)
-					{
-						abortMission();
-						publishDone();
-						mission_state_=INIT_MISSION;
-						state_=IDLE;
-					}
-
-					else if(mission_over_)
+					if(mission_over_)
 					{
 						endMission();
 						publishDone();
 						mission_state_=INIT_MISSION;
 						state_=IDLE;
-					}
-
+					}	
+					if(emergency_stop_)
+						state_=EMERGENCY_STOP;
 					break;
 			}
 			break;
 
 		case EMERGENCY_STOP:
-			ROS_INFO("EMERGENCY_STOP");
-			abortMission();
+			ROS_INFO("EMERGENCY_STOP\n");
 			if(!emergency_stop_)
 			{
 				mission_state_=INIT_MISSION;
@@ -239,6 +239,7 @@ MissionManager::MissionManager()
 	hmi_done_pub_ = nh_.advertise<std_msgs::Bool>("hmi_done", 1);
 	goal_reached_sub_ = nh_.subscribe("/goal_reached", 1, &MissionManager::callbackGoalReached, this);
 	hmi_mission_sub_ = nh_.subscribe("/mission", 1, &MissionManager::callbackMission, this);
+	emergency_stop_sub_= nh_.subscribe("/do_emergency_stop", 1, &MissionManager::callbackEmergencyStop, this);
 
 	goal_reached_=false;
 	state_=IDLE;
@@ -272,6 +273,10 @@ void MissionManager::callbackMission(const osmosis_control::MissionMsg &mission)
 	mission_msg_=mission;
 }
 
+void MissionManager::callbackEmergencyStop(const std_msgs::Bool &emergency_stop)
+{
+	emergency_stop_=emergency_stop.data;
+}
 
 ////////////////////// MAIN  //////////////////////
 

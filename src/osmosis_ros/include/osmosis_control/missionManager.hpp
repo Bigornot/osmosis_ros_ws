@@ -44,6 +44,7 @@ private:
 	ros::Publisher hmi_done_pub_;
 	ros::Subscriber goal_reached_sub_;
 	ros::Subscriber hmi_mission_sub_;
+	ros::Subscriber emergency_stop_sub_;
 
 	enum StateDriveMission{IDLE,REACH_POINT_MISSION,RUNWAY_MISSION,EMERGENCY_STOP};
 	StateDriveMission state_;

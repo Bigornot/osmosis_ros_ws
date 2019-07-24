@@ -13,6 +13,8 @@ void GraphPlanner::graphPlannerFSM()
 				compute_plan();
 				state_=WAIT_COMPUTE_PLAN;
 			}
+			if(emergency_stop_)
+				state_=EMERGENCY_STOP;
 			break;
 
 		case WAIT_COMPUTE_PLAN:
@@ -21,6 +23,8 @@ void GraphPlanner::graphPlannerFSM()
 			{
 				state_=SEND;
 			}
+			if(emergency_stop_)
+				state_=EMERGENCY_STOP;
 			break;
 
 		case SEND:
@@ -36,6 +40,8 @@ void GraphPlanner::graphPlannerFSM()
 				publishSendTarget();
 				state_=FOLLOW;
 			}
+			if(emergency_stop_)
+				state_=EMERGENCY_STOP;
 			break;
 
 		case FOLLOW:
@@ -46,18 +52,27 @@ void GraphPlanner::graphPlannerFSM()
 				target_reached_=false; //re-init
 			}
 			else execute_plan();
+			if(emergency_stop_)
+				state_=EMERGENCY_STOP;
 			break;
 
 		case GOAL_DONE:
 			ROS_INFO("DONE\n");
 			publishDone();
 			state_=WAIT_GOAL;
+			if(emergency_stop_)
+				state_=EMERGENCY_STOP;
+			break;
+		
+		case EMERGENCY_STOP:
+			ROS_INFO("EMERGENCY_STOP\n");
+			if(!emergency_stop_)
+				state_=WAIT_GOAL;
 			break;
 
 		default: break;
 	}
 }
-
 
 bool GraphPlanner::new_goal()
 {
@@ -184,9 +199,11 @@ GraphPlanner::GraphPlanner()
 	goal_sub_=nh_.subscribe("/mission_goal", 1, &GraphPlanner::callbackGoal, this);
 	odom_sub_=nh_.subscribe("/pose", 1, &GraphPlanner::callbackPose, this);
 	target_reached_sub_=nh_.subscribe("/target_reached", 1, &GraphPlanner::callbackTargetReached, this);
+	emergency_stop_sub_=nh_.subscribe("/do_emergency_stop", 1, &GraphPlanner::callbackEmergencyStop, this);
 	state_=WAIT_GOAL;
 	_new_goal=false;
 	target_reached_=false;
+	emergency_stop_=false;
 }
 
 // this method should be placed somewhere else... where ???
@@ -236,6 +253,11 @@ void GraphPlanner::callbackPose(const geometry_msgs::Pose2D & msg)
 	current.x = msg.x;
 	current.y = msg.y;
 	//ROS_INFO("NEW POS : x: [%f], y:[%f]",current.x,current.y);
+}
+
+void GraphPlanner::callbackEmergencyStop(const std_msgs::Bool &emergency_stop)
+{
+	emergency_stop_=emergency_stop.data;
 }
 
 /*void GraphPlanner::callbackGoalId(const string & thegoal_id)

@@ -36,6 +36,7 @@ private:
 	double freq_;
 	ros::Publisher mission_pub_;
 	ros::Subscriber done_sub_;
+	ros::Subscriber emergency_stop_sub_;
 
 	enum StateDriveHMI{IDLE,REACH_POINT_MISSION,RUNWAY_MISSION,EMERGENCY_STOP};
 	StateDriveHMI state_;

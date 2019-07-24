@@ -36,6 +36,7 @@ public:
 	virtual void doRecovery()=0;
 	virtual void startRecovery()=0;
 	virtual void stopRecovery()=0;
+	void debugShowState();
 };
 
 #endif
