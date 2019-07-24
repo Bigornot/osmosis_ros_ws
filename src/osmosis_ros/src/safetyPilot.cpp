@@ -9,6 +9,17 @@ void SafetyPilot::SafetyPilotFSM()
 		case COMPUTE_CMD:
 			ROS_INFO("COMPUTE_CMD\n");
 			computeCommandCtrlTeleop();
+			if(emergency_stop_)
+			{
+				stop();
+				state_=EMERGENCY_STOP;
+			}
+			break;
+
+		case EMERGENCY_STOP:
+			ROS_INFO("EMERGENCY_STOP\n");
+			if(!emergency_stop_)
+				state_=COMPUTE_CMD;
 			break;
 
 		default: break;
@@ -89,9 +100,11 @@ SafetyPilot::SafetyPilot()
 	freq_=10;
 	//set up the publisher for the cmd_vel topic
 	cmd_vel_pub_ = nh_.advertise<geometry_msgs::Twist>("/summit_xl_a/robotnik_base_control/cmd_vel", 1);
-	cmd_vel_sub_  = nh_.subscribe("cmd_vel_control", 1, &SafetyPilot::callbackCmdVelCtrl, this);
+	cmd_vel_sub_  = nh_.subscribe("/cmd_vel_control", 1, &SafetyPilot::callbackCmdVelCtrl, this);
 	scan_sub_  = nh_.subscribe("/summit_xl_a/front_laser/scan", 1, &SafetyPilot::callbackScan, this);
-	cmd_vel_teleop_sub_= nh_.subscribe("cmd_vel_teleop", 1, &SafetyPilot::callbackTeleop, this);
+	cmd_vel_teleop_sub_ = nh_.subscribe("/cmd_vel_teleop", 1, &SafetyPilot::callbackTeleop, this);
+	emergency_stop_sub_ = nh_.subscribe("/do_emergency_stop", 1, &SafetyPilot::callbackEmergencyStop, this);
+	emergency_stop_ = false;
 }
 
 bool SafetyPilot::run()
@@ -124,6 +137,10 @@ void SafetyPilot::callbackTeleop(const osmosis_control::TeleopMsg & teleop_msg)
 	base_cmd_teleop_=teleop_msg;
 }
 
+void SafetyPilot::callbackEmergencyStop(const std_msgs::Bool & emergency_stop)
+{
+	emergency_stop_=emergency_stop.data;
+}
 
 ////////////////////// MAIN //////////////////////
 

@@ -77,7 +77,7 @@ void HMI::HMI_FSM()
 			break;
 
 		case EMERGENCY_STOP:
-			ROS_INFO("EMERGENCY_STOP");
+			ROS_INFO("EMERGENCY_STOP\n");
 			if(!emergency_stop_)
 			{
 				state_=IDLE;

@@ -47,14 +47,16 @@ private:
 	ros::Subscriber cmd_vel_teleop_sub_;
 	ros::Subscriber controlled_stop_sub_;
 	ros::Subscriber switch_to_teleop_sub_;
+	ros::Subscriber emergency_stop_sub_;
 
-	enum State{COMPUTE_CMD};
+	enum State{COMPUTE_CMD, EMERGENCY_STOP};
 	State state_;
 
 	geometry_msgs::Twist base_cmd_ctrl_;
 	geometry_msgs::Twist base_cmd_;
 	osmosis_control::TeleopMsg base_cmd_teleop_;
 	sensor_msgs::LaserScan scan_;
+	bool emergency_stop_;
 
 	///////// Methods ////////
 	void SafetyPilotFSM();
@@ -70,6 +72,7 @@ public:
 	void callbackCmdVelCtrl(const geometry_msgs::Twist & cmd_msg);
 	void callbackScan(const sensor_msgs::LaserScan & scan_msg);
 	void callbackTeleop(const osmosis_control::TeleopMsg & teleop_msg);
-}; // end of class
+	void callbackEmergencyStop(const std_msgs::Bool & emergency_stop);
+};
 
 #endif //OSMOSIS_SAFETYPILOT_HPP
