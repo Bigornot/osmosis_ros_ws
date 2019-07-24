@@ -74,7 +74,6 @@ private:
 	bool checkNextStep();
 	bool isMissionOver();
 	void nextStep();
-	void abortMission();
 	void endMission();
 
 	void publishMissionGoal();
