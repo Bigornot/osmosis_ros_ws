@@ -48,6 +48,7 @@ private:
 	ros::Subscriber emergency_stop_sub_;
 	ros::Subscriber controlled_stop_sub_;
 	ros::Subscriber switch_to_teleop_sub_;
+	ros::Subscriber fault_injection_cmd_not_updated_sub_;
 
 	enum State{COMPUTE_CMD, EMERGENCY_STOP, CONTROLLED_STOP, SWITCH_TO_TELEOP};
 	State state_;
@@ -59,6 +60,8 @@ private:
 	bool emergency_stop_;
 	bool controlled_stop_;
 	bool switch_to_teleop_;
+
+	bool fault_injection_cmd_not_updated_;
 
 	///////// Methods ////////
 	void SafetyPilotFSM();
@@ -77,6 +80,7 @@ public:
 	void callbackEmergencyStop(const std_msgs::Bool & emergency_stop);
 	void callbackControlledStop(const std_msgs::Bool & controlled_stop);
 	void callbackSwitchToTeleop(const std_msgs::Bool & switch_to_teleop);
+	void callbackFaultInjectionCmdNotUpdated(const std_msgs::Bool & fault_injection);
 };
 
 #endif //OSMOSIS_SAFETYPILOT_HPP

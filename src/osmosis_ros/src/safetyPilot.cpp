@@ -129,9 +129,12 @@ SafetyPilot::SafetyPilot()
 	emergency_stop_sub_ = nh_.subscribe("/do_emergency_stop", 1, &SafetyPilot::callbackEmergencyStop, this);
 	controlled_stop_sub_ = nh_.subscribe("/do_controlled_stop", 1, &SafetyPilot::callbackControlledStop, this);
 	switch_to_teleop_sub_ = nh_.subscribe("/do_switch_to_teleop", 1, &SafetyPilot::callbackSwitchToTeleop, this);
+	fault_injection_cmd_not_updated_sub_ = nh_.subscribe("/fault_injection_cmd_not_updated", 1, &SafetyPilot::callbackFaultInjectionCmdNotUpdated, this);
 	emergency_stop_ = false;
 	controlled_stop_ = false;
 	switch_to_teleop_ = false;
+
+	fault_injection_cmd_not_updated_=false;
 }
 
 bool SafetyPilot::run()
@@ -141,7 +144,8 @@ bool SafetyPilot::run()
 	{
 		//computeCommandCtrlTeleop();
 		SafetyPilotFSM();
-		cmd_vel_pub_.publish(base_cmd_);
+		if(!fault_injection_cmd_not_updated_)
+			cmd_vel_pub_.publish(base_cmd_);
 		ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate
 	}
@@ -177,6 +181,11 @@ void SafetyPilot::callbackControlledStop(const std_msgs::Bool & controlled_stop)
 void SafetyPilot::callbackSwitchToTeleop(const std_msgs::Bool & switch_to_teleop)
 {
 	switch_to_teleop_=switch_to_teleop.data;
+}
+
+void SafetyPilot::callbackFaultInjectionCmdNotUpdated(const std_msgs::Bool & fault_injection)
+{
+	fault_injection_cmd_not_updated_=fault_injection.data;
 }
 
 
