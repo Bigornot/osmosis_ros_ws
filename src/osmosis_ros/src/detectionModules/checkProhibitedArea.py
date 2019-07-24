@@ -29,7 +29,6 @@ def poseCallback(data):
         print(fault_injection)
         if fault_injection==True:
             pub.publish(True)
-            print("saltations")
         else:
             pub.publish(False)
 
