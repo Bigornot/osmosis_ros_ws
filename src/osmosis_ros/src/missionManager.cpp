@@ -55,7 +55,6 @@ void MissionManager::MissionManagerFSM()
 
 				case EXECUTE_MISSION:
 					ROS_INFO("RUNWAY_MISSION EXECUTE_MISSION\n");
-					doMission();
 					if(checkNextStep())
 						publishMissionGoal();
 
@@ -125,8 +124,6 @@ void MissionManager::initMission(string name)
 		ROS_INFO("taxi= %d",mission_.mission_steps[i].taxi);
 	}
 
-	time_start_mission_=ros::Time::now();
-
 	mission_over_=false;
 	mission_.step=0;
 	goal_cmd_=mission_.mission_steps[mission_.step];
@@ -152,12 +149,6 @@ void MissionManager::parse(string line)
 			}
 		}
 	}
-}
-
-void MissionManager::doMission()
-{
-	if(ros::Time::now()-time_start_mission_>timeout_)
-		mission_over_=true;
 }
 
 bool MissionManager::checkNextStep()
@@ -230,7 +221,6 @@ MissionManager::MissionManager()
 	goal_cmd_.taxi=true;
 	mission_over_=true;
 	mission_received_=false;
-	time_start_mission_=ros::Time::now();
 }
 
 void MissionManager::run()
