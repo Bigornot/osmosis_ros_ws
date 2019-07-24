@@ -59,9 +59,6 @@ private:
 	bool goal_reached_;
 	bool mission_over_;
 
-	ros::Time time_start_mission_;
-	ros::Duration timeout_;
-
 	std_msgs::Bool done_;
 
 	/////////  Methods   ////////
@@ -74,11 +71,9 @@ private:
 
 	void initMission(string name);
 	void parse(string line);
-	void doMission();
 	bool checkNextStep();
 	bool isMissionOver();
 	void nextStep();
-	void abortMission();
 	void endMission();
 
 	void publishMissionGoal();
