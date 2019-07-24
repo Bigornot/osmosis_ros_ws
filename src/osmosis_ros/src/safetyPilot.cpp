@@ -8,17 +8,40 @@ void SafetyPilot::SafetyPilotFSM()
 	{
 		case COMPUTE_CMD:
 			ROS_INFO("COMPUTE_CMD\n");
-			computeCommandCtrlTeleop();
+			computeCommandCtrlTeleop(false);
 			if(emergency_stop_)
 			{
 				stop();
 				state_=EMERGENCY_STOP;
+			}
+			else if(controlled_stop_)
+			{
+				stop();
+				state_=CONTROLLED_STOP;
+			}
+			else if(switch_to_teleop_)
+			{
+				stop();
+				state_=SWITCH_TO_TELEOP;
 			}
 			break;
 
 		case EMERGENCY_STOP:
 			ROS_INFO("EMERGENCY_STOP\n");
 			if(!emergency_stop_)
+				state_=COMPUTE_CMD;
+			break;
+
+		case CONTROLLED_STOP:
+			ROS_INFO("CONTROLLED_STOP\n");
+			if(!controlled_stop_)
+				state_=COMPUTE_CMD;
+			break;
+
+		case SWITCH_TO_TELEOP:
+			ROS_INFO("SWITCH_TO_TELEOP\n");
+			computeCommandCtrlTeleop(true);
+			if(!switch_to_teleop_)
 				state_=COMPUTE_CMD;
 			break;
 
@@ -73,12 +96,12 @@ geometry_msgs::Twist SafetyPilot::updateCmdWithLaserScan(geometry_msgs::Twist cm
 }
 
 // from MAUVE priority ressource: choose between teleop or control
-void SafetyPilot::computeCommandCtrlTeleop()
+void SafetyPilot::computeCommandCtrlTeleop(bool only_teleop)
 {
 	geometry_msgs::Twist cmd;
 
 	// if user activate teleop
-	if (base_cmd_teleop_.is_active)
+	if (only_teleop || base_cmd_teleop_.is_active)
 	{
 		cmd=base_cmd_teleop_.cmd_vel;
 	}
@@ -104,7 +127,11 @@ SafetyPilot::SafetyPilot()
 	scan_sub_  = nh_.subscribe("/summit_xl_a/front_laser/scan", 1, &SafetyPilot::callbackScan, this);
 	cmd_vel_teleop_sub_ = nh_.subscribe("/cmd_vel_teleop", 1, &SafetyPilot::callbackTeleop, this);
 	emergency_stop_sub_ = nh_.subscribe("/do_emergency_stop", 1, &SafetyPilot::callbackEmergencyStop, this);
+	controlled_stop_sub_ = nh_.subscribe("/do_controlled_stop", 1, &SafetyPilot::callbackControlledStop, this);
+	switch_to_teleop_sub_ = nh_.subscribe("/do_switch_to_teleop", 1, &SafetyPilot::callbackSwitchToTeleop, this);
 	emergency_stop_ = false;
+	controlled_stop_ = false;
+	switch_to_teleop_ = false;
 }
 
 bool SafetyPilot::run()
@@ -141,6 +168,17 @@ void SafetyPilot::callbackEmergencyStop(const std_msgs::Bool & emergency_stop)
 {
 	emergency_stop_=emergency_stop.data;
 }
+
+void SafetyPilot::callbackControlledStop(const std_msgs::Bool & controlled_stop)
+{
+	controlled_stop_=controlled_stop.data;
+}
+
+void SafetyPilot::callbackSwitchToTeleop(const std_msgs::Bool & switch_to_teleop)
+{
+	switch_to_teleop_=switch_to_teleop.data;
+}
+
 
 ////////////////////// MAIN //////////////////////
 

@@ -45,11 +45,11 @@ private:
 	ros::Subscriber cmd_vel_sub_;
 	ros::Subscriber scan_sub_;
 	ros::Subscriber cmd_vel_teleop_sub_;
+	ros::Subscriber emergency_stop_sub_;
 	ros::Subscriber controlled_stop_sub_;
 	ros::Subscriber switch_to_teleop_sub_;
-	ros::Subscriber emergency_stop_sub_;
 
-	enum State{COMPUTE_CMD, EMERGENCY_STOP};
+	enum State{COMPUTE_CMD, EMERGENCY_STOP, CONTROLLED_STOP, SWITCH_TO_TELEOP};
 	State state_;
 
 	geometry_msgs::Twist base_cmd_ctrl_;
@@ -57,12 +57,14 @@ private:
 	osmosis_control::TeleopMsg base_cmd_teleop_;
 	sensor_msgs::LaserScan scan_;
 	bool emergency_stop_;
+	bool controlled_stop_;
+	bool switch_to_teleop_;
 
 	///////// Methods ////////
 	void SafetyPilotFSM();
 	void stop();
 	geometry_msgs::Twist updateCmdWithLaserScan(geometry_msgs::Twist cmd,sensor_msgs::LaserScan s);
-	void computeCommandCtrlTeleop();
+	void computeCommandCtrlTeleop(bool only_teleop);
 
 public:
 	SafetyPilot();
@@ -73,6 +75,8 @@ public:
 	void callbackScan(const sensor_msgs::LaserScan & scan_msg);
 	void callbackTeleop(const osmosis_control::TeleopMsg & teleop_msg);
 	void callbackEmergencyStop(const std_msgs::Bool & emergency_stop);
+	void callbackControlledStop(const std_msgs::Bool & controlled_stop);
+	void callbackSwitchToTeleop(const std_msgs::Bool & switch_to_teleop);
 };
 
 #endif //OSMOSIS_SAFETYPILOT_HPP

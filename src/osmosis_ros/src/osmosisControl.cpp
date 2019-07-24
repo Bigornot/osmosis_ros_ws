@@ -50,7 +50,10 @@ void OsmosisControl::osmosisControlFSM()
 		case EMERGENCY_STOP:
 			ROS_INFO("EMERGENCY_STOP\n");
 			if(!emergency_stop_)
+			{
+				resetGoal();
 				state_=WAIT_GOAL;
+			}
 			break;
 
 		default: break;
@@ -66,6 +69,14 @@ bool OsmosisControl::new_goal()
 		old_goal_=target_.point;
 	}
 	return new_goal;
+}
+
+void OsmosisControl::resetGoal()
+{
+	target_.point.x=robot_pose.x;
+	target_.point.y=robot_pose.y;
+	old_goal_.x=robot_pose.x;
+	old_goal_.y=robot_pose.y;
 }
 
 bool OsmosisControl::is_arrived()

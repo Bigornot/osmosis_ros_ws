@@ -71,6 +71,7 @@ private:
 	void osmosisControlFSM();
 
 	bool new_goal();
+	void resetGoal();
 	bool is_arrived();
 	void stop();
 	void updateMove();
