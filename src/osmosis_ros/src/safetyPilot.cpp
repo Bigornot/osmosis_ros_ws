@@ -1,4 +1,4 @@
-#include <osmosis_control/safetyPilot.hpp>
+#include <safetyPilot.hpp>
 
 ////////////////////// PRIVATE //////////////////////
 

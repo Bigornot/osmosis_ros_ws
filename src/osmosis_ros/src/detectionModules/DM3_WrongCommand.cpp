@@ -1,4 +1,4 @@
-#include <osmosis_control/detectionModules/DM3_WrongCommand.hpp>
+#include <detectionModules/DM3_WrongCommand.hpp>
 
 
 ////////////////////// PRIVATE //////////////////////
@@ -31,4 +31,3 @@ void DM3_WrongCommand::DM3_WrongCommandCallback(const geometry_msgs::Twist & cmd
 {
 	cmd_ = cmd_msg;
 }
-

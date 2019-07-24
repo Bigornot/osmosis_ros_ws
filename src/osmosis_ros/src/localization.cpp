@@ -1,4 +1,4 @@
-#include <osmosis_control/localization.hpp>
+#include <localization.hpp>
 
 // Using const nav_msgs::Odometry::ConstPtr instead nav_msgs::Odometry, leads to avoid
 // a copy of the object Odometry (which might be ressource consuming)
@@ -13,9 +13,9 @@ void Localization::localizationCallbackOdom(const nav_msgs::Odometry::ConstPtr& 
 	ROS_INFO("Vel-> Linear: [%f], Angular: [%f]", msg->twist.twist.linear.x,msg->twist.twist.angular.z);
 	*/
 
-	robot_pose.x = msg->pose.pose.position.x;
-	robot_pose.y = msg->pose.pose.position.y;
-	robot_pose.theta =  tf::getYaw(pose.getRotation());
+	robot_pose_.x = msg->pose.pose.position.x;
+	robot_pose_.y = msg->pose.pose.position.y;
+	robot_pose_.theta =  tf::getYaw(pose.getRotation());
 }
 
 //! ROS node initialization
@@ -31,7 +31,7 @@ bool Localization::run()
 	ros::Rate loop_rate(freq_);
 	while (nh_.ok())
 	{
-		pose_pub_.publish(robot_pose);
+		pose_pub_.publish(robot_pose_);
 		ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate
 	}

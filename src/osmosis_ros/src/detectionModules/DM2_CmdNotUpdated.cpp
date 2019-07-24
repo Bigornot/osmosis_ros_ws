@@ -1,4 +1,4 @@
-#include <osmosis_control/detectionModules/DM2_CmdNotUpdated.hpp>
+#include <detectionModules/DM2_CmdNotUpdated.hpp>
 
 
 ////////////////////// PRIVATE //////////////////////
@@ -32,4 +32,3 @@ void DM2_CmdNotUpdated::DM2_CmdNotUpdatedCallback(const geometry_msgs::Twist &cm
 {
 	lastUpdate_ = ros::Time::now();
 }
-

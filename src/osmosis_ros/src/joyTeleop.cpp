@@ -1,4 +1,4 @@
-#include <osmosis_control/joyTeleop.hpp>
+#include <joyTeleop.hpp>
 
 ////////////////////// PRIVATE //////////////////////
 
@@ -13,7 +13,7 @@ void JoyTeleop::JoyFSM()
 				joy_on();
 			}
 			break;
-			
+
 		case ACTIVATED:
 		        if(button_pressed_)
 			{

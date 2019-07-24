@@ -1,4 +1,4 @@
-#include <osmosis_control/recoveryModules/RM4_RespawnNodes.hpp>
+#include <recoveryModules/RM4_RespawnNodes.hpp>
 
 
 ////////////////////// PUBLIC //////////////////////

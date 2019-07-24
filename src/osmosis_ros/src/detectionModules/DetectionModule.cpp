@@ -1,4 +1,4 @@
-#include <osmosis_control/detectionModules/DetectionModule.hpp>
+#include <detectionModules/DetectionModule.hpp>
 
 
 ////////////////////// PRIVATE //////////////////////
@@ -39,5 +39,3 @@ void DetectionModule::run()
 	detectionModuleFSM();
 	ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 }
-
-

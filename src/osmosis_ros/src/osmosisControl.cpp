@@ -1,5 +1,5 @@
 //July2017 J.Guiochet @ LAAS with cc/paste from C.Lesire @ ONERA
-#include <osmosis_control/osmosisControl.hpp>
+#include <osmosisControl.hpp>
 
 ////////////////////// PRIVATE //////////////////////
 
@@ -21,7 +21,7 @@ void OsmosisControl::osmosisControlFSM()
 
 		case MOVE_TO_GOAL:
 			ROS_INFO("MOVE\n");
-			ROS_INFO("x: %f  y:%f", robot_pose.x , robot_pose.y );
+			ROS_INFO("x: %f  y:%f", robot_pose_.x , robot_pose_.y );
 			if (new_goal())
 				state_=MOVE_TO_GOAL;
 			else if (is_arrived())
@@ -73,16 +73,16 @@ bool OsmosisControl::new_goal()
 
 void OsmosisControl::resetGoal()
 {
-	target_.point.x=robot_pose.x;
-	target_.point.y=robot_pose.y;
-	old_goal_.x=robot_pose.x;
-	old_goal_.y=robot_pose.y;
+	target_.point.x=robot_pose_.x;
+	target_.point.y=robot_pose_.y;
+	old_goal_.x=robot_pose_.x;
+	old_goal_.y=robot_pose_.y;
 }
 
 bool OsmosisControl::is_arrived()
 {
-	double xPos = robot_pose.x - target_.point.x;
-	double yPos = robot_pose.y - target_.point.y;
+	double xPos = robot_pose_.x - target_.point.x;
+	double yPos = robot_pose_.y - target_.point.y;
 	bool is_arrived = false;
 
 	if (sqrt( pow(xPos,2) + pow(yPos,2) ) < 0.2)
@@ -103,16 +103,16 @@ void OsmosisControl::updateMove()
 {
 	geometry_msgs::Twist cmd; //0,0
 
-	// if no obstacle or taxi mode on -> avoid
+	// if no obstacle_ or taxi mode on -> avoid
 	if(!obstacleFromScan(scan_) || target_.taxi)
 	{
-		double xPos = robot_pose.x - target_.point.x;
-		double yPos = robot_pose.y - target_.point.y;
-		double wPos = robot_pose.theta;
+		double xPos = robot_pose_.x - target_.point.x;
+		double yPos = robot_pose_.y - target_.point.y;
+		double wPos = robot_pose_.theta;
 		if ( wPos < 0) wPos += 2 * M_PI;
-		double obs_dist = sqrt(pow(obstacle.x,2) + pow(obstacle.y,2));
-		double obsG_x = (xPos) + obs_dist*cos(wPos + obstacle_lw);
-		double obsG_y = (yPos) + obs_dist*sin(wPos + obstacle_lw);
+		double obs_dist = sqrt(pow(obstacle_.x,2) + pow(obstacle_.y,2));
+		double obsG_x = (xPos) + obs_dist*cos(wPos + obstacle_lw_);
+		double obsG_y = (yPos) + obs_dist*sin(wPos + obstacle_lw_);
 
 		ROS_INFO("Ob_X: %f",obsG_x);
 		ROS_INFO("Ob_Y: %f",obsG_y);
@@ -151,9 +151,9 @@ bool OsmosisControl::obstacleFromScan(const sensor_msgs::LaserScan& scan)
 			}
 		}
 	}
-	obstacle.x = xmin;
-	obstacle.y = ymin;
-	obstacle_lw = atan2(obstacle.y, obstacle.x);
+	obstacle_.x = xmin;
+	obstacle_.y = ymin;
+	obstacle_lw_ = atan2(obstacle_.y, obstacle_.x);
 
 	return obs;
 }
@@ -288,7 +288,7 @@ void OsmosisControl::callbackScan(const sensor_msgs::LaserScan & thescan)
 
 void OsmosisControl::callbackPose(const geometry_msgs::Pose2D & msg)
 {
-	robot_pose = msg;
+	robot_pose_ = msg;
 }
 
 void OsmosisControl::callbackEmergencyStop(const std_msgs::Bool &emergency_stop)

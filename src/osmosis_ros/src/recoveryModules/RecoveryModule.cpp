@@ -1,4 +1,4 @@
-#include <osmosis_control/recoveryModules/RecoveryModule.hpp>
+#include <recoveryModules/RecoveryModule.hpp>
 
 
 ////////////////////// PRIVATE //////////////////////

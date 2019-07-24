@@ -1,4 +1,4 @@
-#include <osmosis_control/detectionModules/DM4_NodeCrashControl.hpp>
+#include <detectionModules/DM4_NodeCrashControl.hpp>
 
 
 ////////////////////// PRIVATE //////////////////////
@@ -8,7 +8,7 @@ void DM4_NodeCrashControl::detect()
 	int i,j;
 	bool found=true;
 
-	ros::master::getNodes(aliveNodes_);	
+	ros::master::getNodes(aliveNodes_);
 	for(i=0; i<nodesToCheck_.size() && found; i++)
 	{
 		found = false;
@@ -40,5 +40,3 @@ DM4_NodeCrashControl::DM4_NodeCrashControl() : DetectionModule()
 void DM4_NodeCrashControl::init()
 {
 }
-
-

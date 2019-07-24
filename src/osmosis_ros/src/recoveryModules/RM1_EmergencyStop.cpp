@@ -1,9 +1,9 @@
-#include <osmosis_control/recoveryModules/RM1_EmergencyStop.hpp>
+#include <recoveryModules/RM1_EmergencyStop.hpp>
 
 
 ////////////////////// PUBLIC //////////////////////
 
-RM1_EmergencyStop::RM1_EmergencyStop(int id, vector<int> successors) : RecoveryModule(id, successors) 
+RM1_EmergencyStop::RM1_EmergencyStop(int id, vector<int> successors) : RecoveryModule(id, successors)
 {
 	pub_=nh_.advertise<std_msgs::Bool>("/do_emergency_stop", 100);
 	pub_cmd_=nh_.advertise<geometry_msgs::Twist>("/summit_xl_a/robotnik_base_control/cmd_vel", 100);
@@ -20,8 +20,8 @@ void RM1_EmergencyStop::startRecovery()
 	ros::Rate poll_rate(pollRate_);
 	start_=ros::Time::now();
 	while(pub_.getNumSubscribers() == 0 && ros::Time::now()-start_<ros::Duration(delaySend_))
-		poll_rate.sleep();	
-	
+		poll_rate.sleep();
+
 	pub_.publish(data);
 
 	doRecovery();
@@ -48,5 +48,3 @@ void RM1_EmergencyStop::doRecovery()
 void RM1_EmergencyStop::stopRecovery()
 {
 }
-
-

@@ -1,4 +1,4 @@
-#include <osmosis_control/FTM_Manager.hpp>
+#include <FTM_Manager.hpp>
 
 
 ////////////////////// PRIVATE //////////////////////

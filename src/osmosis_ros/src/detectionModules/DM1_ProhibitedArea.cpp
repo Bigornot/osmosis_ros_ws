@@ -1,4 +1,4 @@
-#include <osmosis_control/detectionModules/DM1_ProhibitedArea.hpp>
+#include <detectionModules/DM1_ProhibitedArea.hpp>
 
 
 ////////////////////// PRIVATE //////////////////////
@@ -20,11 +20,10 @@ DM1_ProhibitedArea::DM1_ProhibitedArea() : DetectionModule()
 
 void DM1_ProhibitedArea::init()
 {
-	
+
 }
 
 void DM1_ProhibitedArea::DM1_ProhibitedAreaCallback(const std_msgs::Bool & state)
 {
 	state_ = state.data;
 }
-

@@ -1,5 +1,5 @@
 
-#include <osmosis_control/graph.hpp>
+#include <graph.hpp>
 
 
 
@@ -83,10 +83,10 @@ vector<Node*> Graph::compute_plan(const Node* start, const Node* goal)
 	map<string, double> g;
 	map<string, double> f;
 	map<string, string> parent;
-	
+
 	string sn = start->name;
 	string fn = goal->name;
-	
+
 	// Init grid
 	for (auto i : nodes)
 	{

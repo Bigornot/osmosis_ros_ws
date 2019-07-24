@@ -1,5 +1,5 @@
 //juil2018 J.Guiochet @ LAAS
-#include <osmosis_control/HMI.hpp>
+#include <HMI.hpp>
 
 ////////////////////// PRIVATE //////////////////////
 

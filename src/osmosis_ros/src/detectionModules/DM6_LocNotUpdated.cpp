@@ -1,4 +1,4 @@
-#include <osmosis_control/detectionModules/DM6_LocNotUpdated.hpp>
+#include <detectionModules/DM6_LocNotUpdated.hpp>
 
 
 ////////////////////// PRIVATE //////////////////////
@@ -34,4 +34,3 @@ void DM6_LocNotUpdated::DM6_LocNotUpdatedCallback(const geometry_msgs::Pose2D &p
 {
 	lastUpdate_ = ros::Time::now();
 }
-

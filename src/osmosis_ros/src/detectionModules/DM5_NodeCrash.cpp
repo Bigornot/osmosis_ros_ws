@@ -1,4 +1,4 @@
-#include <osmosis_control/detectionModules/DM5_NodeCrash.hpp>
+#include <detectionModules/DM5_NodeCrash.hpp>
 
 ////////////////////// PRIVATE //////////////////////
 
@@ -42,5 +42,3 @@ DM5_NodeCrash::DM5_NodeCrash() : DetectionModule()
 void DM5_NodeCrash::init()
 {
 }
-
-

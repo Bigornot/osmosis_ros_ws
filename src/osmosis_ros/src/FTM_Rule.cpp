@@ -1,4 +1,4 @@
-#include <osmosis_control/FTM_Rule.hpp>
+#include <FTM_Rule.hpp>
 
 
 ////////////////////// PUBLIC //////////////////////
@@ -105,5 +105,3 @@ vector<int> FTM_Rule::getRMSuc()
 {
 	return RM_->getSuccessorsId();
 }
-
-

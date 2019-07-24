@@ -1,4 +1,4 @@
-#include <osmosis_control/teleop.hpp>
+#include <teleop.hpp>
 
 ////////////////////// PRIVATE //////////////////////
 

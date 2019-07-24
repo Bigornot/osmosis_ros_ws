@@ -1,13 +1,13 @@
-#include <osmosis_control/recoveryModules/RM2_ControlledStop.hpp>
+#include <recoveryModules/RM2_ControlledStop.hpp>
 
 
 ////////////////////// PUBLIC //////////////////////
 
-RM2_ControlledStop::RM2_ControlledStop(int id, vector<int> successors) : RecoveryModule(id, successors) 
+RM2_ControlledStop::RM2_ControlledStop(int id, vector<int> successors) : RecoveryModule(id, successors)
 {
 	pub_order_=nh_.advertise<std_msgs::Bool>("/do_controlled_stop", 100);
 	pub_cmd_=nh_.advertise<geometry_msgs::Twist>("/summit_xl_a/robotnik_base_control/cmd_vel", 100);
-	
+
 	pollRate_ = 100;
 	delaySend_=0.1;
 	start_=ros::Time::now();

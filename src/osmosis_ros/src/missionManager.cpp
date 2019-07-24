@@ -1,5 +1,5 @@
 //juil2018 J.Guiochet @ LAAS
-#include <osmosis_control/missionManager.hpp>
+#include <missionManager.hpp>
 
 
 ////////////////////// PRIVATE //////////////////////
@@ -73,7 +73,7 @@ void MissionManager::MissionManagerFSM()
 						publishDone();
 						mission_state_=INIT_MISSION;
 						state_=IDLE;
-					}	
+					}
 					if(emergency_stop_)
 						state_=EMERGENCY_STOP;
 					break;
@@ -117,7 +117,6 @@ void MissionManager::endPoint()
 void MissionManager::initMission(string name)
 {
 	goal_reached_=false;
-	mission_aborted_=false;
 	mission_over_=false;
 
 	ROS_INFO("Init mission");
@@ -208,11 +207,6 @@ void MissionManager::nextStep()
 	goal_cmd_=mission_.mission_steps[mission_.step];
 }
 
-void MissionManager::abortMission()
-{
-	done_.data=true;
-}
-
 void MissionManager::endMission()
 {
 	done_.data=true;
@@ -245,7 +239,6 @@ MissionManager::MissionManager()
 	state_=IDLE;
 	mission_state_=INIT_MISSION;
 	goal_cmd_.taxi=true;
-	mission_aborted_=false;
 	mission_over_=true;
 	mission_received_=false;
 	emergency_stop_=false;
