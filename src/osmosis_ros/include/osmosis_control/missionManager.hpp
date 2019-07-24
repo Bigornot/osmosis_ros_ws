@@ -57,12 +57,9 @@ private:
 	osmosis_control::GoalMsg goal_cmd_;
 
 	bool goal_reached_;
-	bool missionOver_;
-	bool missionAborted_;
+	bool mission_over_;
+	bool mission_aborted_;
 	bool emergency_stop_;
-
-	ros::Time time_start_mission_;
-	ros::Duration timeout_;
 
 	std_msgs::Bool done_;
 
@@ -76,7 +73,6 @@ private:
 
 	void initMission(string name);
 	void parse(string line);
-	void doMission();
 	bool checkNextStep();
 	bool isMissionOver();
 	void nextStep();

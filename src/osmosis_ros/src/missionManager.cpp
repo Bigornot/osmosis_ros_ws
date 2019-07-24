@@ -56,11 +56,10 @@ void MissionManager::MissionManagerFSM()
 
 				case EXECUTE_MISSION:
 					ROS_INFO("RUNWAY_MISSION EXECUTE_MISSION\n");
-					doMission();
 					if(checkNextStep())
 						publishMissionGoal();
 
-					if(missionAborted_)
+					if(mission_aborted_)
 					{
 						abortMission();
 						publishDone();
@@ -68,7 +67,7 @@ void MissionManager::MissionManagerFSM()
 						state_=IDLE;
 					}
 
-					else if(missionOver_)
+					else if(mission_over_)
 					{
 						endMission();
 						publishDone();
@@ -118,8 +117,8 @@ void MissionManager::endPoint()
 void MissionManager::initMission(string name)
 {
 	goal_reached_=false;
-	missionAborted_=false;
-	missionOver_=false;
+	mission_aborted_=false;
+	mission_over_=false;
 
 	ROS_INFO("Init mission");
 
@@ -145,9 +144,7 @@ void MissionManager::initMission(string name)
 		ROS_INFO("taxi= %d",mission_.mission_steps[i].taxi);
 	}
 
-	time_start_mission_=ros::Time::now();
-
-	missionOver_=false;
+	mission_over_=false;
 	mission_.step=0;
 	goal_cmd_=mission_.mission_steps[mission_.step];
 }
@@ -174,15 +171,6 @@ void MissionManager::parse(string line)
 	}
 }
 
-void MissionManager::doMission()
-{
-	if(ros::Time::now()-time_start_mission_>timeout_)
-	{
-		missionAborted_=true;
-		missionOver_=true;
-	}
-}
-
 bool MissionManager::checkNextStep()
 {
 	bool next=false;
@@ -192,7 +180,7 @@ bool MissionManager::checkNextStep()
 		mission_.step++;
 		if(isMissionOver())
 		{
-			missionOver_=true;
+			mission_over_=true;
 		}
 		else
 		{
@@ -222,10 +210,7 @@ void MissionManager::nextStep()
 
 void MissionManager::abortMission()
 {
-	missionAborted_=false;
-	missionOver_=true;
-
-	done_.data=false;
+	done_.data=true;
 }
 
 void MissionManager::endMission()
@@ -259,11 +244,10 @@ MissionManager::MissionManager()
 	state_=IDLE;
 	mission_state_=INIT_MISSION;
 	goal_cmd_.taxi=true;
-	missionAborted_=false;
-	missionOver_=true;
+	mission_aborted_=false;
+	mission_over_=true;
 	mission_received_=false;
-	time_start_mission_=ros::Time::now();
-	timeout_=ros::Duration(20); // Timeout after the mission is aborted
+	emergency_stop_=false;
 }
 
 void MissionManager::run()
