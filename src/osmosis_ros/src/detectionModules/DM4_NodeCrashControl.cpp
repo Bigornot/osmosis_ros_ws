@@ -1,9 +1,9 @@
-#include <osmosis_control/detectionModules/DM5_NodeCrashControl.hpp>
+#include <osmosis_control/detectionModules/DM4_NodeCrashControl.hpp>
 
 
 ////////////////////// PRIVATE //////////////////////
 
-void DM5_NodeCrashControl::detect()
+void DM4_NodeCrashControl::detect()
 {
 	int i,j;
 	bool found=true;
@@ -29,7 +29,7 @@ void DM5_NodeCrashControl::detect()
 
 ////////////////////// PUBLIC //////////////////////
 
-DM5_NodeCrashControl::DM5_NodeCrashControl() : DetectionModule()
+DM4_NodeCrashControl::DM4_NodeCrashControl() : DetectionModule()
 {
 	nodesToCheck_.push_back("/HMI_node");
 	nodesToCheck_.push_back("/graph_planner_node");
@@ -37,7 +37,7 @@ DM5_NodeCrashControl::DM5_NodeCrashControl() : DetectionModule()
 	nodesToCheck_.push_back("/osmosis_control_node");
 }
 
-void DM5_NodeCrashControl::init()
+void DM4_NodeCrashControl::init()
 {
 }
 

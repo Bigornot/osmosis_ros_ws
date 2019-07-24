@@ -25,8 +25,8 @@
 #include <osmosis_control/detectionModules/DM1_ProhibitedArea.hpp>
 #include <osmosis_control/detectionModules/DM2_CmdNotUpdated.hpp>
 #include <osmosis_control/detectionModules/DM3_WrongCommand.hpp>
-#include <osmosis_control/detectionModules/DM4_NodeCrash.hpp>
-#include <osmosis_control/detectionModules/DM5_NodeCrashControl.hpp>
+#include <osmosis_control/detectionModules/DM4_NodeCrashControl.hpp>
+#include <osmosis_control/detectionModules/DM5_NodeCrash.hpp>
 #include <osmosis_control/detectionModules/DM6_LocNotUpdated.hpp>
 
 #include <osmosis_control/recoveryModules/RM1_EmergencyStop.hpp>
@@ -48,8 +48,8 @@ private :
 	DM1_ProhibitedArea* DM1_prohibited_area_;
 	DM2_CmdNotUpdated* DM2_cmd_not_updated_;
 	DM3_WrongCommand* DM3_wrong_command_;
-	DM4_NodeCrash* DM4_node_crash_;
-	DM5_NodeCrashControl* DM5_node_crash_control_;
+	DM4_NodeCrashControl* DM4_node_crash_control_;
+	DM5_NodeCrash* DM5_node_crash_;
 	DM6_LocNotUpdated* DM6_loc_not_updated_;
 
 	RM1_EmergencyStop* RM1_emergency_stop_;

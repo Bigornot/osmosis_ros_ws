@@ -1,8 +1,8 @@
-#include <osmosis_control/detectionModules/DM4_NodeCrash.hpp>
+#include <osmosis_control/detectionModules/DM5_NodeCrash.hpp>
 
 ////////////////////// PRIVATE //////////////////////
 
-void DM4_NodeCrash::detect()
+void DM5_NodeCrash::detect()
 {
 	int i,j;
 	bool found=true;
@@ -28,7 +28,7 @@ void DM4_NodeCrash::detect()
 
 ////////////////////// PUBLIC //////////////////////
 
-DM4_NodeCrash::DM4_NodeCrash() : DetectionModule()
+DM5_NodeCrash::DM5_NodeCrash() : DetectionModule()
 {
 	nodesToCheck_.push_back("/teleop_node");
 	nodesToCheck_.push_back("/joy_node");
@@ -39,7 +39,7 @@ DM4_NodeCrash::DM4_NodeCrash() : DetectionModule()
 	nodesToCheck_.push_back("/checkProhibitedArea_node");
 }
 
-void DM4_NodeCrash::init()
+void DM5_NodeCrash::init()
 {
 }
 
