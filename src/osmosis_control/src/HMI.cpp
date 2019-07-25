@@ -133,7 +133,7 @@ bool HMI::checkMission(string name)
 	ROS_INFO("Mission in progress");
 
 	string filename=ros::package::getPath("osmosis_control");
-	filename.append("/../../ressources/missions/MISSION_" + name + ".miss");
+	filename.append("/../../../osmosis_ressources/missions/MISSION_" + name + ".miss");
 
 	ifstream fichier(filename, ios::in);
 
