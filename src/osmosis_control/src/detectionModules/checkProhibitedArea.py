@@ -40,7 +40,7 @@ def callbackFaultInjectionProhibitedArea(data):
 
 rospack = rospkg.RosPack()
 path = rospack.get_path('osmosis_control')
-path += "/../../ressources/blagnac_area.jpg"
+path += "/ressources/prohibited_area/blagnac_area.jpg"
 image = mpimg.imread(path)
 rospy.init_node('checkProhibitedArea_node')
 rospy.Subscriber("/pose", Pose2D, callbackPose)
