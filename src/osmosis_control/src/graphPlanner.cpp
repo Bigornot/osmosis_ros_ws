@@ -277,6 +277,6 @@ int main(int argc, char** argv)
 
 	GraphPlanner myGraphPlanner;
 
-	myGraphPlanner.initGraph("/../../ressources/blagnac.graph");
+	myGraphPlanner.initGraph("/../../../osmosis_ressources/graph/blagnac.graph");
 	myGraphPlanner.run();
 }
