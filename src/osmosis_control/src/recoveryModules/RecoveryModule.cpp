@@ -56,7 +56,6 @@ void RecoveryModule::start()
 
 void RecoveryModule::stop()
 {
-	cout << "STOP" << endl;
 	state_=false;
 }
 

@@ -27,8 +27,6 @@ void RM2_ControlledStop::startRecovery()
 	pub_order_.publish(data);
 
 	doRecovery();
-
-	cout << "order sent" << endl;
 }
 
 void RM2_ControlledStop::doRecovery()
@@ -47,8 +45,6 @@ void RM2_ControlledStop::doRecovery()
 		poll_rate.sleep();
 
 	pub_cmd_.publish(cmd);
-
-	cout << "Cmd sent" << endl;
 }
 
 void RM2_ControlledStop::stopRecovery()
