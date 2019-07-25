@@ -126,6 +126,17 @@ vector<FTM_Rule*> FTM_Manager::checkSameRM(vector<FTM_Rule*> rules)
 	return rules;
 }
 
+void FTM_Manager::stopRecoveryDominatedRules(vector<FTM_Rule*> rules)
+{
+	vector<FTM_Rule*> dominated;
+
+	for(int i=0; i<rules.size(); i++)
+		dominated=findDominated(rules[i], &dominated);
+
+	for(int i=0; i<dominated.size(); i++)
+		dominated[i]->stopRM();
+}
+
 
 ////////////////////// PUBLIC //////////////////////
 
@@ -237,12 +248,14 @@ FTM_Rule* FTM_Manager::findLowestCommonDominant(vector<FTM_Rule*> dominant)
 	return recursiveLowestCommonDominant(dominant)[0];
 }
 
-void FTM_Manager::doRecovery(vector<FTM_Rule*> activated_rules)
+void FTM_Manager::doRecovery(vector<FTM_Rule*> rules)
 {
-	for(int i=0; i<activated_rules.size(); i++)
+	stopRecoveryDominatedRules(rules);
+
+	for(int i=0; i<rules.size(); i++)
 	{
-		if(!activated_rules[i]->getStateRM())
-			activated_rules[i]->startRM();
+		if(!rules[i]->getStateRM())
+			rules[i]->startRM();
 	}
 }
 
