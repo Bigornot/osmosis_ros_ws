@@ -23,6 +23,7 @@
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/Point.h>
 #include <geometry_msgs/Pose.h>
+#include <std_msgs/Bool.h>
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/Pose2D.h>
 #include <tf/transform_broadcaster.h>
@@ -37,10 +38,13 @@ private:
 	double freq_;
 	ros::Publisher pose_pub_;
 	ros::Subscriber odom_sub_;
+	ros::Subscriber fault_injection_loc_not_updated_sub_;
+	bool fault_injection_loc_not_updated_;
 	nav_msgs::Odometry odom_;
 	geometry_msgs::Pose2D robot_pose_;
 public:
 	void localizationCallbackOdom(const nav_msgs::Odometry::ConstPtr& msg);
+	void callbackFaultInjectionLocNotUpdated(const std_msgs::Bool & fault_injection);
 	bool run();
 	Localization();
 

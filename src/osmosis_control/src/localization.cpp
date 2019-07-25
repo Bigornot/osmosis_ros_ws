@@ -18,12 +18,19 @@ void Localization::localizationCallbackOdom(const nav_msgs::Odometry::ConstPtr& 
 	robot_pose_.theta =  tf::getYaw(pose.getRotation());
 }
 
+void Localization::callbackFaultInjectionLocNotUpdated(const std_msgs::Bool & fault_injection)
+{
+	fault_injection_loc_not_updated_=fault_injection.data;
+}
+
 //! ROS node initialization
 Localization::Localization()
 {
 	freq_=10;
 	pose_pub_ = nh_.advertise<geometry_msgs::Pose2D>("/pose", 1);
 	odom_sub_=nh_.subscribe("/summit_xl_a/ground_truth/state", 1, &Localization::localizationCallbackOdom, this);
+	fault_injection_loc_not_updated_sub_=nh_.subscribe("/fault_injection_loc_not_updated", 1, &Localization::callbackFaultInjectionLocNotUpdated, this);
+	fault_injection_loc_not_updated_=false;
 }
 
 bool Localization::run()
@@ -31,7 +38,8 @@ bool Localization::run()
 	ros::Rate loop_rate(freq_);
 	while (nh_.ok())
 	{
-		pose_pub_.publish(robot_pose_);
+		if(!fault_injection_loc_not_updated_)
+			pose_pub_.publish(robot_pose_);
 		ros::spinOnce(); // Need to call this function often to allow ROS to process incoming messages
 		loop_rate.sleep(); // Sleep for the rest of the cycle, to enforce the loop rate
 	}
