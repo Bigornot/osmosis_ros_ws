@@ -63,7 +63,7 @@ void GraphPlanner::graphPlannerFSM()
 			if(emergency_stop_)
 				state_=EMERGENCY_STOP;
 			break;
-		
+
 		case EMERGENCY_STOP:
 			ROS_INFO("EMERGENCY_STOP\n");
 			if(!emergency_stop_)
@@ -277,6 +277,6 @@ int main(int argc, char** argv)
 
 	GraphPlanner myGraphPlanner;
 
-	myGraphPlanner.initGraph("/../../../osmosis_ressources/graph/blagnac.graph");
+	myGraphPlanner.initGraph("ressources/graph/blagnac.graph");
 	myGraphPlanner.run();
 }
