@@ -58,7 +58,6 @@ void GraphPlanner::graphPlannerFSM()
 	}
 }
 
-
 bool GraphPlanner::new_goal()
 {
 	bool newg=false;
@@ -255,6 +254,6 @@ int main(int argc, char** argv)
 
 	GraphPlanner myGraphPlanner;
 
-	myGraphPlanner.initGraph("/../../ressources/blagnac.graph");
+	myGraphPlanner.initGraph("/../../../osmosis_ressources/graph/blagnac.graph");
 	myGraphPlanner.run();
 }
