@@ -30,12 +30,13 @@ private:
 	int n_;
 	int n_max_wait_;
 
+	///////// Methods ////////
+	void startingAction();
+	void doRecovery();
+	void stoppingAction();
+
 public:
 	RM4_RespawnNodes(int id, vector<int> successors);
-
-	void startRecovery();
-	void doRecovery();
-	void stopRecovery();
 };
 
 #endif

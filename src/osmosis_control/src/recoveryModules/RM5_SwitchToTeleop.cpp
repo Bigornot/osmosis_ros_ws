@@ -11,7 +11,7 @@ RM5_SwitchToTeleop::RM5_SwitchToTeleop(int id, vector<int> successors) : Recover
 	start_=ros::Time::now();
 }
 
-void RM5_SwitchToTeleop::startRecovery()
+void RM5_SwitchToTeleop::startingAction()
 {
 	std_msgs::Bool data;
 	data.data=true;
@@ -28,6 +28,6 @@ void RM5_SwitchToTeleop::doRecovery()
 {
 }
 
-void RM5_SwitchToTeleop::stopRecovery()
+void RM5_SwitchToTeleop::stoppingAction()
 {
 }

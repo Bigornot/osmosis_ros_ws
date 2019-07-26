@@ -11,7 +11,7 @@ void RecoveryModule::recoveryModuleFSM()
 			cout << "IDLE" << endl;
 			if(state_)
 			{
-				startRecovery();
+				startingAction();
 				drive_state_=ACTIVATED;
 			}
 			break;
@@ -20,7 +20,7 @@ void RecoveryModule::recoveryModuleFSM()
 			cout << "ACTIVATED" << endl;
 			if(!state_)
 			{
-				stopRecovery();
+				stoppingAction();
 				drive_state_=IDLE;
 			}
 			else

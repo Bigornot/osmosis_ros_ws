@@ -20,6 +20,9 @@ private:
 
 	///////// Methods ////////
 	void recoveryModuleFSM();
+	virtual void doRecovery()=0;
+	virtual void startingAction()=0;
+	virtual void stoppingAction()=0;
 
 protected:
 	ros::NodeHandle nh_;
@@ -33,9 +36,7 @@ public:
 	void stop();
 	int getId();
 	vector<int> getSuccessorsId();
-	virtual void doRecovery()=0;
-	virtual void startRecovery()=0;
-	virtual void stopRecovery()=0;
+
 	void debugShowState();
 };
 

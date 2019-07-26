@@ -14,7 +14,7 @@ RM3_RespawnControlNodes::RM3_RespawnControlNodes(int id, vector<int> successors)
 	n_=0;
 }
 
-void RM3_RespawnControlNodes::startRecovery()
+void RM3_RespawnControlNodes::startingAction()
 {
 	cout << "START RM3" << endl;
 
@@ -52,7 +52,7 @@ void RM3_RespawnControlNodes::doRecovery()
 {
 	if(n_>n_max_wait_)
 	{
-		startRecovery();
+		startingAction();
 		n_=0;
 	}
 
@@ -79,6 +79,6 @@ void RM3_RespawnControlNodes::doRecovery()
 	n_++;
 }
 
-void RM3_RespawnControlNodes::stopRecovery()
+void RM3_RespawnControlNodes::stoppingAction()
 {
 }

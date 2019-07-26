@@ -75,7 +75,7 @@ private :
 	bool findRM(vector<FTM_Rule*> rules, FTM_Rule* rule);
 	bool findRule(vector<FTM_Rule*> rules, FTM_Rule* rule);
 	vector<FTM_Rule*> checkSameRM(vector<FTM_Rule*> rules);
-	void stopRecoveryDominatedRules(vector<FTM_Rule*> rules);
+	void stoppingActionDominatedRules(vector<FTM_Rule*> rules);
 
 public :
 	FTM_Manager();

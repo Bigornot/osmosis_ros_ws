@@ -16,7 +16,7 @@ RM4_RespawnNodes::RM4_RespawnNodes(int id, vector<int> successors) : RecoveryMod
 	n_max_wait_=10;
 }
 
-void RM4_RespawnNodes::startRecovery()
+void RM4_RespawnNodes::startingAction()
 {
 	cout << "START RM4" << endl;
 
@@ -59,7 +59,7 @@ void RM4_RespawnNodes::doRecovery()
 {
 	if(n_>n_max_wait_)
 	{
-		startRecovery();
+		startingAction();
 		n_=0;
 	}
 
@@ -90,6 +90,6 @@ void RM4_RespawnNodes::doRecovery()
 	n_++;
 }
 
-void RM4_RespawnNodes::stopRecovery()
+void RM4_RespawnNodes::stoppingAction()
 {
 }

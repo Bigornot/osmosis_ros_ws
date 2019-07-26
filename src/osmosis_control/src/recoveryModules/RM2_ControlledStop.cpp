@@ -13,7 +13,7 @@ RM2_ControlledStop::RM2_ControlledStop(int id, vector<int> successors) : Recover
 	start_=ros::Time::now();
 }
 
-void RM2_ControlledStop::startRecovery()
+void RM2_ControlledStop::startingAction()
 {
 
 	std_msgs::Bool data;
@@ -47,7 +47,7 @@ void RM2_ControlledStop::doRecovery()
 	pub_cmd_.publish(cmd);
 }
 
-void RM2_ControlledStop::stopRecovery()
+void RM2_ControlledStop::stoppingAction()
 {
 	std_msgs::Bool data;
 	data.data=false;

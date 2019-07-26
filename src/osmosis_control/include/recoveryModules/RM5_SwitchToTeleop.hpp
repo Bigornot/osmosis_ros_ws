@@ -30,12 +30,13 @@ private:
 	double delaySend_;
 	ros::Time start_;
 
+	///////// Methods ////////
+	void startingAction();
+	void doRecovery();
+	void stoppingAction();
+
 public:
 	RM5_SwitchToTeleop(int id, vector<int> successors);
-
-	void startRecovery();
-	void doRecovery();
-	void stopRecovery();
 };
 
 #endif
