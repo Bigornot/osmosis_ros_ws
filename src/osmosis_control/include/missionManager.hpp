@@ -1,5 +1,6 @@
 /*
- * Copyright 2018 LAAS-CNRS
+ * Copyright 2019 LAAS-CNRS
+ * MESSIOUX Antonin / FAVIER Anthony
  *
  * This file is part of the OSMOSIS project.
  *
@@ -49,7 +50,7 @@ private:
 	StateDriveMission state_;
 	enum StateMission {INIT_MISSION,EXECUTE_MISSION};
 	StateMission mission_state_;
-	
+
 	Mission mission_;
 	osmosis_control::MissionMsg mission_msg_;
 	bool mission_received_=true;

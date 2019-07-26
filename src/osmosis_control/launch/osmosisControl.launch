@@ -12,6 +12,4 @@
 	<param name="deadzone" type="double" value="0.13" />
 </node>
 
-<!--node name="navigation_node" type="navigation_node" pkg="osmosis_control" output="screen" launch-prefix="xterm -e"/-->
-
 </launch>

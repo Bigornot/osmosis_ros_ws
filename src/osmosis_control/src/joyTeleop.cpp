@@ -1,3 +1,4 @@
+//juil2019 Anthony FAVIER / Antonin MESSIOUX @ LAAS
 #include <joyTeleop.hpp>
 
 ////////////////////// PRIVATE //////////////////////

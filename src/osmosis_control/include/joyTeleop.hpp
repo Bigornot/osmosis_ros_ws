@@ -1,5 +1,6 @@
 /*
- * Copyright 2018 LAAS-CNRS
+ * Copyright 2019 LAAS-CNRS
+ * MESSIOUX Antonin / FAVIER Anthony
  *
  * This file is part of the OSMOSIS project.
  *
