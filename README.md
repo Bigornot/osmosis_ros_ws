@@ -39,6 +39,7 @@ Once you have ROS (kinetic) and Gazebo (we worked on the 7.15.0, we have not che
       
       roslaunch osmosis_simulation summit_xl_simulation.launch
       
+      
 2) Add and launch this osmosis_control package :
 
       IN ANOTHER SHELL, IN THE FOLDER osmosis_ws:
@@ -53,7 +54,9 @@ Once you have ROS (kinetic) and Gazebo (we worked on the 7.15.0, we have not che
       
       roslaunch osmosis_control osmosisControl.launch
  
+ 
  You might want to switch on the "ftm" branch of this repository if you want to work on our fault tolerance mechanism.
  
  2019 @LAAS-CNRS TOULOUSE
+ 
  MESSIOUX Antonin/FAVIER Anthony
