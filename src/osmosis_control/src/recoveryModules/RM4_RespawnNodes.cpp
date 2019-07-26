@@ -73,10 +73,8 @@ void RM4_RespawnNodes::doRecovery()
 
 	for(int i=0; i<nodesToRespawn_.size(); i++)
 	{
-		cout << "to respawn " << i << " " << nodesToRespawn_[i] << endl;
 		for(int j=0; j<aliveNodes.size(); j++)
 		{
-			cout << aliveNodes[j] << endl;
 			if(nodesToRespawn_[i]==aliveNodes[j])
 				found=true;
 		}

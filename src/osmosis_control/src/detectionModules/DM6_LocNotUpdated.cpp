@@ -19,8 +19,6 @@ DM6_LocNotUpdated::DM6_LocNotUpdated() : DetectionModule()
 {
 	pose_sub_  = nh_.subscribe("/pose", 1, &DM6_LocNotUpdated::DM6_LocNotUpdatedCallback, this);
 
-	//ros::Duration(1).sleep();
-
 	lastUpdate_=ros::Time::now();
 	timeOut_ = ros::Duration(1);
 }
