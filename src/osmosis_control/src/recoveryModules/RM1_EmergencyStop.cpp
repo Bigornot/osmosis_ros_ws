@@ -12,7 +12,7 @@ RM1_EmergencyStop::RM1_EmergencyStop(int id, vector<int> successors) : RecoveryM
 	start_=ros::Time::now();
 }
 
-void RM1_EmergencyStop::startRecovery()
+void RM1_EmergencyStop::startingAction()
 {
 	std_msgs::Bool data;
 	data.data=true;
@@ -45,6 +45,6 @@ void RM1_EmergencyStop::doRecovery()
 	pub_cmd_.publish(cmd);
 }
 
-void RM1_EmergencyStop::stopRecovery()
+void RM1_EmergencyStop::stoppingAction()
 {
 }

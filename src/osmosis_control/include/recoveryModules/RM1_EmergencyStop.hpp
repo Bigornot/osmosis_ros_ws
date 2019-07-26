@@ -31,12 +31,13 @@ private:
 	double delaySend_;
 	ros::Time start_;
 
+	///////// Methods ////////
+	void startingAction();
+	void doRecovery();
+	void stoppingAction();
+
 public:
 	RM1_EmergencyStop(int id, vector<int> successors);
-
-	void startRecovery();
-	void doRecovery();
-	void stopRecovery();
 };
 
 #endif
