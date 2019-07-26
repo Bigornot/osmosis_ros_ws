@@ -7,8 +7,8 @@ Once you have ROS (kinetic) and Gazebo (we worked on the 7.15.0, we have not che
 
 1) Download and launch the simulation files on gitlab :
 
-      IN A FIRST SHELL:
-      mkdir osmosis_ws
+      IN A FIRST SHELL:\n
+      mkdir osmosis_ws \n
       cd osmosis_ws
       mkdir osmosis_simulation_ws
       cd osmosis_simulation_ws
