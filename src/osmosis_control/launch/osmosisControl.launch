@@ -15,6 +15,7 @@
 <node name="checkProhibitedArea_node" type="checkProhibitedArea.py" pkg="osmosis_control" output="screen" launch-prefix="xterm -e"/>
 <node name="FTM_Manager_node" type="FTM_Manager_node" pkg="osmosis_control" output="screen" launch-prefix="xterm -e"/>
 <node name="fault_injection_node" type="fault_injection_node" pkg="osmosis_control" output="screen" launch-prefix="xterm -e"/>
+<node name="chrono_node" type="chrono_node" pkg="osmosis_control" output="screen" launch-prefix="xterm -e"/>
 
 
 <!--node name="navigation_node" type="navigation_node" pkg="osmosis_control" output="screen" launch-prefix="xterm -e"/-->
