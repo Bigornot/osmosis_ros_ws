@@ -36,9 +36,8 @@ private:
 	double freq_;
 	ros::Publisher mission_pub_;
 	ros::Subscriber done_sub_;
-	ros::Subscriber emergency_stop_sub_;
 
-	enum StateDriveHMI{IDLE,REACH_POINT_MISSION,RUNWAY_MISSION,EMERGENCY_STOP};
+	enum StateDriveHMI{IDLE,REACH_POINT_MISSION,RUNWAY_MISSION};
 	StateDriveHMI state_;
 	enum StateMission {ASK_MISSION,WAIT_END_MISSION};
 	StateMission mission_state_;
@@ -47,7 +46,6 @@ private:
 
 	bool goal_reached_;
 	bool mission_done_;
-	bool emergency_stop_;
 
 	/////////  Methods   ////////
 	void HMI_FSM();
@@ -65,7 +63,6 @@ public:
 	void run();
 
 	void callbackMissionDone(const std_msgs::Bool &done);
-	void callbackEmergencyStop(const std_msgs::Bool &emergency_stop);
 };
 
 #endif

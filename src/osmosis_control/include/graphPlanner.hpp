@@ -45,7 +45,6 @@ private:
 	ros::Subscriber goal_sub_;
 	ros::Subscriber target_reached_sub_;
 	ros::Subscriber odom_sub_;
-	ros::Subscriber emergency_stop_sub_;
 	geometry_msgs::Point current;
 
 	osmosis_control::GoalMsg target_;
@@ -55,9 +54,8 @@ private:
 	int target_index;
 	bool _new_goal;
 	bool target_reached_;
-	bool emergency_stop_;
 
-	enum State {WAIT_GOAL,WAIT_COMPUTE_PLAN,SEND,FOLLOW,GOAL_DONE,EMERGENCY_STOP};
+	enum State {WAIT_GOAL,WAIT_COMPUTE_PLAN,SEND,FOLLOW,GOAL_DONE};
 	State state_;
 
 	///////// Methods ////////
@@ -85,7 +83,6 @@ public:
 	void callbackGoal(const osmosis_control::GoalMsg & thegoal);
 	void callbackPose(const geometry_msgs::Pose2D & msg);
 	void callbackTargetReached(const std_msgs::Bool & target_reached);
-	void callbackEmergencyStop(const std_msgs::Bool &emergency_stop);
 
 	//void GraphPlanner::callbackGoalId(const string & thegoal_id)
 

@@ -50,7 +50,6 @@ private:
 	ros::Subscriber odom_sub_;
 	ros::Subscriber scan_sub_;
 	ros::Subscriber goal_sub_;
-	ros::Subscriber emergency_stop_sub_;
 
 	geometry_msgs::Pose2D robot_pose_;
 	geometry_msgs::Point obstacle_;
@@ -62,10 +61,8 @@ private:
 	sensor_msgs::LaserScan scan_;
 	nav_msgs::Odometry odom_;
 
-	enum State {WAIT_GOAL, MOVE_TO_GOAL, ARRIVED_GOAL, EMERGENCY_STOP};
+	enum State {WAIT_GOAL, MOVE_TO_GOAL, ARRIVED_GOAL};
 	State state_;
-
-	bool emergency_stop_;
 
 	///////// Methods ////////
 	void osmosisControlFSM();
@@ -88,7 +85,6 @@ public:
 	void callbackGoal(const osmosis_control::GoalMsg & thegoal);
 	void callbackScan(const sensor_msgs::LaserScan & thescan);
 	void callbackPose(const geometry_msgs::Pose2D & msg);
-	void callbackEmergencyStop(const std_msgs::Bool & emergency_stop);
 }; // end of class
 
 #endif //OSMOSIS_CONTROL_HPP

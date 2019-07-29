@@ -65,6 +65,8 @@ bool FaultInjection::parse(string select)
 
 	for(int i=0; i<infos.size(); i++)
 		list_FI_.push_back(stoi(infos[i]));
+
+	return infos.size()>0;
 }
 
 void FaultInjection::doFI()

@@ -18,18 +18,13 @@
 
 #include <iostream>
 #include <ros/ros.h>
-#include <geometry_msgs/Twist.h>
+#include <string>
 #include <recoveryModules/RecoveryModule.hpp>
 
 class RM1_EmergencyStop : public RecoveryModule
 {
 private:
 	///////// Attributes ////////
-	ros::Publisher pub_;
-	ros::Publisher pub_cmd_;
-	double pollRate_;
-	double delaySend_;
-	ros::Time start_;
 
 	///////// Methods ////////
 	void startingAction();

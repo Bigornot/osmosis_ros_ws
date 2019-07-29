@@ -12,11 +12,6 @@ void OsmosisControl::osmosisControlFSM()
 			stop();
 			if(new_goal())
 				state_=MOVE_TO_GOAL;
-			if(emergency_stop_)
-			{
-				stop();
-				state_=EMERGENCY_STOP;
-			}
 			break;
 
 		case MOVE_TO_GOAL:
@@ -28,11 +23,6 @@ void OsmosisControl::osmosisControlFSM()
 				state_=ARRIVED_GOAL;
 			else
 				updateMove();
-			if(emergency_stop_)
-			{
-				stop();
-				state_=EMERGENCY_STOP;
-			}
 			break;
 
 		case ARRIVED_GOAL:
@@ -40,20 +30,6 @@ void OsmosisControl::osmosisControlFSM()
 			publish_is_arrived();
 			stop();
 			state_=WAIT_GOAL;
-			if(emergency_stop_)
-			{
-				stop();
-				state_=EMERGENCY_STOP;
-			}
-			break;
-
-		case EMERGENCY_STOP:
-			ROS_INFO("EMERGENCY_STOP\n");
-			if(!emergency_stop_)
-			{
-				resetGoal();
-				state_=WAIT_GOAL;
-			}
 			break;
 
 		default: break;
@@ -252,12 +228,10 @@ OsmosisControl::OsmosisControl()
 	scan_sub_ = nh_.subscribe("/summit_xl_a/front_laser/scan", 1, &OsmosisControl::callbackScan, this);
 	goal_sub_ = nh_.subscribe("/target", 1, &OsmosisControl::callbackGoal, this);
 	odom_sub_ = nh_.subscribe("/pose", 1, &OsmosisControl::callbackPose, this);
-	emergency_stop_sub_ = nh_.subscribe("/do_emergency_stop", 1, &OsmosisControl::callbackEmergencyStop, this);
 
 	//initialization of attributes
 	target_.point.x = old_goal_.x =target_.point.y = old_goal_.y=0;
 	state_=WAIT_GOAL;
-	emergency_stop_=false;
 	freq_=10;
 }
 
@@ -291,10 +265,6 @@ void OsmosisControl::callbackPose(const geometry_msgs::Pose2D & msg)
 	robot_pose_ = msg;
 }
 
-void OsmosisControl::callbackEmergencyStop(const std_msgs::Bool &emergency_stop)
-{
-	emergency_stop_=emergency_stop.data;
-}
 
 ////////////////////// MAIN //////////////////////
 

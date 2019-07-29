@@ -45,20 +45,18 @@ private:
 	ros::Subscriber cmd_vel_sub_;
 	ros::Subscriber scan_sub_;
 	ros::Subscriber cmd_vel_teleop_sub_;
-	ros::Subscriber emergency_stop_sub_;
 	ros::Subscriber controlled_stop_sub_;
 	ros::Subscriber switch_to_teleop_sub_;
 	ros::Subscriber fault_injection_cmd_not_updated_sub_;
 	ros::Subscriber fault_injection_wrong_cmd_sub_;
 
-	enum State{COMPUTE_CMD, EMERGENCY_STOP, CONTROLLED_STOP, SWITCH_TO_TELEOP};
+	enum State{COMPUTE_CMD, CONTROLLED_STOP, SWITCH_TO_TELEOP};
 	State state_;
 
 	geometry_msgs::Twist base_cmd_ctrl_;
 	geometry_msgs::Twist base_cmd_;
 	osmosis_control::TeleopMsg base_cmd_teleop_;
 	sensor_msgs::LaserScan scan_;
-	bool emergency_stop_;
 	bool controlled_stop_;
 	bool switch_to_teleop_;
 
@@ -79,7 +77,6 @@ public:
 	void callbackCmdVelCtrl(const geometry_msgs::Twist & cmd_msg);
 	void callbackScan(const sensor_msgs::LaserScan & scan_msg);
 	void callbackTeleop(const osmosis_control::TeleopMsg & teleop_msg);
-	void callbackEmergencyStop(const std_msgs::Bool & emergency_stop);
 	void callbackControlledStop(const std_msgs::Bool & controlled_stop);
 	void callbackSwitchToTeleop(const std_msgs::Bool & switch_to_teleop);
 	void callbackFaultInjectionCmdNotUpdated(const std_msgs::Bool & fault_injection);

@@ -9,11 +9,6 @@ void SafetyPilot::SafetyPilotFSM()
 		case COMPUTE_CMD:
 			ROS_INFO("COMPUTE_CMD\n");
 			computeCommandCtrlTeleop(false);
-			if(emergency_stop_)
-			{
-				stop();
-				state_=EMERGENCY_STOP;
-			}
 			else if(controlled_stop_)
 			{
 				stop();
@@ -24,12 +19,6 @@ void SafetyPilot::SafetyPilotFSM()
 				stop();
 				state_=SWITCH_TO_TELEOP;
 			}
-			break;
-
-		case EMERGENCY_STOP:
-			ROS_INFO("EMERGENCY_STOP\n");
-			if(!emergency_stop_)
-				state_=COMPUTE_CMD;
 			break;
 
 		case CONTROLLED_STOP:
@@ -132,12 +121,10 @@ SafetyPilot::SafetyPilot()
 	cmd_vel_sub_  = nh_.subscribe("/cmd_vel_control", 1, &SafetyPilot::callbackCmdVelCtrl, this);
 	scan_sub_  = nh_.subscribe("/summit_xl_a/front_laser/scan", 1, &SafetyPilot::callbackScan, this);
 	cmd_vel_teleop_sub_ = nh_.subscribe("/cmd_vel_teleop", 1, &SafetyPilot::callbackTeleop, this);
-	emergency_stop_sub_ = nh_.subscribe("/do_emergency_stop", 1, &SafetyPilot::callbackEmergencyStop, this);
 	controlled_stop_sub_ = nh_.subscribe("/do_controlled_stop", 1, &SafetyPilot::callbackControlledStop, this);
 	switch_to_teleop_sub_ = nh_.subscribe("/do_switch_to_teleop", 1, &SafetyPilot::callbackSwitchToTeleop, this);
 	fault_injection_cmd_not_updated_sub_ = nh_.subscribe("/fault_injection_cmd_not_updated", 1, &SafetyPilot::callbackFaultInjectionCmdNotUpdated, this);
 	fault_injection_wrong_cmd_sub_ = nh_.subscribe("/fault_injection_wrong_cmd", 1, &SafetyPilot::callbackFaultInjectionWrongCmd, this);
-	emergency_stop_ = false;
 	controlled_stop_ = false;
 	switch_to_teleop_ = false;
 
@@ -176,11 +163,6 @@ void SafetyPilot::callbackScan(const sensor_msgs::LaserScan & scan_msg)
 void SafetyPilot::callbackTeleop(const osmosis_control::TeleopMsg & teleop_msg)
 {
 	base_cmd_teleop_=teleop_msg;
-}
-
-void SafetyPilot::callbackEmergencyStop(const std_msgs::Bool & emergency_stop)
-{
-	emergency_stop_=emergency_stop.data;
 }
 
 void SafetyPilot::callbackControlledStop(const std_msgs::Bool & controlled_stop)

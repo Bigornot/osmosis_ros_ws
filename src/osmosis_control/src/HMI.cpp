@@ -17,8 +17,6 @@ void HMI::HMI_FSM()
 			else
 				ROS_ERROR("Input Error : Please try again.\n");
 
-			if(emergency_stop_)
-				state_=EMERGENCY_STOP;
 			break;
 
 		case REACH_POINT_MISSION:
@@ -28,8 +26,6 @@ void HMI::HMI_FSM()
 					goalKeyboard();
 					publishMission();
 					mission_state_=WAIT_END_MISSION;	
-					if(emergency_stop_)
-						state_=EMERGENCY_STOP;
 					break;
 
 				case WAIT_END_MISSION:
@@ -38,8 +34,6 @@ void HMI::HMI_FSM()
 						state_=IDLE;
 						mission_state_=ASK_MISSION;
 					}	
-					if(emergency_stop_)
-						state_=EMERGENCY_STOP;
 					break;
 			}
 			break;
@@ -58,8 +52,6 @@ void HMI::HMI_FSM()
 						ROS_ERROR("Mission Aborted");
 						state_=IDLE;
 					}	
-					if(emergency_stop_)
-						state_=EMERGENCY_STOP;
 					break;
 
 				case WAIT_END_MISSION:	
@@ -69,19 +61,7 @@ void HMI::HMI_FSM()
 						mission_state_=ASK_MISSION;
 						state_=IDLE;
 					}
-					if(emergency_stop_)
-						state_=EMERGENCY_STOP;
-
 					break;
-			}
-			break;
-
-		case EMERGENCY_STOP:
-			ROS_INFO("EMERGENCY_STOP\n");
-			if(!emergency_stop_)
-			{
-				state_=IDLE;
-				mission_state_=ASK_MISSION;
 			}
 			break;
 
@@ -100,7 +80,7 @@ char HMI::askMode()
 	string input;
 
 	ROS_INFO("Enter the mode : ('P':Point 'M':mission)");
-	cin >> input;
+	getline(cin, input);
 	mode=input[0];
 
 	return mode;
@@ -183,11 +163,9 @@ HMI::HMI()
 	freq_=10;
 	mission_pub_ = nh_.advertise<osmosis_control::MissionMsg>("mission", 1);
 	done_sub_ = nh_.subscribe("/hmi_done", 1, &HMI::callbackMissionDone, this);
-	emergency_stop_sub_ = nh_.subscribe("/do_emergency_stop", 1, &HMI::callbackEmergencyStop, this);
 	state_=IDLE;
 	mission_state_=ASK_MISSION;
 	mission_done_=true;
-	emergency_stop_=false;
 }
 
 void HMI::run()
@@ -204,11 +182,6 @@ void HMI::run()
 void HMI::callbackMissionDone(const std_msgs::Bool &mission_done)
 {
 	mission_done_=mission_done.data;
-}
-
-void HMI::callbackEmergencyStop(const std_msgs::Bool &emergency_stop)
-{
-	emergency_stop_=emergency_stop.data;
 }
 
 
