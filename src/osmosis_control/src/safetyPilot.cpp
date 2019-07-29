@@ -9,7 +9,7 @@ void SafetyPilot::SafetyPilotFSM()
 		case COMPUTE_CMD:
 			ROS_INFO("COMPUTE_CMD\n");
 			computeCommandCtrlTeleop(false);
-			else if(controlled_stop_)
+			if(controlled_stop_)
 			{
 				stop();
 				state_=CONTROLLED_STOP;

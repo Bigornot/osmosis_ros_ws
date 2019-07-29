@@ -19,12 +19,14 @@
 #include <iostream>
 #include <ros/ros.h>
 #include <string>
+#include <geometry_msgs/Twist.h>
 #include <recoveryModules/RecoveryModule.hpp>
 
 class RM1_EmergencyStop : public RecoveryModule
 {
 private:
 	///////// Attributes ////////
+	ros::Publisher pub_cmd_;
 
 	///////// Methods ////////
 	void startingAction();

@@ -5,6 +5,7 @@
 
 RM1_EmergencyStop::RM1_EmergencyStop(int id, vector<int> successors) : RecoveryModule(id, successors)
 {
+	pub_cmd_=nh_.advertise<geometry_msgs::Twist>("/summit_xl_a/robotnik_base_control/cmd_vel", 100);
 }
 
 void RM1_EmergencyStop::startingAction()
@@ -12,6 +13,7 @@ void RM1_EmergencyStop::startingAction()
 	string command = "rosnode kill ";
 	string node;
 	string cmd;
+	geometry_msgs::Twist cmd_vel;
 
 	node = "osmosis_control_node";
 	cmd=command+node;
@@ -56,6 +58,8 @@ void RM1_EmergencyStop::startingAction()
 	node = "fault_injection_node";
 	cmd=command+node;
 	system(cmd.c_str());
+
+	pub_cmd_.publish(cmd_vel);
 
 	node = "FTM_Manager_node";
 	cmd=command+node;
