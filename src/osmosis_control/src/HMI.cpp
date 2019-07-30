@@ -80,7 +80,7 @@ char HMI::askMode()
 	string input;
 
 	ROS_INFO("Enter the mode : ('P':Point 'M':mission)");
-	getline(cin, input);
+	cin >> input;
 	mode=input[0];
 
 	return mode;
