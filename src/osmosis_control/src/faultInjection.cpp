@@ -76,6 +76,12 @@ void FaultInjection::doFI()
 {
 	string command;
 	std_msgs::Bool data;
+	ros::Duration wrong_on(0.5);
+	ros::Duration wrong_off(3);
+	ros::Duration cmd_on(3);
+	ros::Duration cmd_off(2);
+	ros::Duration loc_on(3);
+	ros::Duration loc_off(3);
 
 	for(int i=0; i<list_FI_.size(); i++)
 	{
@@ -105,24 +111,30 @@ void FaultInjection::doFI()
 				system(command.c_str());
 				break;
 			case 5:
-				command="rosnode kill /checkProhibitedArea_node /joy_node /joy_teleop_node /localization_node /teleop_node /safety_pilot_node";
+				command="rosnode kill /safety_pilot_node /joy_node /joy_teleop_node /localization_node /teleop_node";
 				system(command.c_str());
 				break;
 			case 6:
 				data.data=true;
 				FI6_pub_.publish(data);
 				break;
-				
+
 			case 7:
 				data.data=true;
 				while(1)
 				{
-					FI2_pub_.publish(data);
 					if(data.data)
+					{
 						data.data=false;
+						FI2_pub_.publish(data);
+						cmd_off.sleep();
+					}
 					else
+					{
 						data.data=true;
-					loop.sleep();
+						FI2_pub_.publish(data);
+						cmd_on.sleep();
+					}
 				}
 				break;
 
@@ -130,12 +142,18 @@ void FaultInjection::doFI()
 				data.data=true;
 				while(1)
 				{
-					FI3_pub_.publish(data);
 					if(data.data)
+					{
 						data.data=false;
+						FI3_pub_.publish(data);
+						wrong_off.sleep();
+					}
 					else
+					{
 						data.data=true;
-					loop.sleep();
+						FI3_pub_.publish(data);
+						wrong_on.sleep();
+					}
 				}
 				break;
 
@@ -143,12 +161,18 @@ void FaultInjection::doFI()
 				data.data=true;
 				while(1)
 				{
-					FI6_pub_.publish(data);
 					if(data.data)
+					{
 						data.data=false;
+						FI6_pub_.publish(data);
+						loc_off.sleep();
+					}
 					else
+					{
 						data.data=true;
-					loop.sleep();
+						FI6_pub_.publish(data);
+						loc_on.sleep();
+					}
 				}
 				break;
 
