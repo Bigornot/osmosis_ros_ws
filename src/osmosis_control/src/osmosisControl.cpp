@@ -53,7 +53,7 @@ bool OsmosisControl::is_arrived()
 	double yPos = robot_pose_.y - target_.point.y;
 	bool is_arrived = false;
 
-	if (sqrt( pow(xPos,2) + pow(yPos,2) ) < 0.2)
+	if (sqrt( pow(xPos,2) + pow(yPos,2) ) < 1.1) //0.2
 		is_arrived = true;
 	return is_arrived;
 }
