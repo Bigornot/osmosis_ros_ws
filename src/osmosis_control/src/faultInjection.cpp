@@ -102,7 +102,7 @@ void FaultInjection::doFI()
 				system(command.c_str());
 				break;
 			case 5:
-				command="rosnode kill /checkProhibitedArea_node /joy_node /joy_teleop_node /localization_node /teleop_node";
+				command="rosnode kill /checkProhibitedArea_node /joy_node /joy_teleop_node /localization_node /teleop_node /safety_pilot_node";
 				system(command.c_str());
 				break;
 			case 6:
