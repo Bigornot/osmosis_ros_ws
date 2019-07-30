@@ -16,10 +16,10 @@ void DM3_WrongCommand::detect()
 DM3_WrongCommand::DM3_WrongCommand()
 {
 	cmd_sub_  = nh_.subscribe("summit_xl_a/robotnik_base_control/cmd_vel", 1, &DM3_WrongCommand::DM3_WrongCommandCallback, this);
-	cmd_linear_x_max_=50;
-	cmd_linear_x_min_=-50;
-	cmd_angular_z_max_=50;
-	cmd_angular_z_min_=-50;
+	cmd_linear_x_max_=1;
+	cmd_linear_x_min_=-1;
+	cmd_angular_z_max_=1;
+	cmd_angular_z_min_=-1;
 }
 
 void DM3_WrongCommand::init()

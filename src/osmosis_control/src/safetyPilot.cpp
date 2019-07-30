@@ -103,8 +103,8 @@ void SafetyPilot::computeCommandCtrlTeleop(bool only_teleop)
 
 	if(fault_injection_wrong_cmd_)
 	{
-		cmd.linear.x=10;
-		cmd.angular.z=15;
+		cmd.linear.x=rand() % 11 - 5;
+		cmd.angular.z=rand() % 11 - 5;
 	}
 
 	base_cmd_=cmd; // command to publish

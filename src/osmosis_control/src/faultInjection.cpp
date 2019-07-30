@@ -33,7 +33,10 @@ bool FaultInjection::askFI()
 	cout << "3-Wrong cmd" << endl;
 	cout << "4-Node Crash Control" << endl;
 	cout << "5-Node Crash" << endl;
-	cout << "6-Loc not updated" << endl << endl;
+	cout << "6-Loc not updated" << endl;
+	cout << "7-Rate cmd" << endl;
+	cout << "8-Rate Wrong cmd" << endl;
+	cout << "9-Rate Loc" << endl << endl;
 
 	cout << "Selected : ";
 	getline(cin, select);
@@ -109,6 +112,45 @@ void FaultInjection::doFI()
 				data.data=true;
 				FI6_pub_.publish(data);
 				break;
+				
+			case 7:
+				data.data=true;
+				while(1)
+				{
+					FI2_pub_.publish(data);
+					if(data.data)
+						data.data=false;
+					else
+						data.data=true;
+					loop.sleep();
+				}
+				break;
+
+			case 8:
+				data.data=true;
+				while(1)
+				{
+					FI3_pub_.publish(data);
+					if(data.data)
+						data.data=false;
+					else
+						data.data=true;
+					loop.sleep();
+				}
+				break;
+
+			case 9:
+				data.data=true;
+				while(1)
+				{
+					FI6_pub_.publish(data);
+					if(data.data)
+						data.data=false;
+					else
+						data.data=true;
+					loop.sleep();
+				}
+				break;
 
 			defaul: break;
 		}
@@ -128,7 +170,7 @@ FaultInjection::FaultInjection()
 }
 
 void FaultInjection::run()
-{	
+{
 	ros::Rate loop_rate(freq_);
 	while (nh_.ok())
 	{
