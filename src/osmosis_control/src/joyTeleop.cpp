@@ -1,3 +1,4 @@
+//juil2019 Anthony FAVIER / Antonin MESSIOUX @ LAAS
 #include <joyTeleop.hpp>
 
 ////////////////////// PRIVATE //////////////////////
@@ -38,7 +39,7 @@ void JoyTeleop::joy_off()
 {
 	joy_teleop_cmd_.is_active=false;
 	button_pressed_=false;
-	ROS_INFO("Controller deactivation");
+	ROS_INFO("Controller Desactivation");
 }
 
 

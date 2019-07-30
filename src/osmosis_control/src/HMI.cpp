@@ -1,4 +1,5 @@
 //juil2018 J.Guiochet @ LAAS
+//juil2019 Anthony FAVIER / Antonin MESSIOUX @ LAAS
 #include <HMI.hpp>
 
 ////////////////////// PRIVATE //////////////////////

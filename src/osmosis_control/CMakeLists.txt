@@ -161,7 +161,6 @@ add_executable(mission_manager_node src/missionManager.cpp)
 add_executable(joy_teleop_node src/joyTeleop.cpp)
 add_executable(HMI_node src/HMI.cpp)
 add_executable(fault_injection_node src/faultInjection.cpp)
-add_executable(chrono_node src/chrono.cpp)
 add_executable(FTM_Manager_node src/FTM_Manager.cpp src/FTM_Rule.cpp
 
 src/strategies/FTM_SafetyFirst.cpp
@@ -192,7 +191,6 @@ add_dependencies(joy_teleop_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EX
 add_dependencies(HMI_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(FTM_Manager_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(fault_injection_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(chrono_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 
 ## Rename C++ executable without prefix
@@ -217,7 +215,6 @@ target_link_libraries(joy_teleop_node ${catkin_LIBRARIES})
 target_link_libraries(HMI_node ${catkin_LIBRARIES})
 target_link_libraries(FTM_Manager_node ${catkin_LIBRARIES})
 target_link_libraries(fault_injection_node ${catkin_LIBRARIES})
-target_link_libraries(chrono_node ${catkin_LIBRARIES})
 
 #target_link_libraries(json  ${catkin_LIBRARIES}  ${JSONCPP_LIBRARIES})
 #############
