@@ -20,7 +20,7 @@ DM2_CmdNotUpdated::DM2_CmdNotUpdated() : DetectionModule()
 	cmd_vel_sub_  = nh_.subscribe("summit_xl_a/robotnik_base_control/cmd_vel", 1, &DM2_CmdNotUpdated::DM2_CmdNotUpdatedCallback, this);
 
 	lastUpdate_=ros::Time::now();
-	timeOut_ = ros::Duration(1);
+	timeOut_ = ros::Duration(0.8*stop_distance/max_linear); // 0.8 is a security coefficient
 }
 
 void DM2_CmdNotUpdated::init()

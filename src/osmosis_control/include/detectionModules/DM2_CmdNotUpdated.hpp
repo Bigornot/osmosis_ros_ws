@@ -20,6 +20,7 @@
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
 #include <detectionModules/DetectionModule.hpp>
+#include <safetyPilot.hpp>
 
 class DM2_CmdNotUpdated : public DetectionModule
 {
