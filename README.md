@@ -55,7 +55,10 @@ Once you have ROS (kinetic) and Gazebo (we worked on the 7.15.0, we have not che
       roslaunch osmosis_control osmosisControl.launch
  
  
- You might want to switch on the "ftm" branch of this repository if you want to work on our fault tolerance mechanism.
+      The 'Joy' ROS package is needed to use a joystick as teleoperation and to compile osmosis_control. To compile osmosis_control without 'Joy' it must be commented from the find_package part of the CMakeList.txt (line 19). 
+
+      You might want to switch on the "ftm" branch of this repository if you want to work on our fault tolerance mechanism.
+
  
  2019 @LAAS-CNRS TOULOUSE
  
