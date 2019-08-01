@@ -29,9 +29,17 @@ void SafetyPilot::SafetyPilotFSM()
 
 		case SWITCH_TO_TELEOP:
 			ROS_INFO("SWITCH_TO_TELEOP\n");
-			computeCommandCtrlTeleop(true);
-			if(!switch_to_teleop_)
-				state_=COMPUTE_CMD;
+			if(controlled_stop_)
+			{
+				stop();
+				state_=CONTROLLED_STOP;
+			}
+			else
+			{
+				computeCommandCtrlTeleop(true);
+				if(!switch_to_teleop_)
+					state_=COMPUTE_CMD;
+			}
 			break;
 
 		default: break;

@@ -172,6 +172,7 @@ src/detectionModules/DM3_WrongCommand.cpp
 src/detectionModules/DM4_NodeCrashControl.cpp
 src/detectionModules/DM5_NodeCrash.cpp
 src/detectionModules/DM6_LocNotUpdated.cpp
+src/detectionModules/DM7_NodeLocalizationCrash.cpp
 
 src/recoveryModules/RecoveryModule.cpp
 src/recoveryModules/RM1_EmergencyStop.cpp

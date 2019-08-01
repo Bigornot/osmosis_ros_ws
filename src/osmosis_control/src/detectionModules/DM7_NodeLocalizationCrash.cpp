@@ -1,8 +1,8 @@
-#include <detectionModules/DM5_NodeCrash.hpp>
+#include <detectionModules/DM7_NodeLocalizationCrash.hpp>
 
 ////////////////////// PRIVATE //////////////////////
 
-void DM5_NodeCrash::detect()
+void DM7_NodeLocalizationCrash::detect()
 {
 	int i,j;
 	bool found=true;
@@ -28,15 +28,11 @@ void DM5_NodeCrash::detect()
 
 ////////////////////// PUBLIC //////////////////////
 
-DM5_NodeCrash::DM5_NodeCrash() : DetectionModule()
+DM7_NodeLocalizationCrash::DM7_NodeLocalizationCrash() : DetectionModule()
 {
-	nodesToCheck_.push_back("/teleop_node");
-	nodesToCheck_.push_back("/joy_node");
-	nodesToCheck_.push_back("/joy_teleop_node");
-	nodesToCheck_.push_back("/safety_pilot_node");
-	nodesToCheck_.push_back("/checkProhibitedArea_node");
+	nodesToCheck_.push_back("/localization_node");
 }
 
-void DM5_NodeCrash::init()
+void DM7_NodeLocalizationCrash::init()
 {
 }

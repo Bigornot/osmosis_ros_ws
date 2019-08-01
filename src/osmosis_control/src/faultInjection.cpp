@@ -34,9 +34,10 @@ bool FaultInjection::askFI()
 	cout << "4-Node Crash Control" << endl;
 	cout << "5-Node Crash" << endl;
 	cout << "6-Loc not updated" << endl;
-	cout << "7-Rate cmd" << endl;
-	cout << "8-Rate Wrong cmd" << endl;
-	cout << "9-Rate Loc" << endl << endl;
+	cout << "7-Node Crash Loc" << endl;
+	cout << "12-Rate no cmd" << endl;
+	cout << "13-Rate Wrong cmd" << endl;
+	cout << "16-Rate Loc" << endl << endl;
 
 	cout << "Selected : ";
 	getline(cin, select);
@@ -111,7 +112,7 @@ void FaultInjection::doFI()
 				system(command.c_str());
 				break;
 			case 5:
-				command="rosnode kill /safety_pilot_node /joy_node /joy_teleop_node /localization_node /teleop_node";
+				command="rosnode kill /safety_pilot_node /joy_node /joy_teleop_node /teleop_node";
 				system(command.c_str());
 				break;
 			case 6:
@@ -120,6 +121,11 @@ void FaultInjection::doFI()
 				break;
 
 			case 7:
+				command="rosnode kill /localization_node";
+				system(command.c_str());
+				break;
+
+			case 12:
 				data.data=true;
 				while(1)
 				{
@@ -138,7 +144,7 @@ void FaultInjection::doFI()
 				}
 				break;
 
-			case 8:
+			case 13:
 				data.data=true;
 				while(1)
 				{
@@ -157,7 +163,7 @@ void FaultInjection::doFI()
 				}
 				break;
 
-			case 9:
+			case 16:
 				data.data=true;
 				while(1)
 				{

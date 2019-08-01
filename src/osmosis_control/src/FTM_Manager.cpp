@@ -150,6 +150,7 @@ FTM_Manager::FTM_Manager()
 	DM4_node_crash_control_ = new DM4_NodeCrashControl();
 	DM5_node_crash_ = new DM5_NodeCrash();
 	DM6_loc_not_updated_ = new DM6_LocNotUpdated();
+	DM7_node_localization_crash_ = new DM7_NodeLocalizationCrash();
 
 	// Declarations of the recovery modules
 	// The recovery tree is built here
@@ -168,7 +169,8 @@ FTM_Manager::FTM_Manager()
 	FTM_rules_.push_back(new FTM_Rule(3, 1, {}, DM3_wrong_command_, RM2_controlled_stop_));
 	FTM_rules_.push_back(new FTM_Rule(4, 2, {5}, DM4_node_crash_control_, RM3_respawn_control_nodes_));
 	FTM_rules_.push_back(new FTM_Rule(5, 4, {}, DM5_node_crash_, RM4_respawn_nodes_));
-	FTM_rules_.push_back(new FTM_Rule(6, 1, {}, DM6_loc_not_updated_, RM5_switch_to_teleop_));
+	FTM_rules_.push_back(new FTM_Rule(6, 1, {7}, DM6_loc_not_updated_, RM5_switch_to_teleop_));
+	FTM_rules_.push_back(new FTM_Rule(7, 6, {}, DM7_node_localization_crash_, RM4_respawn_nodes_));
 
 	strategy_=new FTM_SafetyFirst();
 

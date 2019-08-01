@@ -28,6 +28,7 @@
 #include <detectionModules/DM4_NodeCrashControl.hpp>
 #include <detectionModules/DM5_NodeCrash.hpp>
 #include <detectionModules/DM6_LocNotUpdated.hpp>
+#include <detectionModules/DM7_NodeLocalizationCrash.hpp>
 
 #include <recoveryModules/RM1_EmergencyStop.hpp>
 #include <recoveryModules/RM2_ControlledStop.hpp>
@@ -51,6 +52,7 @@ private :
 	DM4_NodeCrashControl* DM4_node_crash_control_;
 	DM5_NodeCrash* DM5_node_crash_;
 	DM6_LocNotUpdated* DM6_loc_not_updated_;
+	DM7_NodeLocalizationCrash* DM7_node_localization_crash_;
 
 	RM1_EmergencyStop* RM1_emergency_stop_;
 	RM2_ControlledStop* RM2_controlled_stop_;
