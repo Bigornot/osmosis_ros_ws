@@ -52,9 +52,7 @@ geometry_msgs::Twist SafetyPilot::updateCmdWithLaserScan(geometry_msgs::Twist cm
 	}
 
 	cmd.linear.x = fmin(cmd.linear.x, + max_linear);
-	cmd.linear.y = fmin(cmd.linear.y, + max_linear);
 	cmd.linear.x = fmax(cmd.linear.x, - max_linear);
-	cmd.linear.y = fmax(cmd.linear.y, - max_linear);
 	cmd.angular.z = fmin(cmd.angular.z, + max_angular);
 	cmd.angular.z = fmax(cmd.angular.z, - max_angular);
 
