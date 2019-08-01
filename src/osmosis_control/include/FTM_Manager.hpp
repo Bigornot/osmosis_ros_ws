@@ -24,7 +24,7 @@
 
 #include <detectionModules/DM1_ProhibitedArea.hpp>
 #include <detectionModules/DM2_CmdNotUpdated.hpp>
-#include <detectionModules/DM3_WrongCommand.hpp>
+#include <detectionModules/DM3_WrongValueCommand.hpp>
 #include <detectionModules/DM4_NodeCrashControl.hpp>
 #include <detectionModules/DM5_NodeCrash.hpp>
 #include <detectionModules/DM6_LocNotUpdated.hpp>
@@ -48,7 +48,7 @@ private :
 
 	DM1_ProhibitedArea* DM1_prohibited_area_;
 	DM2_CmdNotUpdated* DM2_cmd_not_updated_;
-	DM3_WrongCommand* DM3_wrong_command_;
+	DM3_WrongValueCommand* DM3_wrong_value_command_;
 	DM4_NodeCrashControl* DM4_node_crash_control_;
 	DM5_NodeCrash* DM5_node_crash_;
 	DM6_LocNotUpdated* DM6_loc_not_updated_;

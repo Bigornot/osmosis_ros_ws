@@ -107,7 +107,7 @@ void SafetyPilot::computeCommandCtrlTeleop(bool only_teleop)
 	//check if we need to override the command due to safe stop from laserScan
 	cmd=updateCmdWithLaserScan(cmd,scan_);
 
-	if(fault_injection_wrong_cmd_)
+	if(fault_injection_wrong_value_cmd_)
 	{
 		cmd.linear.x = 1.1*max_linear;
 		cmd.angular.z = 1.1*max_angular;
@@ -130,12 +130,12 @@ SafetyPilot::SafetyPilot()
 	controlled_stop_sub_ = nh_.subscribe("/do_controlled_stop", 1, &SafetyPilot::callbackControlledStop, this);
 	switch_to_teleop_sub_ = nh_.subscribe("/do_switch_to_teleop", 1, &SafetyPilot::callbackSwitchToTeleop, this);
 	fault_injection_cmd_not_updated_sub_ = nh_.subscribe("/fault_injection_cmd_not_updated", 1, &SafetyPilot::callbackFaultInjectionCmdNotUpdated, this);
-	fault_injection_wrong_cmd_sub_ = nh_.subscribe("/fault_injection_wrong_cmd", 1, &SafetyPilot::callbackFaultInjectionWrongCmd, this);
+	fault_injection_wrong_value_cmd_sub_ = nh_.subscribe("/fault_injection_wrong_value_cmd", 1, &SafetyPilot::callbackFaultInjectionWrongValueCmd, this);
 	controlled_stop_ = false;
 	switch_to_teleop_ = false;
 
 	fault_injection_cmd_not_updated_=false;
-	fault_injection_wrong_cmd_=false;
+	fault_injection_wrong_value_cmd_=false;
 }
 
 bool SafetyPilot::run()
@@ -186,9 +186,9 @@ void SafetyPilot::callbackFaultInjectionCmdNotUpdated(const std_msgs::Bool & fau
 	fault_injection_cmd_not_updated_=fault_injection.data;
 }
 
-void SafetyPilot::callbackFaultInjectionWrongCmd(const std_msgs::Bool & fault_injection)
+void SafetyPilot::callbackFaultInjectionWrongValueCmd(const std_msgs::Bool & fault_injection)
 {
-	fault_injection_wrong_cmd_=fault_injection.data;
+	fault_injection_wrong_value_cmd_=fault_injection.data;
 }
 
 

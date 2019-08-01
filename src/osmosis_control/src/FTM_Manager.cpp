@@ -146,7 +146,7 @@ FTM_Manager::FTM_Manager()
 	// DMx_ = new DM_type()
 	DM1_prohibited_area_ = new DM1_ProhibitedArea();
 	DM2_cmd_not_updated_ = new DM2_CmdNotUpdated();
-	DM3_wrong_command_ = new DM3_WrongCommand();
+	DM3_wrong_value_command_ = new DM3_WrongValueCommand();
 	DM4_node_crash_control_ = new DM4_NodeCrashControl();
 	DM5_node_crash_ = new DM5_NodeCrash();
 	DM6_loc_not_updated_ = new DM6_LocNotUpdated();
@@ -166,7 +166,7 @@ FTM_Manager::FTM_Manager()
 	// FTM_rules_.push_back(new FTM_Rule(id, predecessor, {successors}, DMx_, RMx_))
 	FTM_rules_.push_back(new FTM_Rule(1, 0, {2, 3, 6}, DM1_prohibited_area_, RM1_emergency_stop_));
 	FTM_rules_.push_back(new FTM_Rule(2, 1, {4}, DM2_cmd_not_updated_, RM2_controlled_stop_));
-	FTM_rules_.push_back(new FTM_Rule(3, 1, {}, DM3_wrong_command_, RM2_controlled_stop_));
+	FTM_rules_.push_back(new FTM_Rule(3, 1, {}, DM3_wrong_value_command_, RM2_controlled_stop_));
 	FTM_rules_.push_back(new FTM_Rule(4, 2, {5}, DM4_node_crash_control_, RM3_respawn_control_nodes_));
 	FTM_rules_.push_back(new FTM_Rule(5, 4, {}, DM5_node_crash_, RM4_respawn_nodes_));
 	FTM_rules_.push_back(new FTM_Rule(6, 1, {7}, DM6_loc_not_updated_, RM5_switch_to_teleop_));

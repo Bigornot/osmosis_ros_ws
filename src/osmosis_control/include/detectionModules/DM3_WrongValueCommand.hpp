@@ -13,8 +13,8 @@
 *
 */
 
-#ifndef OSMOSIS_DM3_WrongCommand_HPP
-#define OSMOSIS_DM3_WrongCommand_HPP
+#ifndef OSMOSIS_DM3_WrongValueCommand_HPP
+#define OSMOSIS_DM3_WrongValueCommand_HPP
 
 #include <iostream>
 #include <ros/ros.h>
@@ -22,7 +22,7 @@
 #include <detectionModules/DetectionModule.hpp>
 #include <safetyPilot.hpp>
 
-class DM3_WrongCommand : public DetectionModule
+class DM3_WrongValueCommand : public DetectionModule
 {
 private:
 	///////// Attributes ////////
@@ -37,10 +37,10 @@ private:
 	void detect();
 
 public:
-	DM3_WrongCommand();
+	DM3_WrongValueCommand();
 	void init();
-	void DM3_WrongCommandCallback(const geometry_msgs::Twist & cmd_msg);
+	void DM3_WrongValueCommandCallback(const geometry_msgs::Twist & cmd_msg);
 
 }; // end of class
 
-#endif //OSMOSIS_DM3_WrongCommand_HPP
+#endif //OSMOSIS_DM3_WrongValueCommand_HPP

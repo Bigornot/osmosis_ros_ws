@@ -30,13 +30,13 @@ bool FaultInjection::askFI()
 	cout << "0-Reset fault injection" << endl;
 	cout << "1-Prohibited Area" << endl;
 	cout << "2-Cmd not updated" << endl;
-	cout << "3-Wrong cmd" << endl;
+	cout << "3-WrongValue cmd" << endl;
 	cout << "4-Node Crash Control" << endl;
 	cout << "5-Node Crash" << endl;
 	cout << "6-Loc not updated" << endl;
 	cout << "7-Node Crash Loc" << endl;
 	cout << "12-Rate no cmd" << endl;
-	cout << "13-Rate Wrong cmd" << endl;
+	cout << "13-Rate WrongValue cmd" << endl;
 	cout << "16-Rate Loc" << endl << endl;
 
 	cout << "Selected : ";
@@ -77,8 +77,8 @@ void FaultInjection::doFI()
 {
 	string command;
 	std_msgs::Bool data;
-	ros::Duration wrong_on(0.5);
-	ros::Duration wrong_off(3);
+	ros::Duration wrong_value_on(0.5);
+	ros::Duration wrong_value_off(3);
 	ros::Duration cmd_on(3);
 	ros::Duration cmd_off(2);
 	ros::Duration loc_on(3);
@@ -152,13 +152,13 @@ void FaultInjection::doFI()
 					{
 						data.data=false;
 						FI3_pub_.publish(data);
-						wrong_off.sleep();
+						wrong_value_off.sleep();
 					}
 					else
 					{
 						data.data=true;
 						FI3_pub_.publish(data);
-						wrong_on.sleep();
+						wrong_value_on.sleep();
 					}
 				}
 				break;
@@ -191,7 +191,7 @@ FaultInjection::FaultInjection()
 {
 	FI1_pub_ = nh_.advertise<std_msgs::Bool>("fault_injection_prohibited_area", 1);
 	FI2_pub_ = nh_.advertise<std_msgs::Bool>("fault_injection_cmd_not_updated", 1);
-	FI3_pub_ = nh_.advertise<std_msgs::Bool>("fault_injection_wrong_cmd", 1);
+	FI3_pub_ = nh_.advertise<std_msgs::Bool>("fault_injection_wrong_value_cmd", 1);
 	FI6_pub_ = nh_.advertise<std_msgs::Bool>("fault_injection_loc_not_updated", 1);
 
 	state_=IDLE;

@@ -168,7 +168,7 @@ src/strategies/FTM_SafetyFirst.cpp
 src/detectionModules/DetectionModule.cpp
 src/detectionModules/DM1_ProhibitedArea.cpp
 src/detectionModules/DM2_CmdNotUpdated.cpp
-src/detectionModules/DM3_WrongCommand.cpp
+src/detectionModules/DM3_WrongValueCommand.cpp
 src/detectionModules/DM4_NodeCrashControl.cpp
 src/detectionModules/DM5_NodeCrash.cpp
 src/detectionModules/DM6_LocNotUpdated.cpp
