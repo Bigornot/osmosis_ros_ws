@@ -75,9 +75,7 @@ geometry_msgs::Twist SafetyPilot::updateCmdWithLaserScan(geometry_msgs::Twist cm
 	}
 
 	cmd.linear.x = fmin(cmd.linear.x, + max_linear);
-	cmd.linear.y = fmin(cmd.linear.y, + max_linear);
 	cmd.linear.x = fmax(cmd.linear.x, - max_linear);
-	cmd.linear.y = fmax(cmd.linear.y, - max_linear);
 	cmd.angular.z = fmin(cmd.angular.z, + max_angular);
 	cmd.angular.z = fmax(cmd.angular.z, - max_angular);
 
@@ -103,8 +101,8 @@ void SafetyPilot::computeCommandCtrlTeleop(bool only_teleop)
 
 	if(fault_injection_wrong_cmd_)
 	{
-		cmd.linear.x=rand() % 11 - 5;
-		cmd.angular.z=rand() % 11 - 5;
+		cmd.linear.x = max_linear;
+		cmd.angular.z = max_angular;
 	}
 
 	base_cmd_=cmd; // command to publish
