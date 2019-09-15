@@ -81,6 +81,7 @@ private :
 
 public :
 	FTM_Manager();
+	~FTM_Manager();
 
 	vector<FTM_Rule*> getActiveOrRecoveryRules();
 	vector<FTM_Rule*> findDominant(vector<FTM_Rule*> Rules);

@@ -179,6 +179,28 @@ FTM_Manager::FTM_Manager()
 	freq_=20;
 }
 
+FTM_Manager::~FTM_Manager()
+{
+	delete DM1_prohibited_area_;
+	delete DM2_cmd_not_updated_;
+	delete DM3_wrong_value_command_;
+	delete DM4_node_crash_control_;
+	delete DM5_node_crash_;
+	delete DM6_loc_not_updated_;
+	delete DM7_node_localization_crash_;
+
+	delete RM1_emergency_stop_;
+	delete RM2_controlled_stop_;
+	delete RM3_respawn_control_nodes_;
+	delete RM4_respawn_nodes_;
+	delete RM5_switch_to_teleop_;
+
+	for(int i=0; i<FTM_rules_.size(); ++i)
+		delete FTM_rules_[i];
+
+	delete strategy_;
+}
+
 vector<FTM_Rule*> FTM_Manager::getActiveOrRecoveryRules()
 {
 	active_or_recovery_rules_.clear();
