@@ -85,6 +85,8 @@ void SafetyPilot::computeCommandCtrlTeleop()
 SafetyPilot::SafetyPilot()
 {
 	freq_=10;
+	state_=COMPUTE_CMD;
+
 	//set up the publisher for the cmd_vel topic
 	cmd_vel_pub_ = nh_.advertise<geometry_msgs::Twist>("/summit_xl_a/robotnik_base_control/cmd_vel", 1);
 	cmd_vel_sub_  = nh_.subscribe("cmd_vel_control", 1, &SafetyPilot::callbackCmdVelCtrl, this);
