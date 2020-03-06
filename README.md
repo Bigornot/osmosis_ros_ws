@@ -59,6 +59,11 @@ Once you have ROS (kinetic) and Gazebo (we worked on the 7.15.0, we have not che
 
       You might want to switch on the "ftm" branch of this repository if you want to work on our fault tolerance mechanism.
 
+# Branches
+
+- faul_injection_master : with fault injection on the master
+- ftm : with the Fault Tolerance Mechanism and thus, fault injection
+
  
  2019 @LAAS-CNRS TOULOUSE
  
