@@ -106,11 +106,20 @@ void SafetyPilot::computeCommandCtrlTeleop(bool only_teleop)
 
 	//check if we need to override the command due to safe stop from laserScan
 	cmd=updateCmdWithLaserScan(cmd,scan_);
+	
+	static int compteur=5;
 
 	if(fault_injection_wrong_value_cmd_)
 	{
 		cmd.linear.x = 1.1*max_linear;
 		cmd.angular.z = 1.1*max_angular;
+		if(compteur)
+			compteur--;
+		else
+		{
+			fault_injection_wrong_value_cmd_=false;
+			compteur=5;
+		}
 	}
 
 	base_cmd_=cmd; // command to publish
