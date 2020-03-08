@@ -111,6 +111,7 @@ void SafetyPilot::computeCommandCtrlTeleop(bool only_teleop)
 	{
 		cmd.linear.x = 1.1*max_linear;
 		cmd.angular.z = 1.1*max_angular;
+		fault_injection_wrong_value_cmd_=false;
 	}
 
 	base_cmd_=cmd; // command to publish
