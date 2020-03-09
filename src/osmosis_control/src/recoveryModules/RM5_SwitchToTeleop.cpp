@@ -30,4 +30,7 @@ void RM5_SwitchToTeleop::doRecovery()
 
 void RM5_SwitchToTeleop::stoppingAction()
 {
+	std_msgs::Bool data;
+	data.data=false;
+	pub_.publish(data);
 }
