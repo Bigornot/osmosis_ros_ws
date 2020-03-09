@@ -6,19 +6,22 @@ from geometry_msgs.msg import Pose2D
 import matplotlib.image as mpimg
 
 fault_injection=False
+X=0
+Y=0
 
 def drive():
 
     if len(image)>0 and len(image[0])>0 :
         print("Image opened")
 
-    rospy.spin()
+    r=rospy.Rate(10)
+    while not rospy.is_shutdown():
+        compute()
+	r.sleep()
 
-def callbackPose(data):
-    # Converting pose in pixels
-    X=int( (80+float(data.x)) * (828/160) * 1.04)
-    Y=int( (80-float(data.y)) * (740/160) * 1.15)
-
+def compute(): 
+    global X
+    global Y
 
     if int(image[Y][X][0]) > 250 :
 	print("Couleur :", int(image[Y][X][0]), image[Y][X][1], image[Y][X][2], "TRUE")
@@ -31,6 +34,14 @@ def callbackPose(data):
             pub.publish(True)
         else:
             pub.publish(False)
+
+
+def callbackPose(data):
+    global X
+    global Y
+    # Converting pose in pixels
+    X=int( (80+float(data.x)) * (828/160) * 1.04)
+    Y=int( (80-float(data.y)) * (740/160) * 1.15)
 
 def callbackFaultInjectionProhibitedArea(data):
     global fault_injection
@@ -55,3 +66,5 @@ if __name__ == '__main__':
         drive()
     except rospy.ROSInterruptException:
         pass
+
+
