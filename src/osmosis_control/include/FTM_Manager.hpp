@@ -86,8 +86,10 @@ public :
 	vector<FTM_Rule*> findDominant(vector<FTM_Rule*> Rules);
 	vector<FTM_Rule*> findDominantRecovery(vector<FTM_Rule*> Rules);
 	FTM_Rule* findLowestCommonDominant(vector<FTM_Rule*> dominant);
-	void stopDominatedRules(vector<FTM_Rule*> rules);
 	void doRecovery(vector<FTM_Rule*> rules);
+	void stopDominatedRules(vector<FTM_Rule*> rules);
+	void stopDominatedRMs(vector<FTM_Rule*> rules);
+	void stopRMs();
 
 	void debugDisplayRulesId(vector<FTM_Rule*> rules);
 	void debugDisplayRMId(vector<FTM_Rule*> rules);

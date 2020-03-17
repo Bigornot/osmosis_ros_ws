@@ -126,17 +126,6 @@ vector<FTM_Rule*> FTM_Manager::checkSameRM(vector<FTM_Rule*> rules)
 	return rules;
 }
 
-void FTM_Manager::stopDominatedRules(vector<FTM_Rule*> rules)
-{
-	vector<FTM_Rule*> dominated;
-
-	for(int i=0; i<rules.size(); i++)
-		dominated=findDominated(rules[i], &dominated);
-
-	for(int i=0; i<dominated.size(); i++)
-		dominated[i]->stopRM();
-}
-
 
 ////////////////////// PUBLIC //////////////////////
 
@@ -279,6 +268,34 @@ void FTM_Manager::doRecovery(vector<FTM_Rule*> rules)
 		if(!rules[i]->getStateRM())
 			rules[i]->startRM();
 	}
+}
+
+void FTM_Manager::stopDominatedRules(vector<FTM_Rule*> rules)
+{
+	vector<FTM_Rule*> dominated;
+
+	for(int i=0; i<rules.size(); i++)
+		dominated=findDominated(rules[i], &dominated);
+
+	for(int i=0; i<dominated.size(); i++)
+		dominated[i]->stopRM();
+}
+
+void FTM_Manager::stopDominatedRMs(vector<FTM_Rule*> rules)
+{
+	vector<FTM_Rule*> dominated;
+
+	for(int i=0; i<rules.size(); i++)
+		dominated=findDominatedRecovery(rules[i], &dominated);
+
+	for(int i=0; i<dominated.size(); i++)
+		dominated[i]->stopRM();
+}
+
+void FTM_Manager::stopRMs()
+{
+	for(int i=0; i<FTM_rules_.size(); i++)
+		FTM_rules_[i]->stopRM();
 }
 
 void FTM_Manager::debugDisplayRulesId(vector<FTM_Rule*> rules)
