@@ -126,7 +126,7 @@ vector<FTM_Rule*> FTM_Manager::checkSameRM(vector<FTM_Rule*> rules)
 	return rules;
 }
 
-void FTM_Manager::stoppingActionDominatedRules(vector<FTM_Rule*> rules)
+void FTM_Manager::stopDominatedRules(vector<FTM_Rule*> rules)
 {
 	vector<FTM_Rule*> dominated;
 
@@ -274,8 +274,6 @@ FTM_Rule* FTM_Manager::findLowestCommonDominant(vector<FTM_Rule*> dominant)
 
 void FTM_Manager::doRecovery(vector<FTM_Rule*> rules)
 {
-	stoppingActionDominatedRules(rules);
-
 	for(int i=0; i<rules.size(); i++)
 	{
 		if(!rules[i]->getStateRM())

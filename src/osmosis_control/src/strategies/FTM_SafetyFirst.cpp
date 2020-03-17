@@ -16,6 +16,7 @@ void FTM_SafetyFirst::execute(FTM_Manager* myManager)
 	{
 		cout<<"Only one active or recovery rule, so we just activate its recovery : ";
 		myManager->debugDisplayRMId(active_or_recovery_rules_);
+		myManager->stopDominatedRules(dominant_);
 		myManager->doRecovery(active_or_recovery_rules_);
 	}
 	else if(active_or_recovery_rules_.size()>1)
@@ -29,6 +30,7 @@ void FTM_SafetyFirst::execute(FTM_Manager* myManager)
 		{
 			cout<<"Yes, one rule dominates the others, let's activate its recovery :";
 			myManager->debugDisplayRMId(dominant_);
+			myManager->stopDominatedRules(dominant_);
 			myManager->doRecovery(dominant_);
 		}
 
@@ -43,6 +45,7 @@ void FTM_SafetyFirst::execute(FTM_Manager* myManager)
 			{
 				cout<<"Yes, one RM dominates the others, let's activate it : ";
 				myManager->debugDisplayRMId(dominant_recov_);
+				myManager->stopDominatedRules(dominant_);
 				myManager->doRecovery(dominant_recov_);
 			}
 
@@ -54,6 +57,7 @@ void FTM_SafetyFirst::execute(FTM_Manager* myManager)
 				myManager->debugDisplayRulesId({common_dominant_});
 				cout<<"so we activate its recovery : ";
 				myManager->debugDisplayRMId({common_dominant_});
+				myManager->stopDominatedRules(dominant_);
 				myManager->doRecovery({common_dominant_});
 			}
 		}
